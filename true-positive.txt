@@ -1,0 +1,2 @@
+I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`
+
