@@ -1,6 +1,9 @@
 # coding=utf-8
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream, API
+from tweepy.utils import import_simplejson, parse_datetime
+from tweepy.models import Model
+json = import_simplejson()
 import argparse
 import os
 import sys
@@ -53,6 +56,28 @@ def make_reply(text):
 
     return w.lower()
 
+class Event(Model):
+    @classmethod
+    def parse(cls, api, json):
+        event = cls(api)
+        for k, v in json.items():
+            if k == 'target':
+                user_model = getattr(api.parser.model_factory, 'user')
+                user = user_model.parse(api, v)
+                setattr(event, 'target', user)
+            elif k == 'source':
+                user_model = getattr(api.parser.model_factory, 'user')
+                user = user_model.parse(api, v)
+                setattr(event, 'source', user)
+            elif k == 'created_at':
+                setattr(event, k, parse_datetime(v))
+            elif k == 'target_object':
+                setattr(event, 'target_object', v)
+            elif k == 'event':
+                setattr(event, 'event', v)
+            else:
+                setattr(event, k, v)
+        return event
 
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
@@ -61,9 +86,19 @@ class LessListener(StreamListener):
         self.post_replies = kwargs.pop('post_replies', False)
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
+        self.me = self.api.me()
 
     def on_connect(self):
-        print "connected."
+        me = self.me
+        print "streaming as @%s (#%d)" % (me.screen_name, me.id)
+
+    def on_data(self, data):
+        message = json.loads(data)
+        if message.get('event') is not None:
+            event = Event.parse(self.api, message)
+            self.on_event(event)
+        else:
+            super(LessListener, self).on_data(data)
 
     def on_status(self, status):
         now = datetime.datetime.now()
@@ -85,6 +120,15 @@ class LessListener(StreamListener):
                 print "  https://twitter.com/_/status/%s" % r.id
                 self.last = now
 
+    def on_event(self, event):
+        if event.event == 'follow' and event.target.id == self.me.id:
+            print "followed by @%s" % event.source.screen_name,
+            if not event.source.following:
+                print ", following back"
+                event.source.follow()
+            else:
+                # i ain't no follow-back girl!
+                print
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=u'annoy some tweeps',
