@@ -13,6 +13,15 @@ Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [Tex
 [voynich]: http://www.decontextualize.com/2013/10/voynich-tech-news/
 [TextBlob]: https://github.com/sloria/TextBlob
 
+This thing expects to fetch authorization credentials from environment variables. I `source` a file like this:
+
+    export CONSUMER_KEY="..."
+    export CONSUMER_SECRET="..."
+    export ACCESS_TOKEN="..."
+    export ACCESS_TOKEN_SECRET="..."
+
+To get values for those variables, why not follow [Adam Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
+
 ## TODO
 
 - favourite replies
