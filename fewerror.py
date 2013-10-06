@@ -12,14 +12,6 @@ import datetime
 
 from text.blob import TextBlob
 
-"""
-TODO:
-
-[ ] favourite replies
-[ ] log parse tree
-[ ] log skipped tweets
-"""
-
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
