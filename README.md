@@ -15,6 +15,6 @@ Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [Tex
 
 ## TODO
 
-- [ ] favourite replies
-- [ ] log tweets that contain the word "less" but didn't match our rules, for later analysis
-- [ ] match more things (see `false-negative.txt` and `no-idea.txt`)
+- favourite replies
+- log tweets that contain the word "less" but didn't match our rules, for later analysis
+- match more things (see `false-negative.txt` and `no-idea.txt`)
