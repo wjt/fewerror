@@ -27,3 +27,6 @@ To get values for those variables, why not follow [Adam Parrish's instructions f
 - favourite replies
 - log tweets that contain the word "less" but didn't match our rules, for later analysis
 - match more things (see `false-negative.txt` and `no-idea.txt`)
+- seek back in our timeline for things we should have replied to but didn't?
+- remember what we have replied to?
+- follow people who enjoy our replies
