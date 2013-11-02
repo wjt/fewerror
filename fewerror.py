@@ -93,12 +93,13 @@ class LessListener(StreamListener):
             super(LessListener, self).on_data(data)
 
     def on_status(self, status):
-        now = datetime.datetime.now()
-        if self.post_replies and now - self.last < self.TIMEOUT:
-            return
-
         # Reply to the original when a tweet is RTed properly
         status = getattr(status, 'retweeted_status', status)
+
+        now = datetime.datetime.now()
+        print ("[%s @%s] %s" % (now, status.author.screen_name, status.text))
+        if self.post_replies and now - self.last < self.TIMEOUT:
+            return
 
         quantity = make_reply(status.text)
         if quantity is None:
