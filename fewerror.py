@@ -96,19 +96,21 @@ class LessListener(StreamListener):
         # Reply to the original when a tweet is RTed properly
         status = getattr(status, 'retweeted_status', status)
 
+        text = status.text.replace("&amp;", "&")
+        screen_name = status.author.screen_name
+
         now = datetime.datetime.now()
-        print ("[%s @%s] %s" % (now, status.author.screen_name, status.text))
+        print ("[%s @%s] %s" % (now, screen_name, text))
         if self.post_replies and now - self.last < self.TIMEOUT:
             return
 
-        quantity = make_reply(status.text)
+        quantity = make_reply(text)
         if quantity is None:
             return
 
-        reply = u'@%s I think you mean “fewer %s”.' % (status.author.screen_name, quantity)
+        reply = u'@%s I think you mean “fewer %s”.' % (screen_name, quantity)
 
         if len(reply) <= 140:
-            print status.text
             print '--> %s' % reply
 
             if self.post_replies:
