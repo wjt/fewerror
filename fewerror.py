@@ -1,8 +1,11 @@
 # coding=utf-8
+import logging
+
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream, API
 from tweepy.utils import import_simplejson, parse_datetime
 from tweepy.models import Model
+
 json = import_simplejson()
 import argparse
 import os
@@ -11,6 +14,8 @@ import itertools
 import datetime
 
 from text.blob import TextBlob
+
+log = logging
 
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
@@ -82,7 +87,7 @@ class LessListener(StreamListener):
 
     def on_connect(self):
         me = self.me
-        print "streaming as @%s (#%d)" % (me.screen_name, me.id)
+        log.info("streaming as @%s (#%d)", me.screen_name, me.id)
 
     def on_data(self, data):
         message = json.loads(data)
@@ -92,15 +97,20 @@ class LessListener(StreamListener):
         else:
             super(LessListener, self).on_data(data)
 
-    def on_status(self, status):
+    def on_status(self, received_status):
         # Reply to the original when a tweet is RTed properly
-        status = getattr(status, 'retweeted_status', status)
+        status = getattr(received_status, 'retweeted_status', received_status)
 
         text = status.text.replace("&amp;", "&")
         screen_name = status.author.screen_name
 
+        if status == received_status:
+            rt_log_prefix = ''
+        else:
+            rt_log_prefix = '@%s RT ' % received_status.author.screen_name
+
         now = datetime.datetime.now()
-        print ("[%s @%s] %s" % (now, screen_name, text))
+        log.info("[%s %s@%s] %s", now, rt_log_prefix, screen_name, text)
         if self.post_replies and now - self.last < self.TIMEOUT:
             return
 
@@ -111,24 +121,22 @@ class LessListener(StreamListener):
         reply = u'@%s I think you mean “fewer %s”.' % (screen_name, quantity)
 
         if len(reply) <= 140:
-            print '--> %s' % reply
+            log.info('--> %s', reply)
 
             if self.post_replies:
                 r = self.api.update_status(reply, in_reply_to_status_id=status.id)
-                print "  https://twitter.com/_/status/%s" % r.id
+                log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
 
     def on_event(self, event):
         if event.event == 'follow' and event.target.id == self.me.id:
-            print "followed by @%s" % event.source.screen_name,
+            log.info("followed by @%s", event.source.screen_name)
             if not event.source.following:
-                print ", following back"
+                log.info("... following back")
                 event.source.follow()
-            else:
-                # i ain't no follow-back girl!
-                print
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     parser = argparse.ArgumentParser(description=u'annoy some tweeps',
                                      epilog='Note that --post-replies --use-public-stream will get you banned pretty quickly')
     parser.add_argument('--post-replies', action='store_true',
