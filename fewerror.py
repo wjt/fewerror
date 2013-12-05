@@ -110,7 +110,7 @@ class LessListener(StreamListener):
             rt_log_prefix = '@%s RT ' % received_status.author.screen_name
 
         now = datetime.datetime.now()
-        log.info("[%s %s@%s] %s", now, rt_log_prefix, screen_name, text)
+        log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
         if self.post_replies and now - self.last < self.TIMEOUT:
             return
 
@@ -136,7 +136,7 @@ class LessListener(StreamListener):
                 event.source.follow()
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
     parser = argparse.ArgumentParser(description=u'annoy some tweeps',
                                      epilog='Note that --post-replies --use-public-stream will get you banned pretty quickly')
     parser.add_argument('--post-replies', action='store_true',
