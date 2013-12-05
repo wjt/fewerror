@@ -136,14 +136,21 @@ class LessListener(StreamListener):
                 event.source.follow()
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
     parser = argparse.ArgumentParser(description=u'annoy some tweeps',
                                      epilog='Note that --post-replies --use-public-stream will get you banned pretty quickly')
     parser.add_argument('--post-replies', action='store_true',
                         help='post (rate-limited) replies, rather than just printing them locally')
     parser.add_argument('--use-public-stream', action='store_true',
                         help='search public tweets for "less", rather than your own stream')
+    parser.add_argument('--log',
+                        metavar='FILE',
+                        help='log activity to FILE')
+
     args = parser.parse_args()
+
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(message)s',
+                        filename=args.log)
 
     consumer_key = os.environ["CONSUMER_KEY"]
     consumer_secret = os.environ["CONSUMER_SECRET"]
