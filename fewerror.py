@@ -169,9 +169,17 @@ class LessListener(StreamListener):
     def on_event(self, event):
         if event.event == 'follow' and event.target.id == self.me.id:
             log.info("followed by @%s", event.source.screen_name)
-            if not event.source.following:
-                log.info("... following back")
-                event.source.follow()
+            self.maybe_follow(event.source)
+
+        if event.event == 'favorite' and event.target.id == self.me.id:
+            log.info("tweet favorited by @%s", event.source.screen_name)
+            self.maybe_follow(event.source)
+
+    def maybe_follow(self, whom):
+        if not whom.following:
+            log.info("... following back")
+            whom.follow()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=u'annoy some tweeps',
