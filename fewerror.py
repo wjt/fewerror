@@ -12,6 +12,8 @@ import os
 import sys
 import itertools
 import datetime
+import tempfile
+import errno
 
 from text.blob import TextBlob
 
@@ -76,11 +78,40 @@ class Event(Model):
                 setattr(event, k, v)
         return event
 
+
+class State(object):
+    def __init__(self, filename):
+        self.filename = filename
+        self._replied_to = {}
+
+        try:
+            with open(self.filename, 'r') as f:
+                obj = json.load(f)
+                self._replied_to = obj['replied_to']
+        except IOError as e:
+            if e.errno != errno.ENOENT:
+                raise
+
+    def get_reply_id(self, status_id):
+        return self._replied_to.get(status_id, None)
+
+    def remember_reply(self, status_id, reply_id):
+        self._replied_to[status_id] = reply_id
+        self._save()
+
+    def _save(self):
+        obj = {'replied_to': self._replied_to}
+        with tempfile.NamedTemporaryFile(dir='.', delete=False) as f:
+            json.dump(obj, f)
+        os.rename(f.name, self.filename)
+
+
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
+        self._state = state = State('state.json')
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
@@ -111,6 +142,11 @@ class LessListener(StreamListener):
 
         now = datetime.datetime.now()
         log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
+        r_id = self._state.get_reply_id(status.id)
+        if r_id is not None:
+            log.info(u"…already replied: %d", r_id)
+            return
+
         if self.post_replies and now - self.last < self.TIMEOUT:
             return
 
@@ -127,6 +163,8 @@ class LessListener(StreamListener):
                 r = self.api.update_status(reply, in_reply_to_status_id=status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
+
+                self._state.remember_reply(status.id, r.id)
 
     def on_event(self, event):
         if event.event == 'follow' and event.target.id == self.me.id:
