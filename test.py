@@ -1,6 +1,10 @@
+# vim: fileencoding=utf-8
 import fewerror
 import codecs
 import sys
+import string
+
+from text.blob import TextBlob
 
 def do(filename, expect_replies=None):
     with codecs.open(filename, 'r', 'utf-8') as f:
@@ -13,6 +17,19 @@ def do(filename, expect_replies=None):
 
             if expect_replies is None:
                 print tweet
+                blob = TextBlob(tweet)
+
+                for sentence in blob.sentences:
+                    words = []
+                    tags = []
+                    for word, tag in sentence.tags:
+                        length = max(len(word), len(tag))
+                        words.append(string.rjust(word, length))
+                        tags.append(string.rjust(tag, length))
+
+                    print ' '.join(words)
+                    print ' '.join(tags)
+
                 if reply is not None:
                     print reply
                 else:
