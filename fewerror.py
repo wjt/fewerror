@@ -22,6 +22,7 @@ log = logging
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
+
 def make_reply(text):
     """
     Returns a reply to 'text' (without @username) or None if we can't help.
@@ -34,6 +35,13 @@ def make_reply(text):
         return None
 
     blob = TextBlob(text)
+    for sentenceish in blob.sentences:
+        q = find_an_indiscrete_quantity(sentenceish)
+        if q is not None:
+            return q
+
+
+def find_an_indiscrete_quantity(blob):
     tags_from_less = itertools.dropwhile((lambda (word, tag): word.lower() != 'less'),
                                          blob.tags)
     try:
