@@ -30,10 +30,6 @@ def make_reply(text):
     if looks_like_retweet(text):
         return None
 
-    # Avoid "less #lol"
-    if "less " not in text.lower():
-        return None
-
     blob = TextBlob(text)
     for sentenceish in blob.sentences:
         q = find_an_indiscrete_quantity(sentenceish)
