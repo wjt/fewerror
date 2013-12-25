@@ -48,6 +48,21 @@ def make_reply(text):
     raise FewerLess()
 
 
+class POS:
+    # adjective or numeral, ordinal
+    JJ = 'JJ'
+
+    # verb, past participle
+    VBN = 'VBN'
+
+    # noun, proper, singular
+    NNP = 'NNP'
+
+    # Unfortunately there is no POS tag for mass nouns specifically:
+    # noun, singular or mass
+    NN = 'NN'
+
+
 def find_an_indiscrete_quantity(blob):
     tags_from_less = itertools.dropwhile((lambda (word, tag): word.lower() != 'less'),
                                          blob.tags)
@@ -61,15 +76,13 @@ def find_an_indiscrete_quantity(blob):
     except StopIteration:
         return None
 
-    # http://bulba.sdsu.edu/jeanette/thesis/PennTags.html#JJ
-    # Unfortunately there is no POS tag for mass nouns specifically:
-    # http://bulba.sdsu.edu/jeanette/thesis/PennTags.html#NN is "Noun, singular or mass".
-    if w_pos not in ['JJ', 'VBN']:
+    if w_pos not in (POS.JJ, POS.VBN, POS.NNP):
         return None
 
     # Avoid replying "fewer lonely" to "less lonely girl"
+    # but nltk apparently defaults to 'NN' for smileys :) so special-case those
     v, v_pos = next(tags_from_less, (None, None))
-    if v_pos == 'NN':
+    if v_pos == 'NN' and any(c.isalpha() for c in v):
         return None
 
     return w.lower()
