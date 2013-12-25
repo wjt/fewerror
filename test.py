@@ -6,7 +6,10 @@ def do(filename, expect_replies=None):
     with codecs.open(filename, 'r', 'utf-8') as f:
         for tweet in f:
             tweet = tweet.strip()
-            reply = fewerror.make_reply(tweet)
+            try:
+                reply = fewerror.make_reply(tweet)
+            except:
+                reply = None
 
             if expect_replies is None:
                 print tweet

@@ -23,18 +23,29 @@ def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
 
+class FewerLess(Exception):
+    """'less' is not in the tweet"""
+    pass
+
+
 def make_reply(text):
     """
-    Returns a reply to 'text' (without @username) or None if we can't help.
+    Returns a reply to 'text' (without @username), or None if the 'less' might
+    not be correct. Raises FewerLess if 'text' doesn't contain 'less'.
     """
     if looks_like_retweet(text):
         return None
 
     blob = TextBlob(text)
     for sentenceish in blob.sentences:
-        q = find_an_indiscrete_quantity(sentenceish)
-        if q is not None:
-            return q
+        try:
+            q = find_an_indiscrete_quantity(sentenceish)
+            if q is not None:
+                return q
+        except FewerLess:
+            pass
+
+    raise FewerLess()
 
 
 def find_an_indiscrete_quantity(blob):
@@ -42,6 +53,10 @@ def find_an_indiscrete_quantity(blob):
                                          blob.tags)
     try:
         less = next(tags_from_less)
+    except StopIteration:
+        raise FewerLess()
+
+    try:
         w, w_pos = next(tags_from_less)
     except StopIteration:
         return None
@@ -139,6 +154,11 @@ class LessListener(StreamListener):
         text = status.text.replace("&amp;", "&")
         screen_name = status.author.screen_name
 
+        try:
+            quantity = make_reply(text)
+        except FewerLess:
+            return
+
         if status == received_status:
             rt_log_prefix = ''
         else:
@@ -154,7 +174,6 @@ class LessListener(StreamListener):
         if self.post_replies and now - self.last < self.TIMEOUT:
             return
 
-        quantity = make_reply(text)
         if quantity is None:
             return
 
@@ -169,6 +188,8 @@ class LessListener(StreamListener):
                 self.last = now
 
                 self._state.remember_reply(status.id, r.id)
+        else:
+            log.info('too long, not replying')
 
     def on_event(self, event):
         if event.event == 'follow' and event.target.id == self.me.id:
