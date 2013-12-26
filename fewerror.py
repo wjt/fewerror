@@ -34,7 +34,8 @@ def make_reply(text):
     not be correct. Raises FewerLess if 'text' doesn't contain 'less'.
     """
     if looks_like_retweet(text):
-        return None
+        # We can't (reliably) figure out who to admonish so always skip these.
+        raise FewerLess()
 
     blob = TextBlob(text)
     for sentenceish in blob.sentences:
