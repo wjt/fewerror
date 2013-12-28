@@ -86,7 +86,7 @@ def find_an_indiscrete_quantity(blob):
     if v_pos == 'NN' and any(c.isalpha() for c in v):
         return None
 
-    return w.lower()
+    return w
 
 class Event(Model):
     @classmethod
