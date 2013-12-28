@@ -172,6 +172,9 @@ class LessListener(StreamListener):
             quantity = make_reply(text)
         except FewerLess:
             return
+        except Exception:
+            log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
+            raise
 
         if status == received_status:
             rt_log_prefix = ''
