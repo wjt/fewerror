@@ -1,8 +1,17 @@
 [@fewerror][] is a Twitter bot in the [@StealthMountain][] genre. It corrects people when they say “less” but *should* have said “fewer”. It is 100% accurate all of the time.
 
-It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) streaming API to receive all tweets containing the word *less*, and replied to one at most every two minutes. Unfortunately, it was quickly banned for “sending multiple unsolicited mentions to other users”. (I'm not sure how [@StealthMountain][] escapes the same fate.) It did manage to earn itself a [threat of physical violence][violence] during its short life as a spambot!
+It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) streaming API to receive all tweets containing the word *less*, and replied to one at most every two minutes. Unfortunately, it was quickly banned for “sending multiple unsolicited mentions to other users”. (I'm not sure how [@StealthMountain][] escapes the same fate.) So now it just follows people who follow it, and “helps” them out with their grammar.
 
-Anyway, now it just follows people who follow it, and “helps” them out with their grammar.
+## Praise for [@fewerror][]
+
+> lolllll check ur algorithm assbag robot !!!!!!!!! <cite>– [@dudehugs](https://twitter.com/dudehugs/status/418455551383588864)</cite>
+
+> what sort of person do you have to be to sit down at your computer and create that twitter account. <cite>– [@edgardavidsgeps](https://twitter.com/edgardavidsgeps/status/416620250877399041)
+
+> i think i meant that if u do that again u gonna be a less fortunate invalid. <cite>– [@iwritememories](https://twitter.com/iwritememories/status/386084492685115392)
+
+
+## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
 
