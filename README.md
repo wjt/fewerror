@@ -10,6 +10,7 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > i think i meant that if u do that again u gonna be a less fortunate invalid. <cite>– [@iwritememories](https://twitter.com/iwritememories/status/386084492685115392)
 
+> […] definitely a bot. A poorly programmed one at that. <cite>– [@parimalkumar](https://twitter.com/parimalkumar/status/419552596131454977)</cite>
 
 ## For those who care about software
 
