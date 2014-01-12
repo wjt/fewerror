@@ -14,6 +14,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > the world needs less of these bots due to their creators being punched to death <cite>– [@pattymo](https://twitter.com/pattymo/status/420262996586151936)</cite>
 
+> lol nope fuck you robopedant <cite>– [@iphisol](https://twitter.com/iphisol/status/422046676648726528)
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
