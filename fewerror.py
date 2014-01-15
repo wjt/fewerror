@@ -15,7 +15,7 @@ import datetime
 import tempfile
 import errno
 
-from text.blob import TextBlob
+from textblob import TextBlob
 
 log = logging
 
