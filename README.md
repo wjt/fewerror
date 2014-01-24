@@ -16,6 +16,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > lol nope fuck you robopedant <cite>– [@iphisol](https://twitter.com/iphisol/status/422046676648726528)
 
+> Failiest bot ever <cite>– [@C_Halestorm](https://twitter.com/C_Halestorm/status/426510945423478784)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
