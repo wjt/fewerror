@@ -8,6 +8,7 @@ from tweepy.models import Model
 
 json = import_simplejson()
 import argparse
+import cPickle as pickle
 import os
 import sys
 import itertools
@@ -115,60 +116,47 @@ class Event(Model):
 
 
 class State(object):
-    def __init__(self, filename):
-        self.filename = filename
-        self._replied_to = {}
-        self._last_time_for_word = {}
-
-        try:
-            with open(self.filename, 'r') as f:
-                obj = json.load(f)
-                self._replied_to = obj.get('replied_to', {})
-                self._last_time_for_word = {
-                    word: dateutil.parser.parse(timestamp)
-                    for word, timestamp in obj.get('last_time_for_word', {}).iteritems()
-                }
-        except IOError as e:
-            if e.errno != errno.ENOENT:
-                raise
-
-    def get_reply_id(self, status_id):
-        return self._replied_to.get(status_id, None)
-
-    def remember_reply(self, status_id, reply_id):
-        self._replied_to[status_id] = reply_id
-        self._save()
-
-    def get_last_time_for(self, word):
-        try:
-            return dateutil.parser.parse(self._last_time_for_word[word.lower()])
-        except KeyError:
-            return None
-
-    def just_corrected(self, word):
-        self._last_time_for_word[word.lower()] = datetime.datetime.now().isoformat()
-        self._save()
-
-    def _save(self):
-        obj = {
-            'replied_to': self._replied_to,
-            'last_time_for_word': self._last_time_for_word,
-        }
-        with tempfile.NamedTemporaryFile(dir='.', delete=False) as f:
-            json.dump(obj, f)
-        os.rename(f.name, self.filename)
+    def __init__(self):
+        self.replied_to = {}
+        self.last_time_for_word = {}
 
 
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
 
+    STATE_FILENAME = 'state.pickle'
+
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
-        self._state = state = State('state.json')
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
+
+        self._load_state()
+
+    def _load_state(self):
+        try:
+            with open(self.STATE_FILENAME, 'rb') as f:
+                self._state = pickle.load(f)
+        except IOError as e:
+            if e.errno != errno.ENOENT:
+                raise
+
+            self._state = State()
+
+            try:
+                with open('state.json', 'r') as f:
+                    obj = json.load(f)
+                    self._state.replied_to = obj.get('replied_to', {})
+            except IOError as e:
+                if e.errno != errno.ENOENT:
+                    raise
+
+    def _save_state(self):
+        with open(self.STATE_FILENAME + '.tmp', 'wb') as f:
+            pickle.dump(self._state, f, protocol=pickle.HIGHEST_PROTOCOL)
+        os.rename(self.STATE_FILENAME + '.tmp', self.STATE_FILENAME)
 
     def on_connect(self):
         me = self.me
@@ -204,12 +192,12 @@ class LessListener(StreamListener):
 
         now = datetime.datetime.now()
         log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
-        r_id = self._state.get_reply_id(status.id)
+        r_id = self._state.replied_to.get(status.id, None)
         if r_id is not None:
             log.info(u"…already replied: %d", r_id)
             return
 
-        last_for_this = self._state.get_last_time_for(quantity)
+        last_for_this = self._state.last_time_for_word.get(quantity.lower(), None)
         if last_for_this and now - last_for_this < self.PER_WORD_TIMEOUT:
             log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
                      last_for_this + self.PER_WORD_TIMEOUT)
@@ -231,9 +219,10 @@ class LessListener(StreamListener):
                 r = self.api.update_status(reply, in_reply_to_status_id=status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
-                self._state.remember_reply(status.id, r.id)
+                self._state.replied_to[status.id] = r.id
 
-            self._state.just_corrected(quantity)
+            self._state.last_time_for_word[quantity.lower()] = now
+            self._save_state()
         else:
             log.info('too long, not replying')
 
