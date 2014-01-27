@@ -149,6 +149,7 @@ class LessListener(StreamListener):
                 with open('state.json', 'r') as f:
                     obj = json.load(f)
                     self._state.replied_to = obj.get('replied_to', {})
+                    self._save_state()
             except IOError as e:
                 if e.errno != errno.ENOENT:
                     raise
