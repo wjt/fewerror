@@ -17,6 +17,8 @@ import errno
 
 from textblob import TextBlob
 
+import dateutil.parser
+
 log = logging
 
 def looks_like_retweet(text):
@@ -116,11 +118,16 @@ class State(object):
     def __init__(self, filename):
         self.filename = filename
         self._replied_to = {}
+        self._last_time_for_word = {}
 
         try:
             with open(self.filename, 'r') as f:
                 obj = json.load(f)
-                self._replied_to = obj['replied_to']
+                self._replied_to = obj.get('replied_to', {})
+                self._last_time_for_word = {
+                    word: dateutil.parser.parse(timestamp)
+                    for word, timestamp in obj.get('last_time_for_word', {}).iteritems()
+                }
         except IOError as e:
             if e.errno != errno.ENOENT:
                 raise
@@ -132,8 +139,21 @@ class State(object):
         self._replied_to[status_id] = reply_id
         self._save()
 
+    def get_last_time_for(self, word):
+        try:
+            return dateutil.parser.parse(self._last_time_for_word[word.lower()])
+        except KeyError:
+            return None
+
+    def just_corrected(self, word):
+        self._last_time_for_word[word.lower()] = datetime.datetime.now().isoformat()
+        self._save()
+
     def _save(self):
-        obj = {'replied_to': self._replied_to}
+        obj = {
+            'replied_to': self._replied_to,
+            'last_time_for_word': self._last_time_for_word,
+        }
         with tempfile.NamedTemporaryFile(dir='.', delete=False) as f:
             json.dump(obj, f)
         os.rename(f.name, self.filename)
@@ -141,6 +161,7 @@ class State(object):
 
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
+    PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
@@ -188,7 +209,14 @@ class LessListener(StreamListener):
             log.info(u"…already replied: %d", r_id)
             return
 
+        last_for_this = self._state.get_last_time_for(quantity)
+        if last_for_this and now - last_for_this < self.PER_WORD_TIMEOUT:
+            log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
+                     last_for_this + self.PER_WORD_TIMEOUT)
+            return
+
         if self.post_replies and now - self.last < self.TIMEOUT:
+            log.info(u"rate-limiting until %s…", self.last + self.TIMEOUT)
             return
 
         if quantity is None:
@@ -203,8 +231,9 @@ class LessListener(StreamListener):
                 r = self.api.update_status(reply, in_reply_to_status_id=status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
-
                 self._state.remember_reply(status.id, r.id)
+
+            self._state.just_corrected(quantity)
         else:
             log.info('too long, not replying')
 
