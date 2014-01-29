@@ -116,9 +116,14 @@ class Event(Model):
 
 
 class State(object):
-    def __init__(self):
-        self.replied_to = {}
-        self.last_time_for_word = {}
+    def __init__(self, olde=None):
+        self.replied_to = getattr(olde, 'replied_to', {})
+        self.last_time_for_word = getattr(olde, 'last_time_for_word', {})
+        self.replied_to_user_and_word = getattr(olde, 'replied_to_user_and_word', {})
+
+    def __str__(self):
+        return '<State: {} replied_to, {} last_time_for_word, {} replied_to_user_and_word>'.format(
+            len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
 
 
 class LessListener(StreamListener):
@@ -134,11 +139,12 @@ class LessListener(StreamListener):
         self.me = self.api.me()
 
         self._load_state()
+        print self._state
 
     def _load_state(self):
         try:
             with open(self.STATE_FILENAME, 'rb') as f:
-                self._state = pickle.load(f)
+                self._state = State(olde=pickle.load(f))
         except IOError as e:
             if e.errno != errno.ENOENT:
                 raise
@@ -198,6 +204,11 @@ class LessListener(StreamListener):
             log.info(u"…already replied: %d", r_id)
             return
 
+        r_id = self._state.replied_to_user_and_word.get((screen_name, quantity.lower()), None)
+        if r_id is not None:
+            log.info(u"…already corrected @%s about '%s': %d", screen_name, quantity, r_id)
+            return
+
         last_for_this = self._state.last_time_for_word.get(quantity.lower(), None)
         if last_for_this and now - last_for_this < self.PER_WORD_TIMEOUT:
             log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
@@ -221,6 +232,7 @@ class LessListener(StreamListener):
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
                 self._state.replied_to[status.id] = r.id
+                self._state.replied_to_user_and_word[(screen_name, quantity.lower())] = r.id
 
             self._state.last_time_for_word[quantity.lower()] = now
             self._save_state()
