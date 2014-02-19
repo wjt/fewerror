@@ -14,9 +14,13 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > the world needs less of these bots due to their creators being punched to death <cite>– [@pattymo](https://twitter.com/pattymo/status/420262996586151936)</cite>
 
-> lol nope fuck you robopedant <cite>– [@iphisol](https://twitter.com/iphisol/status/422046676648726528)
+> lol nope fuck you robopedant <cite>– [@iphisol](https://twitter.com/iphisol/status/422046676648726528)</cite>
 
 > Failiest bot ever <cite>– [@C_Halestorm](https://twitter.com/C_Halestorm/status/426510945423478784)</cite>
+
+> in love with you, fewerror <cite>– [@pigthe](https://twitter.com/pigthe/status/431211363889713152)</cite>
+
+> murder is not becoming of a believer & is disrespectful of God's creations <cite>– [@wshemp](https://twitter.com/wshemp/status/428203543980290048)</cite>
 
 ## For those who care about software
 
