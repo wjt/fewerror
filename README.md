@@ -24,6 +24,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > I like @fewerror. Should be called @JeremyPaxman he's always trying to pull that shit <cite>– [@YellowRoss](https://twitter.com/YellowRoss/status/444977740287340544)</cite>
 
+> GO FUCK YOURSELF <cite>– [@janhopis](https://twitter.com/janhopis/status/447396453808603136)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
