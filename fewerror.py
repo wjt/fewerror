@@ -40,6 +40,9 @@ def make_reply(text):
         # We can't (reliably) figure out who to admonish so always skip these.
         raise FewerLess()
 
+    if 'less' not in text.lower():
+        raise FewerLess()
+
     blob = TextBlob(text)
     for sentenceish in blob.sentences:
         try:
