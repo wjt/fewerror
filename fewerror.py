@@ -301,7 +301,7 @@ class LessListener(StreamListener):
             return
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
-            raise
+            return
 
         if status == received_status:
             rt_log_prefix = ''
