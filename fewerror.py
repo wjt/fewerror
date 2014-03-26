@@ -191,9 +191,10 @@ def find_an_indiscrete_quantity(blob):
         return None
 
     # Avoid replying "fewer lonely" to "less lonely girl"
-    # but nltk apparently defaults to 'NN' for smileys :) so special-case those
+    # FIXME: why? this is "right"! but it would be better to say "fewer lonely girl"
+    # ... hmm
     v, v_pos = next(tags_from_less, (None, None))
-    if v_pos == 'NN' and any(c.isalpha() for c in v):
+    if POS.nounish(v_pos):
         return None
 
     return w

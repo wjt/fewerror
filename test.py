@@ -4,7 +4,7 @@ import codecs
 import sys
 import string
 
-from text.blob import TextBlob
+from textblob import TextBlob
 
 def do(filename, expect_replies=None):
     with codecs.open(filename, 'r', 'utf-8') as f:
