@@ -171,10 +171,10 @@ class POS:
     WRB = 'WRB'
 
     @staticmethod
-    def nounish(pos):
+    def nounish(word, pos):
         # nltk apparently defaults to 'NN' for smileys :) so special-case those
         return pos in (POS.NN, POS.NNS, POS.NNP, POS.NNPS) and \
-            any(c.isalpha() for c in v)
+            any(c.isalpha() for c in word)
 
 
 def find_an_indiscrete_quantity(blob):
@@ -197,7 +197,7 @@ def find_an_indiscrete_quantity(blob):
     # FIXME: why? this is "right"! but it would be better to say "fewer lonely girl"
     # ... hmm
     v, v_pos = next(tags_from_less, (None, None))
-    if POS.nounish(v_pos):
+    if POS.nounish(v, v_pos):
         return None
 
     return w
