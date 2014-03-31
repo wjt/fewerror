@@ -26,6 +26,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > GO FUCK YOURSELF <cite>– [@janhopis](https://twitter.com/janhopis/status/447396453808603136)</cite>
 
+> [I LOVE U](https://twitter.com/mama_tuna/status/450597264466399232) / [YOU RESPOND SO QUICKLY](https://twitter.com/mama_tuna/status/450597290659819520) <cite>– @mama_tuna</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
