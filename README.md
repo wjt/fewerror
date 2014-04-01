@@ -28,6 +28,9 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > [I LOVE U](https://twitter.com/mama_tuna/status/450597264466399232) / [YOU RESPOND SO QUICKLY](https://twitter.com/mama_tuna/status/450597290659819520) <cite>– @mama_tuna</cite>
 
+> the natural language processing of the day award goes to @fewerror
+ <cite>– [@vogon](https://twitter.com/vogon/status/451087365079973888)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
