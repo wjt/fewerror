@@ -31,6 +31,10 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 > the natural language processing of the day award goes to @fewerror
  <cite>– [@vogon](https://twitter.com/vogon/status/451087365079973888)</cite>
 
+> the worst spelling bot that exists on twitter <cite>– [@shifty_11](https://twitter.com/shifty_11/status/452746071530569728)</cite>
+
+> fucktastic bot <cite>– [@ebassi](https://twitter.com/ebassi/status/451851394535153664)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
