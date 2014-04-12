@@ -43,12 +43,15 @@ def make_reply(text):
     if 'less' not in text.lower():
         raise FewerLess()
 
+    if 'could care less' in text.lower():
+        return 'could care fewer'
+
     blob = TextBlob(text)
     for sentenceish in blob.sentences:
         try:
             q = find_an_indiscrete_quantity(sentenceish)
             if q is not None:
-                return q
+                return 'fewer ' + q
         except FewerLess:
             pass
 
@@ -333,7 +336,7 @@ class LessListener(StreamListener):
         if quantity is None:
             return
 
-        reply = u'@%s I think you mean “fewer %s”.' % (screen_name, quantity)
+        reply = u'@%s I think you mean “%s”.' % (screen_name, quantity)
 
         if len(reply) <= 140:
             log.info('--> %s', reply)
