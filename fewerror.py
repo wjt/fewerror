@@ -342,7 +342,7 @@ class LessListener(StreamListener):
             log.info('--> %s', reply)
 
             if self.post_replies:
-                r = self.api.update_status(reply, in_reply_to_status_id=status.id)
+                r = self.api.update_status(reply, in_reply_to_status_id=received_status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
                 self._state.replied_to[status.id] = r.id
