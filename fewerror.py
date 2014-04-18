@@ -9,12 +9,14 @@ from tweepy.models import Model
 json = import_simplejson()
 import argparse
 import cPickle as pickle
-import os
-import sys
-import itertools
+import collections
 import datetime
-import tempfile
 import errno
+import itertools
+import os
+import re
+import sys
+import tempfile
 
 from textblob import TextBlob
 
@@ -240,6 +242,11 @@ class State(object):
             len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
 
 
+def reverse_inits(xs):
+    for i in xrange(len(xs), 0, -1):
+        yield xs[:i]
+
+
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
@@ -336,9 +343,22 @@ class LessListener(StreamListener):
         if quantity is None:
             return
 
-        reply = u'@%s I think you mean “%s”.' % (screen_name, quantity)
+        # basically I want an ordered set here
+        to_mention = collections.OrderedDict()
+        to_mention[screen_name] = None
+        if status != received_status:
+            to_mention[received_status.author.screen_name] = None
+        for x in status.entities['user_mentions']:
+            to_mention[x['screen_name']] = None
 
-        if len(reply) <= 140:
+        # Keep dropping mentions until the reply is short enough
+        reply = None
+        for mentions in reverse_inits([ u'@' + sn for sn in to_mention.keys() ]):
+            reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)
+            if len(reply) <= 140:
+                break
+
+        if reply is not None and len(reply) <= 140:
             log.info('--> %s', reply)
 
             if self.post_replies:
