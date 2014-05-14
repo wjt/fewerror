@@ -35,6 +35,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > fucktastic bot <cite>– [@ebassi](https://twitter.com/ebassi/status/451851394535153664)</cite>
 
+> If all trolls were like this, I'd have no problem with the activity <cite>– [@hyperdeath128k](https://twitter.com/hyperdeath128k/status/462522298998992896)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
