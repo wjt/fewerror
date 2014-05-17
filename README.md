@@ -37,6 +37,9 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > If all trolls were like this, I'd have no problem with the activity <cite>– [@hyperdeath128k](https://twitter.com/hyperdeath128k/status/462522298998992896)</cite>
 
+> "I love @fewerror ." "Me too. I feel like we've built a rapport."
+ <cite>– [@drmoonpants](https://twitter.com/drmoonpants/status/467446078082531328)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
