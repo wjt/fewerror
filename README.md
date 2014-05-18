@@ -40,6 +40,9 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 > "I love @fewerror ." "Me too. I feel like we've built a rapport."
  <cite>– [@drmoonpants](https://twitter.com/drmoonpants/status/467446078082531328)</cite>
 
+> Someday the clerk in the "10 Items or Less" aisle is gonna smash your skull in with a can of cling peaches. <cite>– [@KevinCarson1](https://twitter.com/KevinCarson1/status/467889956027781120)</cite>
+
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
