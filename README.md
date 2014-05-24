@@ -42,6 +42,7 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > Someday the clerk in the "10 Items or Less" aisle is gonna smash your skull in with a can of cling peaches. <cite>– [@KevinCarson1](https://twitter.com/KevinCarson1/status/467889956027781120)</cite>
 
+> we're going to fall out, me and you. I'm having less and less respect for you. <cite>– [@janhopis](https://twitter.com/janhopis/status/470282734100021248)</cite>
 
 ## For those who care about software
 
