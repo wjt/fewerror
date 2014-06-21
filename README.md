@@ -44,6 +44,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > we're going to fall out, me and you. I'm having less and less respect for you. <cite>– [@janhopis](https://twitter.com/janhopis/status/470282734100021248)</cite>
 
+> oh good they managed to automate smug men getting things wrong <cite>– [@quendergeer](https://twitter.com/quendergeer/status/480267052574576641)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
