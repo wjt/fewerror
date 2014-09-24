@@ -405,7 +405,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(message)s',
+                        format='%(asctime)s %(levelname)s %(message)s',
                         filename=args.log)
 
     consumer_key = os.environ["CONSUMER_KEY"]
