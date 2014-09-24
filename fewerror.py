@@ -299,8 +299,17 @@ class LessListener(StreamListener):
             super(LessListener, self).on_data(data)
 
     def on_status(self, received_status):
+        # basically I want an ordered set here
+        to_mention = collections.OrderedDict()
+
         # Reply to the original when a tweet is RTed properly
-        status = getattr(received_status, 'retweeted_status', received_status)
+        if hasattr(received_status, 'retweeted_status'):
+            status = received_status.retweeted_status
+            rt_log_prefix = '@%s RT ' % received_status.author.screen_name
+            to_mention[received_status.author.screen_name] = None
+        else:
+            status = received_status
+            rt_log_prefix = ''
 
         text = status.text.replace("&amp;", "&")
         screen_name = status.author.screen_name
@@ -312,11 +321,6 @@ class LessListener(StreamListener):
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
             return
-
-        if status == received_status:
-            rt_log_prefix = ''
-        else:
-            rt_log_prefix = '@%s RT ' % received_status.author.screen_name
 
         now = datetime.datetime.now()
         log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
@@ -343,13 +347,12 @@ class LessListener(StreamListener):
         if quantity is None:
             return
 
-        # basically I want an ordered set here
-        to_mention = collections.OrderedDict()
         to_mention[screen_name] = None
-        if status != received_status:
-            to_mention[received_status.author.screen_name] = None
         for x in status.entities['user_mentions']:
             to_mention[x['screen_name']] = None
+
+        if self.me.screen_name in to_mention:
+            del to_mention[self.me.screen_name]
 
         # Keep dropping mentions until the reply is short enough
         reply = None
