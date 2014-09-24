@@ -255,6 +255,7 @@ class LessListener(StreamListener):
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
+        self.reply_to_rts = kwargs.pop('reply_to_rts', False)
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
@@ -304,6 +305,9 @@ class LessListener(StreamListener):
 
         # Reply to the original when a tweet is RTed properly
         if hasattr(received_status, 'retweeted_status'):
+            if not self.reply_to_rts:
+                return
+
             status = received_status.retweeted_status
             rt_log_prefix = '@%s RT ' % received_status.author.screen_name
             to_mention[received_status.author.screen_name] = None
@@ -398,6 +402,9 @@ if __name__ == '__main__':
                         help='post (rate-limited) replies, rather than just printing them locally')
     parser.add_argument('--use-public-stream', action='store_true',
                         help='search public tweets for "less", rather than your own stream')
+    parser.add_argument('--reply-to-retweets', action='store_true',
+                        help='reply to retweets (makes the bot a little less opt-in)')
+
     parser.add_argument('--log',
                         metavar='FILE',
                         help='log activity to FILE')
@@ -418,7 +425,7 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     api = API(auth)
-    l = LessListener(api, post_replies=args.post_replies)
+    l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets)
 
     stream = Stream(auth, l)
     if args.use_public_stream:
