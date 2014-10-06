@@ -46,6 +46,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > oh good they managed to automate smug men getting things wrong <cite>– [@quendergeer](https://twitter.com/quendergeer/status/480267052574576641)</cite>
 
+> Thank you, @fewerror, for being my light in the darkness. <cite>– [@Ferrovore](https://twitter.com/Ferrovore/status/518916378565177344)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
