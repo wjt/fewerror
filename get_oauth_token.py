@@ -3,7 +3,7 @@ import tweepy
 
 consumer_key = os.environ["CONSUMER_KEY"]
 consumer_secret = os.environ["CONSUMER_SECRET"]
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret, secure=True)
 
 redirect_url = auth.get_authorization_url()
 print "go to %s" % redirect_url
