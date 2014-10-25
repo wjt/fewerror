@@ -247,6 +247,17 @@ def reverse_inits(xs):
         yield xs[:i]
 
 
+class OrderedSet(collections.OrderedDict):
+    def add(self, elem):
+        self[elem] = None
+
+    def remove(self, elem):
+        del self[elem]
+
+    def discard(self, elem):
+        self.pop(elem, None)
+
+
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
@@ -300,8 +311,7 @@ class LessListener(StreamListener):
             super(LessListener, self).on_data(data)
 
     def on_status(self, received_status):
-        # basically I want an ordered set here
-        to_mention = collections.OrderedDict()
+        to_mention = OrderedSet()
 
         # Reply to the original when a tweet is RTed properly
         if hasattr(received_status, 'retweeted_status'):
@@ -310,7 +320,7 @@ class LessListener(StreamListener):
 
             status = received_status.retweeted_status
             rt_log_prefix = '@%s RT ' % received_status.author.screen_name
-            to_mention[received_status.author.screen_name] = None
+            to_mention.add(received_status.author.screen_name)
         else:
             status = received_status
             rt_log_prefix = ''
@@ -351,12 +361,11 @@ class LessListener(StreamListener):
         if quantity is None:
             return
 
-        to_mention[screen_name] = None
+        to_mention.add(screen_name)
         for x in status.entities['user_mentions']:
-            to_mention[x['screen_name']] = None
+            to_mention.add(x['screen_name'])
 
-        if self.me.screen_name in to_mention:
-            del to_mention[self.me.screen_name]
+        to_mention.discard(self.me.screen_name)
 
         # Keep dropping mentions until the reply is short enough
         reply = None
