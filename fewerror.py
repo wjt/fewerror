@@ -262,8 +262,6 @@ class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
 
-    STATE_FILENAME = 'state.pickle'
-
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
         self.reply_to_rts = kwargs.pop('reply_to_rts', False)
@@ -271,12 +269,13 @@ class LessListener(StreamListener):
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
 
+        self._state_filename = 'state.{}.pickle'.format(self.me.screen_name)
         self._load_state()
         print self._state
 
     def _load_state(self):
         try:
-            with open(self.STATE_FILENAME, 'rb') as f:
+            with open(self._state_filename, 'rb') as f:
                 self._state = State(olde=pickle.load(f))
         except IOError as e:
             if e.errno != errno.ENOENT:
@@ -294,9 +293,10 @@ class LessListener(StreamListener):
                     raise
 
     def _save_state(self):
-        with open(self.STATE_FILENAME + '.tmp', 'wb') as f:
+        tmp = self._state_filename + '.tmp'
+        with open(tmp, 'wb') as f:
             pickle.dump(self._state, f, protocol=pickle.HIGHEST_PROTOCOL)
-        os.rename(self.STATE_FILENAME + '.tmp', self.STATE_FILENAME)
+        os.rename(tmp, self._state_filename)
 
     def on_connect(self):
         me = self.me
