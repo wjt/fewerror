@@ -14,13 +14,8 @@ import datetime
 import errno
 import itertools
 import os
-import re
-import sys
-import tempfile
 
 from textblob import TextBlob
-
-import dateutil.parser
 
 log = logging
 
@@ -28,36 +23,31 @@ def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
 
-class FewerLess(Exception):
-    """'less' is not in the tweet"""
-    pass
+def iflatmap(f, ys):
+    for y in ys:
+        for x in f(y):
+            yield x
 
 
 def make_reply(text):
     """
-    Returns a reply to 'text' (without @username), or None if the 'less' might
-    not be correct. Raises FewerLess if 'text' doesn't contain 'less'.
+    A generator of 0 or 1 replies to 'text' (without @username).
     """
     if looks_like_retweet(text):
         # We can't (reliably) figure out who to admonish so always skip these.
-        raise FewerLess()
+        return
 
     if 'less' not in text.lower():
-        raise FewerLess()
+        return
 
     if 'could care less' in text.lower():
-        return 'could care fewer'
+        yield 'could care fewer'
+        return
 
     blob = TextBlob(text)
-    for sentenceish in blob.sentences:
-        try:
-            q = find_an_indiscrete_quantity(sentenceish)
-            if q is not None:
-                return 'fewer ' + q
-        except FewerLess:
-            pass
-
-    raise FewerLess()
+    for q in iflatmap(find_an_indiscrete_quantity, blob.sentences):
+        yield 'fewer ' + q
+        break
 
 
 class POS:
@@ -186,26 +176,28 @@ def find_an_indiscrete_quantity(blob):
     tags_from_less = itertools.dropwhile((lambda (word, tag): word.lower() != 'less'),
                                          blob.tags)
     try:
-        less = next(tags_from_less)
+        less, less_pos = next(tags_from_less)
+        assert less.lower() == 'less'
     except StopIteration:
-        raise FewerLess()
+        return
 
     try:
         w, w_pos = next(tags_from_less)
     except StopIteration:
-        return None
+        return
 
     if w_pos not in (POS.JJ, POS.VBN, POS.NNP):
-        return None
+        return
 
     # Avoid replying "fewer lonely" to "less lonely girl"
     # FIXME: why? this is "right"! but it would be better to say "fewer lonely girl"
     # ... hmm
+    # because "less happy sheep" -> "fewer happy sheep" is bad
     v, v_pos = next(tags_from_less, (None, None))
     if POS.nounish(v, v_pos):
-        return None
+        return
 
-    return w
+    yield w
 
 class Event(Model):
     @classmethod
@@ -329,8 +321,8 @@ class LessListener(StreamListener):
         screen_name = status.author.screen_name
 
         try:
-            quantity = make_reply(text)
-        except FewerLess:
+            quantity = next(make_reply(text))
+        except StopIteration:
             return
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
