@@ -9,7 +9,6 @@ from tweepy.models import Model
 json = import_simplejson()
 import argparse
 import cPickle as pickle
-import collections
 import datetime
 import errno
 import itertools
@@ -17,16 +16,13 @@ import os
 
 from textblob import TextBlob
 
+from util import iflatmap, reverse_inits, OrderedSet
+
+
 log = logging
 
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
-
-
-def iflatmap(f, ys):
-    for y in ys:
-        for x in f(y):
-            yield x
 
 
 def make_reply(text):
@@ -232,22 +228,6 @@ class State(object):
     def __str__(self):
         return '<State: {} replied_to, {} last_time_for_word, {} replied_to_user_and_word>'.format(
             len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
-
-
-def reverse_inits(xs):
-    for i in xrange(len(xs), 0, -1):
-        yield xs[:i]
-
-
-class OrderedSet(collections.OrderedDict):
-    def add(self, elem):
-        self[elem] = None
-
-    def remove(self, elem):
-        del self[elem]
-
-    def discard(self, elem):
-        self.pop(elem, None)
 
 
 class LessListener(StreamListener):
