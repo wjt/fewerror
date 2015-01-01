@@ -243,7 +243,7 @@ class LessListener(StreamListener):
 
         self._state_filename = 'state.{}.pickle'.format(self.me.screen_name)
         self._load_state()
-        print self._state
+        log.info('%s: %s', self._state_filename, self._state)
 
     def _load_state(self):
         try:
