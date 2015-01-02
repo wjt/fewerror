@@ -48,6 +48,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > Thank you, @fewerror, for being my light in the darkness. <cite>– [@Ferrovore](https://twitter.com/Ferrovore/status/518916378565177344)</cite>
 
+> Best Bot 20XX <cite>– [@Ferrovore](https://twitter.com/Ferrovore/status/551052720061562880), again</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
