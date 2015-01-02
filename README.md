@@ -52,7 +52,7 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 ## For those who care about software
 
-Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in his post on [the making of @VoynichTechNews][voynich].
+Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
 
 [@fewerror]: https://twitter.com/fewerror/
 [@StealthMountain]: https://twitter.com/StealthMountain
@@ -68,7 +68,7 @@ This thing expects to fetch authorization credentials from environment variables
     export ACCESS_TOKEN="..."
     export ACCESS_TOKEN_SECRET="..."
 
-To get values for those variables, why not follow [Adam Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
+To get values for those variables, why not follow [Allison Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
 
 ## TODO
 
