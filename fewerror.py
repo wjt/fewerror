@@ -19,7 +19,7 @@ from textblob import TextBlob
 from util import iflatmap, reverse_inits, OrderedSet
 
 
-log = logging
+log = logging.getLogger('fewerror')
 
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
@@ -389,11 +389,16 @@ if __name__ == '__main__':
     parser.add_argument('--log',
                         metavar='FILE',
                         help='log activity to FILE')
+    parser.add_argument('--log-level',
+                        metavar='LEVEL',
+                        default='INFO',
+                        choices=('WARNING', 'INFO', 'DEBUG'),
+                        help='default: INFO')
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)s %(message)s',
+    logging.basicConfig(level=args.log_level,
+                        format='%(asctime)s %(levelname)8s [%(name)s] %(message)s',
                         filename=args.log)
 
     consumer_key = os.environ["CONSUMER_KEY"]
