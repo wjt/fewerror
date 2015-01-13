@@ -234,12 +234,12 @@ class State(object):
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
-    HEARTBEAT_INTERVAL = 500
     HEARTS = [u'♥', u'💓']
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
         self.reply_to_rts = kwargs.pop('reply_to_rts', False)
+        self.heartbeat_interval = kwargs.pop('heartbeat_interval', 500)
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
@@ -279,7 +279,7 @@ class LessListener(StreamListener):
         log.info("streaming as @%s (#%d)", me.screen_name, me.id)
 
     def on_data(self, data):
-        self._hb = (self._hb + 1) % self.HEARTBEAT_INTERVAL
+        self._hb = (self._hb + 1) % self.heartbeat_interval
         if self._hb == 0:
             log.info(random.choice(self.HEARTS))
 
@@ -393,6 +393,7 @@ if __name__ == '__main__':
                         help='search public tweets for "less", rather than your own stream')
     parser.add_argument('--reply-to-retweets', action='store_true',
                         help='reply to retweets (makes the bot a little less opt-in)')
+    parser.add_argument('--heartbeat-interval', type=int, default=500)
 
     parser.add_argument('--log',
                         metavar='FILE',
@@ -419,7 +420,8 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     api = API(auth)
-    l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets)
+    l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
+                     heartbeat_interval=args.heartbeat_interval)
 
     stream = Stream(auth, l)
     if args.use_public_stream:
