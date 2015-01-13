@@ -233,6 +233,7 @@ class State(object):
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
+    HEARTBEAT_INTERVAL = 500
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
@@ -244,6 +245,7 @@ class LessListener(StreamListener):
         self._state_filename = 'state.{}.pickle'.format(self.me.screen_name)
         self._load_state()
         log.info('%s: %s', self._state_filename, self._state)
+        self._hb = 0
 
     def _load_state(self):
         try:
@@ -275,6 +277,10 @@ class LessListener(StreamListener):
         log.info("streaming as @%s (#%d)", me.screen_name, me.id)
 
     def on_data(self, data):
+        self._hb = (self._hb + 1) % self.HEARTBEAT_INTERVAL
+        if self._hb == 0:
+            log.info(u'♥')
+
         message = json.loads(data)
         if message.get('event') is not None:
             event = Event.parse(self.api, message)
