@@ -13,6 +13,7 @@ import datetime
 import errno
 import itertools
 import os
+import random
 
 from textblob import TextBlob
 
@@ -233,7 +234,8 @@ class State(object):
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
-    HEARTBEAT_INTERVAL = 500
+    HEARTBEAT_INTERVAL = 1
+    HEARTS = [u'♥', u'💓']
 
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
@@ -279,7 +281,7 @@ class LessListener(StreamListener):
     def on_data(self, data):
         self._hb = (self._hb + 1) % self.HEARTBEAT_INTERVAL
         if self._hb == 0:
-            log.info(u'♥')
+            log.info(random.choice(self.HEARTS))
 
         message = json.loads(data)
         if message.get('event') is not None:
