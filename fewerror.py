@@ -234,7 +234,7 @@ class State(object):
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
-    HEARTBEAT_INTERVAL = 1
+    HEARTBEAT_INTERVAL = 500
     HEARTS = [u'♥', u'💓']
 
     def __init__(self, *args, **kwargs):
