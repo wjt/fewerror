@@ -14,6 +14,7 @@ import errno
 import itertools
 import os
 import random
+import tempfile
 
 from textblob import TextBlob
 
@@ -231,6 +232,42 @@ class State(object):
             len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
 
 
+class StateHolder(object):
+    def __init__(self, screen_name):
+        self._state_filename = 'state.{}.pickle'.format(screen_name)
+
+    def load(self):
+        try:
+            with open(self._state_filename, 'rb') as f:
+                state = State(olde=pickle.load(f))
+        except IOError as e:
+            if e.errno != errno.ENOENT:
+                raise
+
+            state = State()
+
+            try:
+                with open('state.json', 'r') as f:
+                    obj = json.load(f)
+                    state.replied_to = obj.get('replied_to', {})
+                    self.save(state)
+            except IOError as e:
+                if e.errno != errno.ENOENT:
+                    raise
+
+        log.info('loaded %s: %s', self._state_filename, state)
+        return state
+
+    def save(self, state):
+        with tempfile.NamedTemporaryFile(prefix=self._state_filename, suffix='.tmp', dir='.',
+                                         delete=False) as f:
+            log.info("pickling to %s", f.name)
+            pickle.dump(self._state, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        log.info("rename %s -> %s", f.name, self._state_filename)
+        os.rename(f.name, self._state_filename)
+
+
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
@@ -244,35 +281,9 @@ class LessListener(StreamListener):
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
 
-        self._state_filename = 'state.{}.pickle'.format(self.me.screen_name)
-        self._load_state()
-        log.info('%s: %s', self._state_filename, self._state)
+        self._state_holder = StateHolder(self.me.screen_name)
+        self._state = self._state_holder.load()
         self._hb = 0
-
-    def _load_state(self):
-        try:
-            with open(self._state_filename, 'rb') as f:
-                self._state = State(olde=pickle.load(f))
-        except IOError as e:
-            if e.errno != errno.ENOENT:
-                raise
-
-            self._state = State()
-
-            try:
-                with open('state.json', 'r') as f:
-                    obj = json.load(f)
-                    self._state.replied_to = obj.get('replied_to', {})
-                    self._save_state()
-            except IOError as e:
-                if e.errno != errno.ENOENT:
-                    raise
-
-    def _save_state(self):
-        tmp = self._state_filename + '.tmp'
-        with open(tmp, 'wb') as f:
-            pickle.dump(self._state, f, protocol=pickle.HIGHEST_PROTOCOL)
-        os.rename(tmp, self._state_filename)
 
     def on_connect(self):
         me = self.me
@@ -365,7 +376,7 @@ class LessListener(StreamListener):
                 self._state.replied_to_user_and_word[(screen_name, quantity.lower())] = r.id
 
             self._state.last_time_for_word[quantity.lower()] = now
-            self._save_state()
+            self._state_holder.save(self._state)
         else:
             log.info('too long, not replying')
 
