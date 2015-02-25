@@ -6,11 +6,6 @@ import pytest
 
 from textblob import TextBlob
 
-def setup_module(module):
-    import nltk
-
-    nltk.download('punkt')
-
 
 def tweets_from(filename):
     with codecs.open(filename, 'r', 'utf-8') as f:
