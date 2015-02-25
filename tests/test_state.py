@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import fewerror
-import os
 
 def test_stateholder(tmpdir):
     with tmpdir.as_cwd():
