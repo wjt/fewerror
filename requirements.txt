@@ -2,6 +2,8 @@ PyYAML==3.10
 argparse==1.2.1
 nltk==3.0.0
 pip-tools==0.3.5
+py==1.4.26
+pytest==2.6.4
 python-dateutil==2.2
 six==1.8.0
 textblob==0.9.0
