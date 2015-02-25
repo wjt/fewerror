@@ -246,15 +246,6 @@ class StateHolder(object):
 
             state = State()
 
-            try:
-                with open('state.json', 'r') as f:
-                    obj = json.load(f)
-                    state.replied_to = obj.get('replied_to', {})
-                    self.save(state)
-            except IOError as e:
-                if e.errno != errno.ENOENT:
-                    raise
-
         log.info('loaded %s: %s', self._state_filename, state)
         return state
 
