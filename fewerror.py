@@ -1,5 +1,6 @@
 # coding=utf-8
 import logging
+import logging.config
 
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream, API
@@ -397,20 +398,19 @@ if __name__ == '__main__':
                         help='reply to retweets (makes the bot a little less opt-in)')
     parser.add_argument('--heartbeat-interval', type=int, default=500)
 
-    parser.add_argument('--log',
-                        metavar='FILE',
-                        help='log activity to FILE')
-    parser.add_argument('--log-level',
-                        metavar='LEVEL',
-                        default='INFO',
-                        choices=('WARNING', 'INFO', 'DEBUG'),
-                        help='default: INFO')
+    parser.add_argument('--log-config',
+                        type=argparse.FileType('r'),
+                        metavar='FILE.json',
+                        help='Read logging config from FILE.json (default: DEBUG to stdout)')
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=args.log_level,
-                        format='%(asctime)s %(levelname)8s [%(name)s] %(message)s',
-                        filename=args.log)
+    if args.log_config:
+        log_config = json.load(args.log_config)
+        logging.config.dictConfig(log_config)
+    else:
+        logging.basicConfig(level='DEBUG',
+                            format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
 
     consumer_key = os.environ["CONSUMER_KEY"]
     consumer_secret = os.environ["CONSUMER_SECRET"]
