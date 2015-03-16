@@ -1,12 +1,19 @@
 {
   "version": 1,
+  "disable_existing_loggers": false,
   "formatters": {
     "simple": {
       "format": "%(asctime)s %(levelname)8s [%(name)s] %(message)s"
     }
   },
   "handlers": {
-    "file": {
+    "console_info": {
+      "class": "logging.StreamHandler",
+      "formatter": "simple",
+      "level": "INFO",
+      "stream": "ext://sys.stderr"
+    },
+    "file_debug": {
       "class": "logging.FileHandler",
       "level": "DEBUG",
       "formatter": "simple",
@@ -15,6 +22,6 @@
   },
   "root": {
     "level": "DEBUG",
-    "handlers": ["file"]
+    "handlers": ["console_info", "file_debug"]
   }
 }

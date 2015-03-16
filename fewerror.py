@@ -253,10 +253,10 @@ class StateHolder(object):
     def save(self, state):
         with tempfile.NamedTemporaryFile(prefix=self._state_filename, suffix='.tmp', dir='.',
                                          delete=False) as f:
-            log.info("pickling to %s", f.name)
+            log.debug("pickling to %s", f.name)
             pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-        log.info("rename %s -> %s", f.name, self._state_filename)
+        log.debug("rename %s -> %s", f.name, self._state_filename)
         os.rename(f.name, self._state_filename)
 
 
