@@ -361,7 +361,9 @@ class LessListener(StreamListener):
             log.info('--> %s', reply)
 
             if self.post_replies:
-                r = self.api.update_status(reply, in_reply_to_status_id=received_status.id)
+                # TODO: I think tweepy commit f99b1da broke calling this without naming the status
+                # parameter by adding media_ids before *args -- why do the tweepy tests pass?
+                r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
                 self._state.replied_to[status.id] = r.id
