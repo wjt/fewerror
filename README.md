@@ -76,7 +76,9 @@ To get values for those variables, why not follow [Allison Parrish's instruction
 
 - favourite replies
 - log tweets that contain the word "less" but didn't match our rules, for later analysis
-- match more things (see `false-negative.txt` and `no-idea.txt`)
+- match more things (see `no-idea.txt` and skipped tests)
 - seek back in our timeline for things we should have replied to but didn't?
-- remember what we have replied to?
-- follow people who enjoy our replies
+- follow people who RT our replies
+
+[![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
+
