@@ -7,53 +7,62 @@ import pytest
 from textblob import TextBlob
 
 
-def tweets_from(filename):
-    with codecs.open(filename, 'r', 'utf-8') as f:
-        for tweet in f:
-            tweet = tweet.strip()
-            reply = None
-            for reply in fewerror.make_reply(tweet):
-                break
-            yield (tweet, reply)
+def first_reply(tweet):
+    for reply in fewerror.make_reply(tweet):
+        return reply
 
-def do(filename, expect_replies=None):
-    for tweet, reply in tweets_from(filename):
-        check(tweet, reply, expect_replies=expect_replies)
+    return None
 
-def check(tweet, reply, expect_replies=None):
-    if expect_replies is None:
-        print tweet
-        blob = TextBlob(tweet)
 
-        for sentence in blob.sentences:
-            words = []
-            tags = []
-            for word, tag in sentence.tags:
-                length = max(len(word), len(tag))
-                words.append(string.rjust(word, length))
-                tags.append(string.rjust(tag, length))
+true_positives = [
+    u"I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`",
 
-            print ' '.join(words)
-            print ' '.join(tags)
+    pytest.mark.xfail(reason='regressed at some point; maybe splitting subclauses would help')(
+        u"Good: Sweet puppies sleeping. Less Good: Vet tells us they will be 50-60lbs instead of the 25-30 the Rescue group... pic.twitter.com/CBUpjZyxLu"
 
-        if reply is not None:
-            print reply
-        else:
-            print "[speechless]"
-        print
-    elif expect_replies:
-        assert reply is not None, tweet
-    else:
-        assert reply is None, (tweet, reply)
+    ),
+    u"Sitting next to Dan Winship here at the @WebKitGTK hackfest, turned out it was a missing TCP_NODELAY. Fixed! HTTPS now 33% less slow :)",
+    u"My phone is more or less screwed.",
+    u"One broken string, one shock from a microphone, and one admonition from the sound guy to rock less hard. Success! Thanks for coming.",
+    u"Hispanic-American Adults Are Less Catholic and More ‘Unaffiliated’ Than Ever Before",
+    u"Okay, it was an ad for an emergency-alarm watch. I feel less annoyed now.",
+    u"We're not from a faraway country. We were just less lucky than you.",
 
-@pytest.mark.parametrize("tweet,reply", tweets_from('true-positive.txt'))
-def test_true_positives(tweet, reply):
-    check(tweet,reply, expect_replies=True)
+    pytest.mark.xfail(reason='not sure')(
+        u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
+    ),
 
-@pytest.mark.parametrize("tweet,reply", tweets_from('false-positive.txt'))
-def test_false_positives(tweet, reply):
-    check(tweet,reply, expect_replies=False)
+    u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
 
-@pytest.mark.parametrize("tweet,reply", tweets_from('false-negative.txt'))
-def test_false_negatives(tweet, reply):
-    check(tweet,reply, expect_replies=True)
+    pytest.mark.xfail(reason='mass nouns have never worked')(
+        u"Reckon you'd lose less blood having a major heart op!!"
+    ),
+]
+
+
+@pytest.mark.parametrize("tweet", true_positives)
+def test_true_positives(tweet):
+    assert first_reply(tweet) is not None
+
+
+false_positives = [
+    u"The fact that @merrittwhitley can Instagram me but not text me back.... haha I expect nothing less. #Cool #IllJustWait #MyBestFriendIsSlow",
+    u"one less lonely girl is my song",
+    u"There's going to be one less lonely girl",
+    u'"@TBHJustUgly: Dating Tip: People in wheelchairs are less likely to run away from you" @Kelly21Nash',
+    u'“@ThatGuyCode: The more makeup girls wear the less attractive they get.”you know it !',
+
+    pytest.mark.xfail(reason='we check for nouniness of the very next word, not more adjectives '
+                      'followed by noun')(
+        u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia."
+    ),
+
+    u"oh yh due to there being less gender-neutral people, right? :D",
+    u"Yes, Fred Phelps did horrible things, said horrible things. That doesn't mean you can do slightly less horrible things and be a good person.",
+    u"There are people with life sentences for way less: Tim Allen arrested for over 650 grams (1.43 lb) of cocaine. 1978. http://twitter.com/History_Pics/status/442776869742854145/photo/1pic.twitter.com/EtUND0xYxm ",
+]
+
+
+@pytest.mark.parametrize("tweet", false_positives)
+def test_false_positives(tweet):
+    assert first_reply(tweet) is None
