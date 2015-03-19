@@ -52,10 +52,11 @@ false_positives = [
     u'"@TBHJustUgly: Dating Tip: People in wheelchairs are less likely to run away from you" @Kelly21Nash',
     u'“@ThatGuyCode: The more makeup girls wear the less attractive they get.”you know it !',
 
-    pytest.mark.xfail(reason='we check for nouniness of the very next word, not more adjectives '
-                      'followed by noun')(
-        u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia."
-    ),
+    # Less JJ JJ+ nounish. "Fewer successful political unions" is not what the speaker meant, but it
+    # is grammatical.
+    u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia."
+    # Similar. https://twitter.com/kiehlmanniac/status/578486683353661441
+    u"@resiak @fewerror @travisci Are there any less over-engineered satirical grammar bots?",
 
     u"oh yh due to there being less gender-neutral people, right? :D",
     u"Yes, Fred Phelps did horrible things, said horrible things. That doesn't mean you can do slightly less horrible things and be a good person.",

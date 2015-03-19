@@ -188,13 +188,16 @@ def find_an_indiscrete_quantity(blob):
     if w_pos not in (POS.JJ, POS.VBN, POS.NNP):
         return
 
-    # Avoid replying "fewer lonely" to "less lonely girl"
-    # FIXME: why? this is "right"! but it would be better to say "fewer lonely girl"
-    # ... hmm
-    # because "less happy sheep" -> "fewer happy sheep" is bad
-    v, v_pos = next(tags_from_less, (None, None))
-    if POS.nounish(v, v_pos):
-        return
+    for v, v_pos in tags_from_less:
+        # Avoid replying "fewer lonely" to "less lonely girl"
+        # why? this is "right"! but it would be better to say "fewer lonely girl"
+        # but: "less happy sheep" -> "fewer happy sheep" is bad
+        if POS.nounish(v, v_pos):
+            return
+
+        # if we reject "less happy sheep" we should also reject "less happy fluffy sheep".
+        if v_pos != POS.JJ:
+            break
 
     yield w
 
