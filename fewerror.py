@@ -18,6 +18,7 @@ import random
 import tempfile
 
 from textblob import TextBlob
+from nltk.corpus.reader import WordListCorpusReader
 
 from util import iflatmap, reverse_inits, OrderedSet
 
@@ -171,6 +172,10 @@ class POS:
             any(c.isalpha() for c in word)
 
 
+mass_noun_corpora = WordListCorpusReader('wordlist/massnoun', r'[a-z]+')
+mass_nouns = mass_noun_corpora.words()
+
+
 def find_an_indiscrete_quantity(blob):
     tags_from_less = itertools.dropwhile((lambda (word, tag): word.lower() != 'less'),
                                          blob.tags)
@@ -185,7 +190,7 @@ def find_an_indiscrete_quantity(blob):
     except StopIteration:
         return
 
-    if w_pos not in (POS.JJ, POS.VBN, POS.NNP):
+    if w_pos not in (POS.JJ, POS.VBN, POS.NNP) and w not in mass_nouns:
         return
 
     for v, v_pos in tags_from_less:

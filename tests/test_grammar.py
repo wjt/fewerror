@@ -34,9 +34,8 @@ true_positives = [
 
     u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
 
-    pytest.mark.xfail(reason='mass nouns have never worked')(
-        u"Reckon you'd lose less blood having a major heart op!!"
-    ),
+    # mass noun         vvvvvvvvvv
+    u"Reckon you'd lose less blood having a major heart op!!"
 ]
 
 
@@ -67,3 +66,8 @@ false_positives = [
 @pytest.mark.parametrize("tweet", false_positives)
 def test_false_positives(tweet):
     assert first_reply(tweet) is None
+
+
+def test_mass_nouns():
+    assert first_reply("I wish I had studied less mathematics") is not None
+    assert first_reply("I wish I had studied less mathematics students") is None
