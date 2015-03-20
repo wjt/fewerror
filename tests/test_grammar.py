@@ -46,8 +46,12 @@ def test_true_positives(tweet):
 
 false_positives = [
     u"The fact that @merrittwhitley can Instagram me but not text me back.... haha I expect nothing less. #Cool #IllJustWait #MyBestFriendIsSlow",
+
     u"one less lonely girl is my song",
     u"There's going to be one less lonely girl",
+
+    # (a) these two are awful things to say
+    # (b) they are false negatives
     u'"@TBHJustUgly: Dating Tip: People in wheelchairs are less likely to run away from you" @Kelly21Nash',
     u'“@ThatGuyCode: The more makeup girls wear the less attractive they get.”you know it !',
 
