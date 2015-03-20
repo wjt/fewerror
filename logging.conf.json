@@ -22,6 +22,7 @@
   },
   "root": {
     "level": "DEBUG",
-    "handlers": ["console_info", "file_debug"]
+    "handlers": ["file_debug"],
+    "_handlers": ["console_info", "file_debug"]
   }
 }
