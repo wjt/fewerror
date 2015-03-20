@@ -50,11 +50,6 @@ false_positives = [
     u"one less lonely girl is my song",
     u"There's going to be one less lonely girl",
 
-    # (a) these two are awful things to say
-    # (b) they are false negatives
-    u'"@TBHJustUgly: Dating Tip: People in wheelchairs are less likely to run away from you" @Kelly21Nash',
-    u'“@ThatGuyCode: The more makeup girls wear the less attractive they get.”you know it !',
-
     # Less JJ JJ+ nounish. "Fewer successful political unions" is not what the speaker meant, but it
     # is grammatical.
     u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia."
@@ -75,3 +70,14 @@ def test_false_positives(tweet):
 def test_mass_nouns():
     assert first_reply("I wish I had studied less mathematics") is not None
     assert first_reply("I wish I had studied less mathematics students") is None
+
+
+@pytest.mark.parametrize("desc,fmt", [
+    ("RT", u"RT @test: {}"),
+    ("MT", u"THIS. MT @test: {}"),
+    ("dq", u'"{}" @myfriend'),
+    ("uniquote", u'“{}” ýéş'),
+])
+def test_ignores_manual_rts(desc, fmt):
+    tweet = fmt.format(true_positives[0])
+    assert first_reply(tweet) is None
