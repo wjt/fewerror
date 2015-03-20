@@ -41,13 +41,11 @@ def make_reply(text):
         return
 
     if 'could care less' in text.lower():
-        yield 'could care fewer'
-        return
+        return 'could care fewer'
 
     blob = TextBlob(text)
     for q in iflatmap(find_an_indiscrete_quantity, blob.sentences):
-        yield 'fewer ' + q
-        break
+        return 'fewer ' + q
 
 
 class POS:
@@ -321,10 +319,11 @@ class LessListener(StreamListener):
 
         try:
             quantity = next(make_reply(text))
-        except StopIteration:
-            return
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
+            return
+
+        if quantity is None:
             return
 
         now = datetime.datetime.now()

@@ -7,13 +7,6 @@ import pytest
 from textblob import TextBlob
 
 
-def first_reply(tweet):
-    for reply in fewerror.make_reply(tweet):
-        return reply
-
-    return None
-
-
 true_positives = [
     u"I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`",
 
@@ -41,7 +34,7 @@ true_positives = [
 
 @pytest.mark.parametrize("tweet", true_positives)
 def test_true_positives(tweet):
-    assert first_reply(tweet) is not None
+    assert fewerror.make_reply(tweet) is not None
 
 
 false_positives = [
@@ -64,12 +57,12 @@ false_positives = [
 
 @pytest.mark.parametrize("tweet", false_positives)
 def test_false_positives(tweet):
-    assert first_reply(tweet) is None
+    assert fewerror.make_reply(tweet) is None
 
 
 def test_mass_nouns():
-    assert first_reply("I wish I had studied less mathematics") is not None
-    assert first_reply("I wish I had studied less mathematics students") is None
+    assert fewerror.make_reply("I wish I had studied less mathematics") is not None
+    assert fewerror.make_reply("I wish I had studied less mathematics students") is None
 
 
 @pytest.mark.parametrize("desc,fmt", [
@@ -80,4 +73,4 @@ def test_mass_nouns():
 ])
 def test_ignores_manual_rts(desc, fmt):
     tweet = fmt.format(true_positives[0])
-    assert first_reply(tweet) is None
+    assert fewerror.make_reply(tweet) is None
