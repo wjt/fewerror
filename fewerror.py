@@ -9,7 +9,7 @@ from tweepy.models import Model
 
 json = import_simplejson()
 import argparse
-import cPickle as pickle
+from six.moves import cPickle as pickle
 import datetime
 import errno
 import itertools
@@ -21,6 +21,8 @@ from textblob import TextBlob
 from nltk.corpus.reader import WordListCorpusReader
 
 from util import iflatmap, reverse_inits, OrderedSet
+
+import six
 
 
 log = logging.getLogger('fewerror')
@@ -175,7 +177,7 @@ mass_nouns = mass_noun_corpora.words()
 
 
 def find_an_indiscrete_quantity(blob):
-    tags_from_less = itertools.dropwhile((lambda (word, tag): word.lower() != 'less'),
+    tags_from_less = itertools.dropwhile((lambda word_tag: word_tag[0].lower() != 'less'),
                                          blob.tags)
     try:
         less, less_pos = next(tags_from_less)
@@ -208,7 +210,7 @@ class Event(Model):
     @classmethod
     def parse(cls, api, json):
         event = cls(api)
-        for k, v in json.items():
+        for k, v in six.items(json):
             if k == 'target':
                 user_model = getattr(api.parser.model_factory, 'user')
                 user = user_model.parse(api, v)
@@ -359,7 +361,7 @@ class LessListener(StreamListener):
 
         # Keep dropping mentions until the reply is short enough
         reply = None
-        for mentions in reverse_inits([ u'@' + sn for sn in to_mention.keys() ]):
+        for mentions in reverse_inits([ u'@' + sn for sn in six.iterkeys(to_mention) ]):
             reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)
             if len(reply) <= 140:
                 break

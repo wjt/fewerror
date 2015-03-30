@@ -1,4 +1,5 @@
 import collections
+from six.moves import range
 
 
 def iflatmap(f, ys):
@@ -8,7 +9,7 @@ def iflatmap(f, ys):
 
 
 def reverse_inits(xs):
-    for i in xrange(len(xs), 0, -1):
+    for i in range(len(xs), 0, -1):
         yield xs[:i]
 
 
