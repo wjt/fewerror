@@ -21,14 +21,21 @@ true_positives = [
     u"Okay, it was an ad for an emergency-alarm watch. I feel less annoyed now.",
     u"We're not from a faraway country. We were just less lucky than you.",
 
-    pytest.mark.xfail(reason='not sure')(
+    pytest.mark.xfail(reason='POS tagger thinks "wanky" is a noun')(
         u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
     ),
 
     u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
 
     # mass noun         vvvvvvvvvv
-    u"Reckon you'd lose less blood having a major heart op!!"
+    u"Reckon you'd lose less blood having a major heart op!!",
+
+    # Would be nice to get this right. "a less theatrical version" -> "I think you mean 'a fewer
+    # theatrical version'" would be funny, whereas "I think you mean 'fewer theatrical'" is less
+    # good.
+    pytest.mark.xfail(reason='a less adj noun')(
+        u"hey, remember that google bus thing? sf delivers a less theatrical version http://t.co/YxVq1JYZP9"
+    )
 ]
 
 
@@ -52,6 +59,9 @@ false_positives = [
     u"oh yh due to there being less gender-neutral people, right? :D",
     u"Yes, Fred Phelps did horrible things, said horrible things. That doesn't mean you can do slightly less horrible things and be a good person.",
     u"There are people with life sentences for way less: Tim Allen arrested for over 650 grams (1.43 lb) of cocaine. 1978. http://twitter.com/History_Pics/status/442776869742854145/photo/1pic.twitter.com/EtUND0xYxm ",
+
+    # 100% fewer exercise would be ungrammatical but "100% fewer exercises" would be grammatical...
+    u"I've eaten 50% more food and done 100% less exercise since I got to NY. If I lived here I'd be spherical.",
 ]
 
 
