@@ -306,10 +306,6 @@ class LessListener(StreamListener):
             super(LessListener, self).on_data(data)
 
     def on_status(self, received_status):
-        if self.gather:
-            with open(os.path.join(self.gather, '{}.json'.format(received_status.id)), 'w') as f:
-                json.dump(obj=received_status._json, fp=f)
-
         to_mention = OrderedSet()
 
         # Reply to the original when a tweet is RTed properly
@@ -323,6 +319,12 @@ class LessListener(StreamListener):
         else:
             status = received_status
             rt_log_prefix = ''
+
+            # Don't log RTs, no point in getting a million duplicates in the corpus.
+            if self.gather:
+                with open(os.path.join(self.gather, '{}.json'.format(received_status.id)), 'w') as f:
+                    json.dump(obj=received_status._json, fp=f)
+
 
         text = status.text.replace("&amp;", "&")
         screen_name = status.author.screen_name
