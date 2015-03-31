@@ -20,7 +20,7 @@ import tempfile
 from textblob import TextBlob
 from nltk.corpus.reader import WordListCorpusReader
 
-from util import iflatmap, reverse_inits, OrderedSet
+from util import iflatmap, reverse_inits, OrderedSet, mkdir_p
 
 import six
 
@@ -277,6 +277,7 @@ class LessListener(StreamListener):
         self.post_replies = kwargs.pop('post_replies', False)
         self.reply_to_rts = kwargs.pop('reply_to_rts', False)
         self.heartbeat_interval = kwargs.pop('heartbeat_interval', 500)
+        self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
@@ -284,6 +285,9 @@ class LessListener(StreamListener):
         self._state_holder = StateHolder(self.me.screen_name)
         self._state = self._state_holder.load()
         self._hb = 0
+
+        if self.gather:
+            mkdir_p(self.gather)
 
     def on_connect(self):
         me = self.me
@@ -302,6 +306,10 @@ class LessListener(StreamListener):
             super(LessListener, self).on_data(data)
 
     def on_status(self, received_status):
+        if self.gather:
+            with open(os.path.join(self.gather, '{}.json'.format(received_status.id)), 'w') as f:
+                json.dump(obj=received_status._json, fp=f)
+
         to_mention = OrderedSet()
 
         # Reply to the original when a tweet is RTed properly
@@ -403,6 +411,8 @@ if __name__ == '__main__':
                                      epilog='Note that --post-replies --use-public-stream will get you banned pretty quickly')
     parser.add_argument('--post-replies', action='store_true',
                         help='post (rate-limited) replies, rather than just printing them locally')
+    parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
+                        help='save matched tweets in DIR for later degustation')
     parser.add_argument('--use-public-stream', action='store_true',
                         help='search public tweets for "less", rather than your own stream')
     parser.add_argument('--reply-to-retweets', action='store_true',
@@ -434,7 +444,7 @@ if __name__ == '__main__':
 
     api = API(auth)
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
-                     heartbeat_interval=args.heartbeat_interval)
+                     heartbeat_interval=args.heartbeat_interval, gather=args.gather)
 
     stream = Stream(auth, l)
     if args.use_public_stream:
