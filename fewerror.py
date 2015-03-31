@@ -27,6 +27,7 @@ import six
 
 log = logging.getLogger('fewerror')
 
+
 def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
@@ -206,6 +207,7 @@ def find_an_indiscrete_quantity(blob):
 
     yield w
 
+
 class Event(Model):
     @classmethod
     def parse(cls, api, json):
@@ -369,7 +371,7 @@ class LessListener(StreamListener):
 
         # Keep dropping mentions until the reply is short enough
         reply = None
-        for mentions in reverse_inits([ u'@' + sn for sn in six.iterkeys(to_mention) ]):
+        for mentions in reverse_inits([u'@' + sn for sn in six.iterkeys(to_mention)]):
             reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)
             if len(reply) <= 140:
                 break
@@ -407,8 +409,9 @@ class LessListener(StreamListener):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=u'annoy some tweeps',
-                                     epilog='Note that --post-replies --use-public-stream will get you banned pretty quickly')
+    parser = argparse.ArgumentParser(
+        description=u'annoy some tweeps',
+        epilog=u'Note that --post-replies --use-public-stream will get you banned pretty quickly')
     parser.add_argument('--post-replies', action='store_true',
                         help='post (rate-limited) replies, rather than just printing them locally')
     parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
