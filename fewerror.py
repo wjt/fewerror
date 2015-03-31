@@ -321,7 +321,7 @@ class LessListener(StreamListener):
             rt_log_prefix = ''
 
             # Don't log RTs, no point in getting a million duplicates in the corpus.
-            if self.gather:
+            if self.gather and 'less' in status.text:
                 with open(os.path.join(self.gather, '{}.json'.format(received_status.id)), 'w') as f:
                     json.dump(obj=received_status._json, fp=f)
 
