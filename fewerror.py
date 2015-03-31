@@ -293,6 +293,10 @@ class LessListener(StreamListener):
         me = self.me
         log.info("streaming as @%s (#%d)", me.screen_name, me.id)
 
+    def on_error(self, status_code):
+        log.info("HTTP status %d", status_code)
+        return True  # permit tweepy.Stream to retry
+
     def on_data(self, data):
         self._hb = (self._hb + 1) % self.heartbeat_interval
         if self._hb == 0:
@@ -449,7 +453,6 @@ if __name__ == '__main__':
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
                      heartbeat_interval=args.heartbeat_interval, gather=args.gather)
 
-    # TODO: should be retrying, why is it not?
     stream = Stream(auth, l)
     if args.use_public_stream:
         stream.filter(track=['less'])
