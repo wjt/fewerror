@@ -33,7 +33,7 @@ def looks_like_retweet(text):
 
 def make_reply(text):
     """
-    A generator of 0 or 1 replies to 'text' (without @username).
+    Returns a reply to 'text' (without @username) or None if there is none.
     """
     if looks_like_retweet(text):
         # We can't (reliably) figure out who to admonish so always skip these.
@@ -320,7 +320,7 @@ class LessListener(StreamListener):
         screen_name = status.author.screen_name
 
         try:
-            quantity = next(make_reply(text))
+            quantity = make_reply(text)
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
             return
