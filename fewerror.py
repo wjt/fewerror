@@ -449,6 +449,7 @@ if __name__ == '__main__':
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
                      heartbeat_interval=args.heartbeat_interval, gather=args.gather)
 
+    # TODO: should be retrying, why is it not?
     stream = Stream(auth, l)
     if args.use_public_stream:
         stream.filter(track=['less'])
