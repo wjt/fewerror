@@ -322,9 +322,9 @@ class LessListener(StreamListener):
 
             # Don't log RTs, no point in getting a million duplicates in the corpus.
             if self.gather and 'less' in status.text:
-                with open(os.path.join(self.gather, '{}.json'.format(received_status.id)), 'w') as f:
+                filename = os.path.join(self.gather, '{}.json'.format(received_status.id))
+                with open(filename, 'w') as f:
                     json.dump(obj=received_status._json, fp=f)
-
 
         text = status.text.replace("&amp;", "&")
         screen_name = status.author.screen_name
