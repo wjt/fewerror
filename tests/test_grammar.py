@@ -52,7 +52,8 @@ false_positives = [
 
     # Less JJ JJ+ nounish. "Fewer successful political unions" is not what the speaker meant, but it
     # is grammatical.
-    u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia."
+    u"@AdamRamsay @dhothersall For sake of balance; Less successful political unions include USSR and Yugoslavia.",
+
     # Similar. https://twitter.com/kiehlmanniac/status/578486683353661441
     u"@resiak @fewerror @travisci Are there any less over-engineered satirical grammar bots?",
 
