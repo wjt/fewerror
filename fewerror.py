@@ -416,6 +416,9 @@ class LessListener(StreamListener):
             log.info('too long, not replying')
 
     def on_event(self, event):
+        if event.source.id == self.me.id:
+            return
+
         if event.event == 'follow' and event.target.id == self.me.id:
             log.info("followed by @%s", event.source.screen_name)
             self.maybe_follow(event.source)
