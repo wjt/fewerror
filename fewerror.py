@@ -212,7 +212,7 @@ class Event(Model):
     @classmethod
     def parse(cls, api, json):
         event = cls(api)
-        for k, v in six.items(json):
+        for k, v in json.items():
             if k == 'target':
                 user_model = getattr(api.parser.model_factory, 'user')
                 user = user_model.parse(api, v)
