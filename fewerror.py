@@ -5,7 +5,7 @@ import logging.config
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream, API
 from tweepy.utils import import_simplejson, parse_datetime
-from tweepy.models import Model
+from tweepy.models import Model, Status, User
 
 json = import_simplejson()
 import argparse
@@ -209,22 +209,40 @@ def find_an_indiscrete_quantity(blob):
 
 
 class Event(Model):
+    """https://dev.twitter.com/streaming/overview/messages-types#Events_event
+
+    TODO: upstream this. Currently you get a Status object.
+    """
+
     @classmethod
     def parse(cls, api, json):
         event = cls(api)
+        event_name = json['event']
+        user_model   = getattr(api.parser.model_factory, 'user')   if api else User
+        status_model = getattr(api.parser.model_factory, 'status') if api else Status
+        list_model   = getattr(api.parser.model_factory, 'list')   if api else List
+
         for k, v in json.items():
             if k == 'target':
-                user_model = getattr(api.parser.model_factory, 'user')
                 user = user_model.parse(api, v)
                 setattr(event, 'target', user)
             elif k == 'source':
-                user_model = getattr(api.parser.model_factory, 'user')
                 user = user_model.parse(api, v)
                 setattr(event, 'source', user)
             elif k == 'created_at':
                 setattr(event, k, parse_datetime(v))
             elif k == 'target_object':
-                setattr(event, 'target_object', v)
+                if event_name in ('favorite', 'unfavorite'):
+                    status = status_model.parse(api, v)
+                    setattr(event, 'target_object', status)
+                elif event_name.startswith('list_'):
+                    list_ = list_model.parse(api, v)
+                    setattr(event, 'target_object', list_)
+                else:
+                    # at the time of writing, the only other event defined to have a non-null
+                    # target_object is 'access_revoked', defined to be a 'client'. I don't have one
+                    # of those to hand.
+                    setattr(event, 'target_object', v)
             elif k == 'event':
                 setattr(event, 'event', v)
             else:
