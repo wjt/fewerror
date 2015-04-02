@@ -5,7 +5,7 @@ import logging.config
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler, Stream, API
 from tweepy.utils import import_simplejson, parse_datetime
-from tweepy.models import Model, Status, User
+from tweepy.models import Model, Status, User, List
 
 json = import_simplejson()
 import argparse
@@ -218,9 +218,9 @@ class Event(Model):
     def parse(cls, api, json):
         event = cls(api)
         event_name = json['event']
-        user_model   = getattr(api.parser.model_factory, 'user')   if api else User
+        user_model = getattr(api.parser.model_factory, 'user') if api else User
         status_model = getattr(api.parser.model_factory, 'status') if api else Status
-        list_model   = getattr(api.parser.model_factory, 'list')   if api else List
+        list_model = getattr(api.parser.model_factory, 'list') if api else List
 
         for k, v in json.items():
             if k == 'target':
