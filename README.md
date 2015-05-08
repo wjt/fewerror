@@ -84,4 +84,4 @@ To get values for those variables, why not follow [Allison Parrish's instruction
 - follow people who RT our replies
 
 [![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
-
+[![Code Health](https://landscape.io/github/wjt/fewerror/master/landscape.svg?style=flat)](https://landscape.io/github/wjt/fewerror/master)
