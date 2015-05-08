@@ -35,7 +35,10 @@ true_positives = [
     # good.
     pytest.mark.xfail(reason='a less adj noun')(
         u"hey, remember that google bus thing? sf delivers a less theatrical version http://t.co/YxVq1JYZP9"
-    )
+    ),
+
+    # https://github.com/wjt/fewerror/issues/2
+    u"In the context of https://medium.com/@b_k/https-the-end-of-an-era-c106acded474 … it’s striking that the problems setting up ssh are much much less onerous",
 ]
 
 
