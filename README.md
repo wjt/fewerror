@@ -77,13 +77,5 @@ This thing expects to fetch authorization credentials from environment variables
 
 To get values for those variables, why not follow [Allison Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
 
-## TODO
-
-- favourite replies
-- log tweets that contain the word "less" but didn't match our rules, for later analysis
-- match more things (see `no-idea.txt` and skipped tests)
-- seek back in our timeline for things we should have replied to but didn't?
-- follow people who RT our replies
-
 [![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
 [![Code Health](https://landscape.io/github/wjt/fewerror/master/landscape.svg?style=flat)](https://landscape.io/github/wjt/fewerror/master)
