@@ -294,6 +294,7 @@ class LessListener(StreamListener):
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
         self.reply_to_rts = kwargs.pop('reply_to_rts', False)
+        self.follow_on_favs = kwargs.pop('follow_on_favs', False)
         self.heartbeat_interval = kwargs.pop('heartbeat_interval', 500)
         self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
@@ -423,9 +424,10 @@ class LessListener(StreamListener):
             log.info("followed by @%s", event.source.screen_name)
             self.maybe_follow(event.source)
 
-        if event.event == 'favorite' and event.target.id == self.me.id:
-            log.info("tweet favorited by @%s", event.source.screen_name)
-            self.maybe_follow(event.source)
+        if self.follow_on_favs:
+            if event.event == 'favorite' and event.target.id == self.me.id:
+                log.info("tweet favorited by @%s", event.source.screen_name)
+                self.maybe_follow(event.source)
 
     def maybe_follow(self, whom):
         if not whom.following:
@@ -445,6 +447,8 @@ if __name__ == '__main__':
                         help='search public tweets for "less", rather than your own stream')
     parser.add_argument('--reply-to-retweets', action='store_true',
                         help='reply to retweets (makes the bot a little less opt-in)')
+    parser.add_argument('--follow-on-favs', action='store_true',
+                        help='follow people who fav us (makes the bot a little less opt-in)')
     parser.add_argument('--heartbeat-interval', type=int, default=500)
 
     parser.add_argument('--log-config',
@@ -472,6 +476,7 @@ if __name__ == '__main__':
 
     api = API(auth)
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
+                     follow_on_favs=args.follow_on_favs,
                      heartbeat_interval=args.heartbeat_interval, gather=args.gather)
 
     stream = Stream(auth, l)
