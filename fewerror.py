@@ -391,6 +391,7 @@ class LessListener(StreamListener):
             to_mention.add(x['screen_name'])
 
         to_mention.discard(self.me.screen_name)
+        # TODO: only mention people who follow the bot
 
         # Keep dropping mentions until the reply is short enough
         reply = None
