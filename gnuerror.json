@@ -1,0 +1,133 @@
+{
+  "origin": [
+    "#tinfoil#",
+    "#despise#",
+    "#frighten#"
+  ],
+
+
+  "tinfoil": [
+    "To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
+  ],
+  "agents": [
+    "CIA  agents",
+    "NSA agents",
+    "FBI agents",
+    "GCHQ agents",
+    "Xamarin employees",
+    "Netflix employees",
+    "Google employees"
+  ],
+  "entity": [
+    "the Constitution",
+    "the Crown",
+    "Free Software",
+    "GNU",
+    "GNOME",
+    "Emacs",
+    "Acid Burn",
+    "Assange",
+    "parrots"
+  ],
+  "bad_entities": [
+    "Apple",
+    "Microsoft",
+    "Linus Torvalds",
+    "Mark Zuckerberg",
+    "Miguel de Icaza",
+    "Mono",
+    "DRM",
+    "HTML email",
+    "non-free JavaScript",
+    "Swedish prosecutors",
+    "The Plague",
+
+    "avocado",
+    "eggplant",
+    "hot pepper",
+    "olives",
+    "liver (even in trace quantities)",
+    "stomach and intestine",
+    "other organ meats",
+    "cooked tuna",
+    "oysters",
+    "egg yolk",
+    "strong cheeses, especially those with green fungus,",
+    "desserts that contain fruit or liqueur flavors",
+    "sour fruits",
+    "beer",
+    "coffee",
+    "the taste of alcohol"
+  ],
+  "nameless_enemies": [
+    "all enemies",
+    "foreign enemies",
+    "domestic enemies"
+  ],
+  "enemies": [
+    "#nameless_enemies#",
+    "#bad_entities#",
+    "#bad_entities#",
+    "#bad_entities#",
+    "#animals_that_do_animal_things#"
+  ],
+  "whistleblower": [
+    "Snowden’s",
+    "Assange’s",
+    "my",
+    "the FSF’s",
+    "Andy Wingo’s",
+    "Zero Cool’s",
+    "Saint IGNUcius’"
+  ],
+
+
+
+  "despise": [
+    "It is a fact that many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
+  ],
+
+
+  "animals_that_do_animal_things": "#animal#s that #animal_action#",
+
+  "animal": [
+    "dog",
+    "cat",
+    "parrot"
+  ],
+
+
+  "animal_action": [
+    "bark angrily",
+    "jump up on me",
+    "outlive me",
+    "make my face itch",
+    "make my eyes water"
+  ],
+
+
+  "computer_action": [
+    "require a proxy for SSH",
+    "report all guests to the police",
+    "use RealPlayer format",
+    "call the whole system \"Linux\""
+  ],
+
+
+  "animal_nature": [
+    "are small",
+    "cannot reach much above my knees",
+    "are friendly",
+    "are an Ogg codec",
+    "join me in striking a blow against Big Brother"
+  ],
+
+
+  "fr": [
+    "frighten",
+    "emotionally scar"
+  ],
+
+
+  "frighten": "#animal#s that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#"
+}
