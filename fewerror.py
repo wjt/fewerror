@@ -383,9 +383,6 @@ class LessListener(StreamListener):
             log.info(u"rate-limiting until %s…", self.last + self.TIMEOUT)
             return
 
-        if quantity is None:
-            return
-
         to_mention.add(screen_name)
         for x in status.entities['user_mentions']:
             to_mention.add(x['screen_name'])
