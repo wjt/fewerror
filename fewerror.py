@@ -388,7 +388,13 @@ class LessListener(StreamListener):
             to_mention.add(x['screen_name'])
 
         to_mention.discard(self.me.screen_name)
-        # TODO: only mention people who follow the bot
+        for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
+            if not rel.is_followed_by:
+                to_mention.discard(rel.screen_name)
+
+                if rel.is_following:
+                    log.info(u"%s no longer follows us; unfollowing", rel.screen_name)
+                    self.api.destroy_friendship(user_id=rel.id)
 
         # Keep dropping mentions until the reply is short enough
         reply = None
