@@ -407,7 +407,8 @@ class LessListener(StreamListener):
                 log.info("  https://twitter.com/_/status/%s", r.id)
                 self.last = now
                 self._state.replied_to[status.id] = r.id
-                self._state.replied_to_user_and_word[(screen_name, quantity.lower())] = r.id
+                for sn in to_mention:
+                    self._state.replied_to_user_and_word[(sn, quantity.lower())] = r.id
 
             self._state.last_time_for_word[quantity.lower()] = now
             self._state_holder.save(self._state)
