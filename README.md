@@ -59,6 +59,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > Pedantry is terrible, but automated pedantry is the worst <cite>– [@christinelove](https://twitter.com/christinelove/status/597786212791889920)</cite>
 
+> very silly <cite>– [@RaeKnowler](https://twitter.com/RaeKnowler/status/606405005776678913)
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
