@@ -66,6 +66,8 @@ false_positives = [
 
     # 100% fewer exercise would be ungrammatical but "100% fewer exercises" would be grammatical...
     u"I've eaten 50% more food and done 100% less exercise since I got to NY. If I lived here I'd be spherical.",
+
+    u"I wish there were less pretentious motherfucking ass holes on this planet...i feel so worthless right now",
 ]
 
 

@@ -202,7 +202,7 @@ def find_an_indiscrete_quantity(blob):
             return
 
         # if we reject "less happy sheep" we should also reject "less happy fluffy sheep".
-        if v_pos != POS.JJ:
+        if v_pos not in (POS.JJ, POS.VBG):
             break
 
     yield w
