@@ -14,10 +14,12 @@
       "stream": "ext://sys.stderr"
     },
     "file_debug": {
-      "class": "logging.FileHandler",
+      "class": "logging.handlers.RotatingFileHandler",
       "level": "DEBUG",
       "formatter": "simple",
-      "filename": "log/fewerror.log"
+      "filename": "log/fewerror.log",
+      "maxBytes": 1048576,
+      "backupCount": 7
     }
   },
   "root": {
