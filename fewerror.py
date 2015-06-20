@@ -440,7 +440,7 @@ class LessListener(StreamListener):
             whom.follow()
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description=u'annoy some tweeps',
         epilog=u'Note that --post-replies --use-public-stream will get you banned pretty quickly')
@@ -489,3 +489,10 @@ if __name__ == '__main__':
         stream.filter(track=['less'])
     else:
         stream.userstream()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except:
+        log.error('Bye :-(', exc_info=True)
+        raise
