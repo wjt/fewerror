@@ -65,6 +65,12 @@ true_positives = [
     (u"In the context of https://medium.com/@b_k/https-the-end-of-an-era-c106acded474 … it’s striking that the problems setting up ssh are much much less onerous",
      'fewer onerous',
     ),
+
+    pytest.mark.xfail(reason='not implemented')(
+        ("which is to say I found it no less surprising than 'with' itself.",
+         'no fewer surprising',
+        ),
+    ),
 ]
 
 
