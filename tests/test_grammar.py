@@ -8,43 +8,69 @@ from textblob import TextBlob
 
 
 true_positives = [
-    u"I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`",
+    (u"I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`",
+
+     'fewer offensive',
+    ),
 
     pytest.mark.xfail(reason='regressed at some point; maybe splitting subclauses would help')(
-        u"Good: Sweet puppies sleeping. Less Good: Vet tells us they will be 50-60lbs instead of the 25-30 the Rescue group... pic.twitter.com/CBUpjZyxLu"
-
+        (u"Good: Sweet puppies sleeping. Less Good: Vet tells us they will be 50-60lbs instead of the 25-30 the Rescue group... pic.twitter.com/CBUpjZyxLu",
+         'fewer good',
+        ),
     ),
-    u"Sitting next to Dan Winship here at the @WebKitGTK hackfest, turned out it was a missing TCP_NODELAY. Fixed! HTTPS now 33% less slow :)",
-    u"My phone is more or less screwed.",
-    u"One broken string, one shock from a microphone, and one admonition from the sound guy to rock less hard. Success! Thanks for coming.",
-    u"Hispanic-American Adults Are Less Catholic and More ‘Unaffiliated’ Than Ever Before",
-    u"Okay, it was an ad for an emergency-alarm watch. I feel less annoyed now.",
-    u"We're not from a faraway country. We were just less lucky than you.",
+    (u"Sitting next to Dan Winship here at the @WebKitGTK hackfest, turned out it was a missing TCP_NODELAY. Fixed! HTTPS now 33% less slow :)",
+     'fewer slow',
+    ),
+    (u"My phone is more or less screwed.",
+     'fewer screwed',
+    ),
+    (u"One broken string, one shock from a microphone, and one admonition from the sound guy to rock less hard. Success! Thanks for coming.",
+     'fewer hard',
+    ),
+    (u"Hispanic-American Adults Are Less Catholic and More ‘Unaffiliated’ Than Ever Before",
+     'fewer Catholic',
+    ),
+    (u"Okay, it was an ad for an emergency-alarm watch. I feel less annoyed now.",
+     'fewer annoyed',
+    ),
+    (u"We're not from a faraway country. We were just less lucky than you.",
+     'fewer lucky',
+    ),
 
     pytest.mark.xfail(reason='POS tagger thinks "wanky" is a noun')(
-        u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
+        (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
+         'fewer wanky',
+        ),
     ),
 
-    u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
+    (u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
+     'fewer keen',
+    ),
 
-    # mass noun         vvvvvvvvvv
-    u"Reckon you'd lose less blood having a major heart op!!",
+    # mass noun          vvvvvvvvvv
+    (u"Reckon you'd lose less blood having a major heart op!!",
+     'fewer blood',
+    ),
 
     # Would be nice to get this right. "a less theatrical version" -> "I think you mean 'a fewer
     # theatrical version'" would be funny, whereas "I think you mean 'fewer theatrical'" is less
     # good.
     pytest.mark.xfail(reason='a less adj noun')(
-        u"hey, remember that google bus thing? sf delivers a less theatrical version http://t.co/YxVq1JYZP9"
+        (u"hey, remember that google bus thing? sf delivers a less theatrical version http://t.co/YxVq1JYZP9",
+         'fewer theatrical',
+        ),
     ),
 
     # https://github.com/wjt/fewerror/issues/2
-    u"In the context of https://medium.com/@b_k/https-the-end-of-an-era-c106acded474 … it’s striking that the problems setting up ssh are much much less onerous",
+    (u"In the context of https://medium.com/@b_k/https-the-end-of-an-era-c106acded474 … it’s striking that the problems setting up ssh are much much less onerous",
+     'fewer onerous',
+    ),
 ]
 
 
-@pytest.mark.parametrize("tweet", true_positives)
-def test_true_positives(tweet):
-    assert fewerror.make_reply(tweet) is not None
+@pytest.mark.parametrize("tweet,reply", true_positives)
+def test_true_positives(tweet, reply):
+    assert fewerror.make_reply(tweet) == reply
 
 
 false_positives = [
@@ -77,7 +103,7 @@ def test_false_positives(tweet):
 
 
 def test_mass_nouns():
-    assert fewerror.make_reply("I wish I had studied less mathematics") is not None
+    assert fewerror.make_reply("I wish I had studied less mathematics") == 'fewer mathematics'
     assert fewerror.make_reply("I wish I had studied less mathematics students") is None
 
 
