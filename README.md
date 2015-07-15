@@ -61,6 +61,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > very silly <cite>– [@RaeKnowler](https://twitter.com/RaeKnowler/status/606405005776678913)
 
+> wonderful asshole of a bot <cite>– [@mo_ranyart](https://twitter.com/mo_ranyart/status/621071298299441153)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
