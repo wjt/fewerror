@@ -493,6 +493,8 @@ def main():
 if __name__ == '__main__':
     try:
         main()
+    except SystemExit:
+        raise
     except:
         log.error('Bye :-(', exc_info=True)
         raise
