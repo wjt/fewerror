@@ -6,9 +6,10 @@ from fewerror import make_reply
 
 log = logging.getLogger(__name__)
 
+
 def main(token):
     bot = telegram.Bot(token=token)
-    me = bot.getMe()
+    # me = bot.getMe()
     offset = None
 
     while True:
