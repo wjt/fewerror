@@ -25,7 +25,7 @@ def main(token):
                     reply = u'I think you mean “{}”.'.format(quantity)
                     bot.sendMessage(chat_id=u.message.chat_id, text=reply)
 
-                offset = u.update_id + 1
+            offset = u.update_id + 1
 
 
 if __name__ == '__main__':
