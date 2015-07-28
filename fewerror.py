@@ -191,7 +191,7 @@ def find_an_indiscrete_quantity(blob):
     except StopIteration:
         return
 
-    if w_pos not in (POS.JJ, POS.VBN, POS.NNP) and w not in mass_nouns:
+    if w_pos not in (POS.JJ, POS.VBN, POS.NNP, POS.RB, POS.RBR, POS.RBS) and w not in mass_nouns:
         return
 
     for v, v_pos in tags_from_less:

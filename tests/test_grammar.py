@@ -71,11 +71,19 @@ true_positives = [
          'no fewer surprising',
         ),
     ),
+
+    (u"So if I say fewer less often all is well?",
+     u"fewer often",
+    ),
 ]
 
 
 @pytest.mark.parametrize("tweet,reply", true_positives)
 def test_true_positives(tweet, reply):
+    actual_reply = fewerror.make_reply(tweet)
+    if not actual_reply:
+        print(TextBlob(tweet).tags)
+
     assert fewerror.make_reply(tweet) == reply
 
 
