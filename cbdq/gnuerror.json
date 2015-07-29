@@ -1,8 +1,18 @@
 {
   "origin": [
+    "#new_origins#",
+    "#new_origins#",
+    "#new_origins#",
+    "#old_origins#"
+  ],
+  "old_origins": [
     "#tinfoil#",
     "#despise#",
     "#frighten#"
+  ],
+  "new_origins": [
+    "#menacing#",
+    "#natalist_pressure#"
   ],
 
 
@@ -133,7 +143,53 @@
   ],
 
 
-  "frighten": "#animal#s that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#"
+  "frighten": "#animal#s that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
+
+  "menacing": "Hundreds of thousands of #menacing_births# are\nborn every day: the whole phenomenon\n#is_menacing#.",
+
+  "menacing_births": [
+    "#animal#s",
+    "#agents#",
+    "babies",
+    "GNU programs"
+  ],
+  "is_menacing": [
+    "is menacing",
+    "makes my eyes water",
+    "makes my face itch",
+    "requires a proxy for SSH",
+    "is not newsworthy",
+    "is outside the scope and purpose of this list",
+    "is of no particular interest"
+  ],
+
+
+  "natalist_pressure": "Having a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
+  "natalist_births": [
+    "baby",
+    "GNU program",
+    "#animal#",
+    "#animal#",
+    "#animal#"
+  ],
+  "natalist_extinctions": [
+    "wildlife",
+    "#entity#",
+    "#animal#s"
+  ],
+  "natalist_effects": [
+    "#bad_entities#",
+    "#bad_entities#",
+    "#bad_entities#",
+    "#animals_that_do_animal_things#",
+    "mass starvation"
+  ],
+
+
+
+
+
+  "___": "___"
 }
 
 
