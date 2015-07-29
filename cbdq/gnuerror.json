@@ -10,7 +10,7 @@
     "To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
   ],
   "agents": [
-    "CIA  agents",
+    "CIA agents",
     "NSA agents",
     "FBI agents",
     "GCHQ agents",
@@ -48,12 +48,12 @@
     "olives",
     "liver (even in trace quantities)",
     "stomach and intestine",
-    "other organ meats",
+    "organ meats",
     "cooked tuna",
     "oysters",
     "egg yolk",
-    "strong cheeses, especially those with green fungus,",
-    "desserts that contain fruit or liqueur flavors",
+    "strong cheeses, especially with green fungus",
+    "desserts that contain fruit flavors",
     "sour fruits",
     "beer",
     "coffee",
@@ -84,7 +84,11 @@
 
 
   "despise": [
-    "It is a fact that many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
+    "Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
+  ],
+  "despisers": [
+    "#animal#s",
+    "#agents#"
   ],
 
 
@@ -131,3 +135,5 @@
 
   "frighten": "#animal#s that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#"
 }
+
+
