@@ -29,7 +29,9 @@ class Telegrammar(object):
                 self.despatch(u.message, catchup)
 
             if updates:
-                offset = updates[-1].update_id
+                # Yes, +1 is what the HTTP API requires, and python-telegram-bot does not hide this
+                # cruelty from us
+                offset = updates[-1].update_id + 1
 
             catchup = False
 
@@ -78,7 +80,7 @@ def main(debug: "enable debug output"=False,
     """
     Annoy some Telegram users.
 
-    Requires the TELEGRAM_BOT_TOKEN environment variable to be set.
+    Set $TELEGRAM_BOT_TOKEN for success.
     """
     token = os.environ['TELEGRAM_BOT_TOKEN']
     bot = telegram.Bot(token=token, debug=debug)
