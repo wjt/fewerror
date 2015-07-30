@@ -18,7 +18,6 @@ log = logging.getLogger(__name__)
 class Telegrammar(object):
     def __init__(self, bot):
         self.bot = bot
-        self.me = bot.getMe()
 
     def run(self):
         offset = None
@@ -44,11 +43,11 @@ class Telegrammar(object):
             log.debug("unhandled message %s", message.to_dict())
 
     def handle_left_chat_participant(self, message):
-        if message.left_chat_participant.id == self.me.id:
+        if message.left_chat_participant.id == self.bot.id:
             log.info('Left %s', message.chat.title)
 
     def handle_joined_chat_participant(self, message):
-        if message.joined_chat_participant.id == self.me.id:
+        if message.joined_chat_participant.id == self.bot.id:
             log.info('Joined %s', message.chat.title)
 
     def handle_text(self, message):
