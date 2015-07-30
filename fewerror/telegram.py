@@ -2,7 +2,7 @@ import os
 import telegram
 import logging
 
-from fewerror import make_reply
+from . import make_reply
 
 log = logging.getLogger(__name__)
 
