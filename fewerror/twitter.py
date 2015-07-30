@@ -2,6 +2,7 @@
 import argparse
 import json
 import logging
+import logging.config
 import os
 
 from tweepy import OAuthHandler, Stream, API
