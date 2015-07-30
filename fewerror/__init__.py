@@ -6,7 +6,6 @@ from tweepy.utils import import_simplejson, parse_datetime
 from tweepy.models import Model, Status, User, List
 
 json = import_simplejson()
-from six.moves import cPickle as pickle
 import datetime
 import errno
 import itertools
