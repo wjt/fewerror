@@ -26,15 +26,15 @@ class Telegrammar(object):
             updates = self.bot.getUpdates(offset=offset, timeout=600)
 
             for u in updates:
-                self.despatch(u)
+                self.despatch(u.message)
 
             if updates:
                 offset = updates[-1].update_id
 
     def despatch(self, message):
-        if message.left_chat_participant:
+        if getattr(message, 'left_chat_participant'):
             self.handle_left_chat_participant(message)
-        elif message.new_chat_participant:
+        elif getattr(message, 'new_chat_participant'):
             self.handle_joined_chat_participant(message)
         elif message.text is not None:
             # TODO: handle commands
