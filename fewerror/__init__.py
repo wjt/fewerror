@@ -18,8 +18,6 @@ from nltk.corpus.reader import WordListCorpusReader
 
 from .util import iflatmap, reverse_inits, OrderedSet, mkdir_p
 
-import six
-
 
 log = logging.getLogger(__name__)
 
@@ -405,7 +403,7 @@ class LessListener(StreamListener):
 
         # Keep dropping mentions until the reply is short enough
         reply = None
-        for mentions in reverse_inits([u'@' + sn for sn in six.iterkeys(to_mention)]):
+        for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
             reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)
             if len(reply) <= 140:
                 break

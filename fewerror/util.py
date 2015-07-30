@@ -2,8 +2,6 @@ import collections
 import errno
 import os
 
-from six.moves import range
-
 
 def iflatmap(f, ys):
     for y in ys:

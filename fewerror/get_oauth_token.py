@@ -1,6 +1,5 @@
 import os
 import tweepy
-from six.moves import input
 
 consumer_key = os.environ["CONSUMER_KEY"]
 consumer_secret = os.environ["CONSUMER_SECRET"]
