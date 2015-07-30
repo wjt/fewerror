@@ -19,26 +19,28 @@ class Telegrammar(object):
     def __init__(self, bot):
         self.bot = bot
 
-    def run(self):
+    def run(self, catchup):
         offset = None
 
         while True:
             updates = self.bot.getUpdates(offset=offset, timeout=600)
 
             for u in updates:
-                self.despatch(u.message)
+                self.despatch(u.message, catchup)
 
             if updates:
                 offset = updates[-1].update_id
 
-    def despatch(self, message):
+            catchup = False
+
+    def despatch(self, message, catchup):
         if getattr(message, 'left_chat_participant'):
             self.handle_left_chat_participant(message)
         elif getattr(message, 'new_chat_participant'):
             self.handle_joined_chat_participant(message)
         elif message.text is not None:
             # TODO: handle commands
-            self.handle_text(message)
+            self.handle_text(message, catchup)
         else:
             log.debug("unhandled message %s", message.to_dict())
 
@@ -50,7 +52,7 @@ class Telegrammar(object):
         if message.joined_chat_participant.id == self.bot.id:
             log.info('Joined %s', message.chat.title)
 
-    def handle_text(self, message):
+    def handle_text(self, message, catchup):
         sender = message.from_user.username
 
         if isinstance(message.chat, telegram.GroupChat):
@@ -64,13 +66,15 @@ class Telegrammar(object):
 
             reply = u'I think you mean “{}”.'.format(quantity)
             log.info('--> %s', reply)
-            self.bot.sendMessage(
-                chat_id=message.chat_id,
-                reply_to_message_id=message.message_id,
-                text=reply)
+            if not catchup:
+                self.bot.sendMessage(
+                    chat_id=message.chat_id,
+                    reply_to_message_id=message.message_id,
+                    text=reply)
 
 
-def main(debug: "enable debug output"=False):
+def main(debug: "enable debug output"=False,
+         catchup: "skip the first batch of messages"=False):
     """
     Annoy some Telegram users.
 
@@ -79,7 +83,7 @@ def main(debug: "enable debug output"=False):
     token = os.environ['TELEGRAM_BOT_TOKEN']
     bot = telegram.Bot(token=token, debug=debug)
 
-    Telegrammar(bot).run()
+    Telegrammar(bot).run(catchup)
 
 if __name__ == '__main__':
     argh.dispatch_command(main)
