@@ -393,6 +393,10 @@ class LessListener(StreamListener):
                     log.info(u"%s no longer follows us; unfollowing", rel.screen_name)
                     self.api.destroy_friendship(user_id=rel.id)
 
+        if not to_mention:
+            log.info('no-one who follows us to reply to')
+            return
+
         # Keep dropping mentions until the reply is short enough
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in six.iterkeys(to_mention)]):
