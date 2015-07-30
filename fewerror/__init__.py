@@ -248,37 +248,45 @@ class Event(Model):
 
 
 class State(object):
-    def __init__(self, olde=None):
-        self.replied_to = getattr(olde, 'replied_to', {})
-        self.last_time_for_word = getattr(olde, 'last_time_for_word', {})
-        self.replied_to_user_and_word = getattr(olde, 'replied_to_user_and_word', {})
+    def __init__(self, filename, olde=None):
+        self._state_filename = filename
+        self.replied_to = {
+            int(k): v for k, v in olde.get('replied_to', {}).items()
+        }
+        self.last_time_for_word = olde.get('last_time_for_word', {})
+        self.replied_to_user_and_word = olde.get('replied_to_user_and_word', {})
 
     def __str__(self):
         return '<State: {} replied_to, {} last_time_for_word, {} replied_to_user_and_word>'.format(
             len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
 
+    @classmethod
+    def load(cls, screen_name):
+        filename = 'state.{}.json'.format(screen_name)
 
-class StateHolder(object):
-    def __init__(self, screen_name):
-        self._state_filename = 'state.{}.pickle'.format(screen_name)
-
-    def load(self):
         try:
-            with open(self._state_filename, 'rb') as f:
-                state = State(olde=pickle.load(f))
+            with open(filename, 'r') as f:
+                olde = json.load(f)
+
         except IOError as e:
             if e.errno != errno.ENOENT:
                 raise
 
-            state = State()
+            olde = {}
 
-        log.info('loaded %s: %s', self._state_filename, state)
+        state = cls(filename, olde)
+        log.info('loaded %s: %s', filename, state)
         return state
 
-    def save(self, state):
+    def save(self):
         with tempfile.NamedTemporaryFile(prefix=self._state_filename, suffix='.tmp', dir='.',
+                                         mode='w',
                                          delete=False) as f:
-            pickle.dump(state, f, protocol=pickle.HIGHEST_PROTOCOL)
+            json.dump(fp=f, obj={
+                'replied_to': self.replied_to,
+                'last_time_for_word': self.last_time_for_word,
+                'replied_to_user_and_word': self.replied_to_user_and_word,
+            })
 
         os.rename(f.name, self._state_filename)
 
@@ -298,8 +306,7 @@ class LessListener(StreamListener):
         self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
 
-        self._state_holder = StateHolder(self.me.screen_name)
-        self._state = self._state_holder.load()
+        self._state = State.load(self.me.screen_name)
         self._hb = 0
 
         if self.gather:
@@ -418,7 +425,7 @@ class LessListener(StreamListener):
                     self._state.replied_to_user_and_word[(sn, quantity.lower())] = r.id
 
             self._state.last_time_for_word[quantity.lower()] = now
-            self._state_holder.save(self._state)
+            self._state.save()
         else:
             log.info('too long, not replying')
 
