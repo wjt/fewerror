@@ -36,9 +36,9 @@ class Telegrammar(object):
             catchup = False
 
     def despatch(self, message, catchup):
-        if getattr(message, 'left_chat_participant'):
+        if message.left_chat_participant:
             self.handle_left_chat_participant(message)
-        elif getattr(message, 'new_chat_participant'):
+        elif message.new_chat_participant:
             self.handle_joined_chat_participant(message)
         elif message.text is not None:
             # TODO: handle commands
