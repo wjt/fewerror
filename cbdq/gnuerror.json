@@ -97,17 +97,27 @@
     "Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
   ],
   "despisers": [
-    "#animal#s",
+    "#animals#",
     "#agents#"
   ],
 
 
-  "animals_that_do_animal_things": "#animal#s that #animal_action#",
-
+  "animals_that_do_animal_things": "#animals# that #animal_action#",
   "animal": [
     "dog",
     "cat",
-    "parrot"
+    "parrot",
+    "fish",
+    "seahorse",
+    "baby"
+  ],
+  "animals": [
+    "dogs",
+    "cats",
+    "parrots",
+    "fish",
+    "seahorses",
+    "babies"
   ],
 
 
@@ -143,15 +153,20 @@
   ],
 
 
-  "frighten": "#animal#s that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
+  "frighten": "#animals# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
 
-  "menacing": "Hundreds of thousands of #menacing_births# are\nborn every day: the whole phenomenon\n#is_menacing#.",
+  "menacing": "Hundreds of thousands of #menacing_births# are\n#menacing_born# every day: the whole phenomenon\n#is_menacing#.",
 
   "menacing_births": [
-    "#animal#s",
+    "#animals#",
     "#agents#",
-    "babies",
     "GNU programs"
+  ],
+  "menacing_born": [
+    "born",
+    "announced",
+    "produced",
+    "created"
   ],
   "is_menacing": [
     "is menacing",
@@ -164,9 +179,15 @@
   ],
 
 
-  "natalist_pressure": "Having a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
+  "natalist_pressure": "#natalist_verbs# a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
+
+  "natalist_verbs": [
+    "Having",
+    "Producing",
+    "Creating",
+    "Publishing"
+  ],
   "natalist_births": [
-    "baby",
     "GNU program",
     "#animal#",
     "#animal#",
@@ -175,7 +196,7 @@
   "natalist_extinctions": [
     "wildlife",
     "#entity#",
-    "#animal#s"
+    "#animals#"
   ],
   "natalist_effects": [
     "#bad_entities#",
