@@ -8,6 +8,7 @@ logging.basicConfig(level='DEBUG',
 
 import abc
 import argh
+import errno
 import os
 import telegram
 
@@ -71,8 +72,9 @@ class TelegramStreamer(object):
                 for line in f:
                     if line:
                         return int(line)
-        except FileNotFoundError:
-            return None
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
 
     def write_last_offset(self, offset):
         with open(self._last_offset_path, 'w') as f:
