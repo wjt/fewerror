@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level='DEBUG',
                     format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
 
+import abc
 import argh
 import os
 import telegram
@@ -15,11 +16,41 @@ from . import make_reply
 log = logging.getLogger(__name__)
 
 
-class Telegrammar(object):
+class TelegramHandler(metaclass=abc.ABCMeta):
     def __init__(self, bot):
         self.bot = bot
 
-    def run(self, catchup):
+    def handle_left_chat_participant(self, message):
+        pass
+
+    def handle_left_chat_participant(self, message):
+        pass
+
+    def handle_command(self, message):
+        pass
+
+    def handle_text(self, message):
+        pass
+
+    def handle_message(self, message):
+        log.debug("unhandled message flavour %s", message.to_dict())
+
+    def _context(self, message):
+        """Just for logging convenience"""
+        sender = message.from_user.username
+
+        if isinstance(message.chat, telegram.GroupChat):
+            return '{} @ {}'.format(sender, message.chat.title)
+        else:
+            return sender
+
+
+class TelegramStreamer(object):
+    def __init__(self, bot, handler):
+        self.bot = bot
+        self.handler = handler
+
+    def run(self):
         offset = None
 
         while True:
@@ -35,16 +66,21 @@ class Telegrammar(object):
 
             catchup = False
 
-    def despatch(self, message, catchup):
+    def despatch(self, message):
         if message.left_chat_participant:
             self.handle_left_chat_participant(message)
         elif message.new_chat_participant:
             self.handle_joined_chat_participant(message)
         elif message.text is not None:
-            # TODO: handle commands
-            self.handle_text(message, catchup)
+            if message.text.startswith('/'):
+                self.handler.handle_command(message)
+            else:
+                self.handler.handle_text(message)
         else:
-            log.debug("unhandled message %s", message.to_dict())
+            self.handler.handle_message(message)
+
+
+class FewerrorHandler(TelegramHandler):
 
     def handle_left_chat_participant(self, message):
         if message.left_chat_participant.id == self.bot.id:
@@ -54,13 +90,12 @@ class Telegrammar(object):
         if message.joined_chat_participant.id == self.bot.id:
             log.info('Joined %s', message.chat.title)
 
-    def handle_text(self, message, catchup):
-        sender = message.from_user.username
+    def handle_command(self, message):
+        context = self._context(message)
+        log.info('<%s> %s', context, message.text)
 
-        if isinstance(message.chat, telegram.GroupChat):
-            context = '{} @ {}'.format(sender, message.chat.title)
-        else:
-            context = sender
+    def handle_text(self, message):
+        context = self._context(message)
 
         quantity = make_reply(message.text)
         if quantity is not None:
@@ -68,15 +103,13 @@ class Telegrammar(object):
 
             reply = u'I think you mean “{}”.'.format(quantity)
             log.info('--> %s', reply)
-            if not catchup:
-                self.bot.sendMessage(
-                    chat_id=message.chat_id,
-                    reply_to_message_id=message.message_id,
-                    text=reply)
+            self.bot.sendMessage(
+                chat_id=message.chat_id,
+                reply_to_message_id=message.message_id,
+                text=reply)
 
 
-def main(debug: "enable debug output"=False,
-         catchup: "skip the first batch of messages"=False):
+def main(debug: "enable debug output"=False):
     """
     Annoy some Telegram users.
 
@@ -84,8 +117,9 @@ def main(debug: "enable debug output"=False,
     """
     token = os.environ['TELEGRAM_BOT_TOKEN']
     bot = telegram.Bot(token=token, debug=debug)
+    handler = FewerrorHandler(bot)
+    TelegramStreamer(bot, handler).run()
 
-    Telegrammar(bot).run(catchup)
 
 if __name__ == '__main__':
     argh.dispatch_command(main)
