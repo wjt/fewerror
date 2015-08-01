@@ -49,22 +49,34 @@ class TelegramStreamer(object):
     def __init__(self, bot, handler):
         self.bot = bot
         self.handler = handler
+        self._last_offset_path = os.path.join(os.getcwd(), '.offset.{}.txt'.format(bot.username))
 
     def run(self):
-        offset = None
+        offset = self.read_last_offset()
 
         while True:
             updates = self.bot.getUpdates(offset=offset, timeout=600)
 
             for u in updates:
-                self.despatch(u.message, catchup)
-
-            if updates:
                 # Yes, +1 is what the HTTP API requires, and python-telegram-bot does not hide this
                 # cruelty from us
-                offset = updates[-1].update_id + 1
+                offset = u.update_id + 1
+                self.write_last_offset(offset)
 
-            catchup = False
+                self.despatch(u.message)
+
+    def read_last_offset(self):
+        try:
+            with open(self._last_offset_path, 'r') as f:
+                for line in f:
+                    if line:
+                        return int(line)
+        except FileNotFoundError:
+            return None
+
+    def write_last_offset(self, offset):
+        with open(self._last_offset_path, 'w') as f:
+            f.write(str(offset))
 
     def despatch(self, message):
         if message.left_chat_participant:
