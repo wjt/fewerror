@@ -23,7 +23,7 @@ class TelegramHandler(metaclass=abc.ABCMeta):
     def handle_left_chat_participant(self, message):
         pass
 
-    def handle_left_chat_participant(self, message):
+    def handle_joined_chat_participant(self, message):
         pass
 
     def handle_command(self, message):
