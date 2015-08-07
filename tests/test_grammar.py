@@ -37,11 +37,11 @@ true_positives = [
      'fewer lucky',
     ),
 
-    pytest.mark.xfail(reason='POS tagger thinks "wanky" is a noun')(
+    # pytest.mark.xfail(reason='POS tagger thinks "wanky" is a noun')(
         (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
          'fewer wanky',
         ),
-    ),
+    # ),
 
     (u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
      'fewer keen',
@@ -75,6 +75,15 @@ true_positives = [
     (u"So if I say fewer less often all is well?",
      u"fewer often",
     ),
+
+    (u"Less monitoring if you ask me",
+     u"fewer monitoring",
+    ),
+
+    # [100%] fewer exercise is be ungrammatical, though "100% fewer exercises" would be grammatical...
+    (u"I've eaten 50% more food and done 100% less exercise since I got to NY.",
+     "fewer exercise",
+    ),
 ]
 
 
@@ -103,9 +112,6 @@ false_positives = [
     u"oh yh due to there being less gender-neutral people, right? :D",
     u"Yes, Fred Phelps did horrible things, said horrible things. That doesn't mean you can do slightly less horrible things and be a good person.",
     u"There are people with life sentences for way less: Tim Allen arrested for over 650 grams (1.43 lb) of cocaine. 1978. http://twitter.com/History_Pics/status/442776869742854145/photo/1pic.twitter.com/EtUND0xYxm ",
-
-    # 100% fewer exercise would be ungrammatical but "100% fewer exercises" would be grammatical...
-    u"I've eaten 50% more food and done 100% less exercise since I got to NY. If I lived here I'd be spherical.",
 
     u"I wish there were less pretentious motherfucking ass holes on this planet...i feel so worthless right now",
 ]
