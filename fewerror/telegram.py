@@ -10,6 +10,7 @@ import abc
 import argh
 import errno
 import os
+from retry import retry
 import telegram
 
 from . import make_reply
@@ -56,7 +57,7 @@ class TelegramStreamer(object):
         offset = self.read_last_offset()
 
         while True:
-            updates = self.bot.getUpdates(offset=offset, timeout=600)
+            updates = self._getUpdates(offset)
 
             for u in updates:
                 # Yes, +1 is what the HTTP API requires, and python-telegram-bot does not hide this
@@ -64,7 +65,10 @@ class TelegramStreamer(object):
                 offset = u.update_id + 1
                 self.write_last_offset(offset)
 
-                self.despatch(u.message)
+                try:
+                    self.despatch(u.message)
+                except Exception:
+                    log.warning("while handling %s", u, exc_info=True)
 
     def read_last_offset(self):
         try:
@@ -92,6 +96,13 @@ class TelegramStreamer(object):
                 self.handler.handle_text(message)
         else:
             self.handler.handle_message(message)
+
+    @retry(exceptions=telegram.error.TelegramError,
+           delay=1,
+           max_delay=30,
+           backoff=2)
+    def _getUpdates(self, offset):
+        return self.bot.getUpdates(offset=offset, timeout=600)
 
 
 class FewerrorHandler(TelegramHandler):
