@@ -170,6 +170,8 @@ class POS:
 mass_noun_corpora = WordListCorpusReader('wordlist/massnoun', r'[a-z]+')
 mass_nouns = mass_noun_corpora.words()
 
+QUANTITY_POS_TAGS = (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS)
+
 
 def find_an_indiscrete_quantity(blob):
     tags_from_less = itertools.dropwhile((lambda word_tag: word_tag[0].lower() != 'less'),
@@ -185,7 +187,7 @@ def find_an_indiscrete_quantity(blob):
     except StopIteration:
         return
 
-    if w_pos not in (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS) and w not in mass_nouns:
+    if w_pos not in QUANTITY_POS_TAGS and w not in mass_nouns:
         return
 
     for v, v_pos in tags_from_less:
