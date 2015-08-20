@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 # vim: fileencoding=utf-8
 
-# XXX: https://github.com/leandrotoledo/python-telegram-bot/pull/22
-import logging
-logging.basicConfig(level='DEBUG',
-                    format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
-
 import abc
 import argh
 import errno
+import logging
 import os
 from retry import retry
 import telegram
@@ -140,8 +136,11 @@ def main(debug: "enable debug output"=False):
 
     Set $TELEGRAM_BOT_TOKEN for success.
     """
+    logging.basicConfig(level=('DEBUG' if debug else 'INFO'),
+                        format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
+
     token = os.environ['TELEGRAM_BOT_TOKEN']
-    bot = telegram.Bot(token=token, debug=debug)
+    bot = telegram.Bot(token=token)
     handler = FewerrorHandler(bot)
     TelegramStreamer(bot, handler).run()
 
