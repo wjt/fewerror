@@ -7,7 +7,7 @@ pytest==2.6.4
 python-dateutil==2.2
 PyYAML==3.10
 textblob==0.9.0
-tweepy==3.4.0
+tweepy==3.3.0
 python-telegram-bot==2.7.1
 argh==0.26.1
 retry==0.9.1
