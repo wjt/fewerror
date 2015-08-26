@@ -114,6 +114,10 @@ false_positives = [
     u"There are people with life sentences for way less: Tim Allen arrested for over 650 grams (1.43 lb) of cocaine. 1978. http://twitter.com/History_Pics/status/442776869742854145/photo/1pic.twitter.com/EtUND0xYxm ",
 
     u"I wish there were less pretentious motherfucking ass holes on this planet...i feel so worthless right now",
+
+    pytest.mark.xfail(reason='TODO: split on/strip out links?')(
+        u"Firefox Tweaks – An attempt to make Firefox suck less http://ift.tt/1MuFeCN",
+    ),
 ]
 
 
