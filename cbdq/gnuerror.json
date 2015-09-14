@@ -2,7 +2,6 @@
   "origin": [
     "#new_origins#",
     "#new_origins#",
-    "#new_origins#",
     "#old_origins#"
   ],
   "old_origins": [
@@ -17,7 +16,7 @@
 
 
   "tinfoil": [
-    "To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
+    "#QUOTE#To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
   ],
   "agents": [
     "CIA agents",
@@ -94,7 +93,7 @@
 
 
   "despise": [
-    "Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
+    "#QUOTE#Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
   ],
   "despisers": [
     "#animals#",
@@ -153,9 +152,9 @@
   ],
 
 
-  "frighten": "#animals# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
+  "frighten": "#QUOTE##animals# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
 
-  "menacing": "Hundreds of thousands of #menacing_births# are\n#menacing_born# every day: the whole phenomenon\n#is_menacing#.",
+  "menacing": "#QUOTE#Hundreds of thousands of #menacing_births# are\n#menacing_born# every day: the whole phenomenon\n#is_menacing#.",
 
   "menacing_births": [
     "#animals#",
@@ -179,7 +178,7 @@
   ],
 
 
-  "natalist_pressure": "#natalist_verbs# a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
+  "natalist_pressure": "#QUOTE##natalist_verbs# a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
 
   "natalist_verbs": [
     "Having",
@@ -206,11 +205,13 @@
     "mass starvation"
   ],
 
-
+"QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
 
 
 
   "___": "___"
 }
+
+
 
 
