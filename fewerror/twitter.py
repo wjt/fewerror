@@ -11,6 +11,19 @@ from . import LessListener
 log = logging.getLogger(__name__)
 
 
+def api_from_env():
+    consumer_key = os.environ["CONSUMER_KEY"]
+    consumer_secret = os.environ["CONSUMER_SECRET"]
+
+    access_token = os.environ["ACCESS_TOKEN"]
+    access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
+
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+
+    return API(auth)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=u'annoy some tweeps',
@@ -41,16 +54,7 @@ def main():
         logging.basicConfig(level='DEBUG',
                             format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
 
-    consumer_key = os.environ["CONSUMER_KEY"]
-    consumer_secret = os.environ["CONSUMER_SECRET"]
-
-    access_token = os.environ["ACCESS_TOKEN"]
-    access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
-
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-
-    api = API(auth)
+    api = api_from_env()
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
                      follow_on_favs=args.follow_on_favs,
                      heartbeat_interval=args.heartbeat_interval, gather=args.gather)
