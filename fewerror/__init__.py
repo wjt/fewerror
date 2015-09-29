@@ -390,6 +390,7 @@ class LessListener(StreamListener):
         for x in status.entities['user_mentions']:
             to_mention.add(x['screen_name'])
 
+        # TODO: if it's a mention, reply to the poster
         to_mention.discard(self.me.screen_name)
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:
@@ -404,6 +405,7 @@ class LessListener(StreamListener):
             return
 
         # Keep dropping mentions until the reply is short enough
+        # TODO: hashtags?
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
             reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)

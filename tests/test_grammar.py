@@ -84,6 +84,14 @@ true_positives = [
     (u"I've eaten 50% more food and done 100% less exercise since I got to NY.",
      "fewer exercise",
     ),
+
+    (u"The One True Syntax Pedant Bot is @fewerror. Much less bad than all others.",
+     "fewer bad",
+    ),
+
+    (u"it’s WAY less spiritually exhausting than constantly having to educate about race/gender/etc.",
+     "fewer spiritually",  # TODO: would be nice to say "fewer spiritually exhausting"
+    ),
 ]
 
 
@@ -131,12 +139,12 @@ def test_mass_nouns():
     assert fewerror.make_reply("I wish I had studied less mathematics students") is None
 
 
-@pytest.mark.parametrize("desc,fmt", [
-    ("RT", u"RT @test: {}"),
-    ("MT", u"THIS. MT @test: {}"),
-    ("dq", u'"{}" @myfriend'),
-    ("uniquote", u'“{}” ýéş'),
+@pytest.mark.parametrize("fmt", [
+    (u"RT @test: {}"),
+    (u"THIS. MT @test: {}"),
+    (u'"{}" @myfriend'),
+    (u'“{}” ýéş'),
 ])
-def test_ignores_manual_rts(desc, fmt):
+def test_ignores_manual_rts(fmt):
     tweet = fmt.format(true_positives[0])
     assert fewerror.make_reply(tweet) is None
