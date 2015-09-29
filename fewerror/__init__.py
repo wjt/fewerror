@@ -290,6 +290,24 @@ class State(object):
         os.rename(f.name, self._state_filename)
 
 
+def get_sanitized_text(status):
+    text = status.text
+
+    flat_entities = [
+        e
+        for k in ('media', 'urls')  # TODO: what about hashtags?
+        for e in status.entities[k]
+    ]
+    flat_entities.sort(key=lambda e: e['indices'], reverse=True)
+
+    for e in flat_entities:
+        i, j = e['indices']
+        text = text[:i] + text[j:]
+
+    text = text.replace("&amp;", "&")
+    return text.strip()
+
+
 class LessListener(StreamListener):
     TIMEOUT = datetime.timedelta(seconds=120)
     PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
@@ -352,7 +370,7 @@ class LessListener(StreamListener):
                 with open(filename, 'w') as f:
                     json.dump(obj=received_status._json, fp=f)
 
-        text = status.text.replace("&amp;", "&")
+        text = get_sanitized_text(status)
         screen_name = status.author.screen_name
 
         try:
