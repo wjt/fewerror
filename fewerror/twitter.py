@@ -55,7 +55,12 @@ def main():
                             format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
 
     auth = auth_from_env()
-    api = API(auth)
+    api = API(auth,
+              wait_on_rate_limit=True,
+              wait_on_rate_limit_notify=True,
+              # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
+              # actually retry after a rate limit.
+              retry_count=1)
     l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
                      follow_on_favs=args.follow_on_favs,
                      heartbeat_interval=args.heartbeat_interval, gather=args.gather)
