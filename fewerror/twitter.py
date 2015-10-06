@@ -4,8 +4,9 @@ import json
 import logging
 import logging.config
 import os
+import time
 
-from tweepy import OAuthHandler, Stream, API
+from tweepy import OAuthHandler, Stream, API, RateLimitError
 from . import LessListener
 
 log = logging.getLogger(__name__)
@@ -61,15 +62,25 @@ def main():
               # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
               # actually retry after a rate limit.
               retry_count=1)
-    l = LessListener(api, post_replies=args.post_replies, reply_to_rts=args.reply_to_retweets,
-                     follow_on_favs=args.follow_on_favs,
-                     heartbeat_interval=args.heartbeat_interval, gather=args.gather)
+    while True:
+        try:
+            l = LessListener(api,
+                             post_replies=args.post_replies,
+                             reply_to_rts=args.reply_to_retweets,
+                             follow_on_favs=args.follow_on_favs,
+                             heartbeat_interval=args.heartbeat_interval,
+                             gather=args.gather)
 
-    stream = Stream(auth, l)
-    if args.use_public_stream:
-        stream.filter(track=['less'])
-    else:
-        stream.userstream()
+            stream = Stream(auth, l)
+            if args.use_public_stream:
+                stream.filter(track=['less'])
+            else:
+                stream.userstream()
+        except RateLimitError:
+            log.warning("Rate-limited, and Tweepy didn't save us; time for a nap",
+                        exc_info=True)
+            time.sleep(15 * 60)
+
 
 if __name__ == '__main__':
     try:
