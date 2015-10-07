@@ -75,7 +75,7 @@ def main():
             if args.use_public_stream:
                 stream.filter(track=['less'])
             else:
-                stream.userstream()
+                stream.userstream(replies='all')
         except RateLimitError:
             log.warning("Rate-limited, and Tweepy didn't save us; time for a nap",
                         exc_info=True)
