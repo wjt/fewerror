@@ -296,6 +296,7 @@ def get_sanitized_text(status):
     flat_entities = [
         e
         for k in ('media', 'urls')  # TODO: what about hashtags?
+        if k in status.entities
         for e in status.entities[k]
     ]
     flat_entities.sort(key=lambda e: e['indices'], reverse=True)
@@ -365,10 +366,10 @@ class LessListener(StreamListener):
             rt_log_prefix = ''
 
             # Don't log RTs, no point in getting a million duplicates in the corpus.
-            if self.gather and 'less' in status.text:
-                filename = os.path.join(self.gather, '{}.json'.format(received_status.id))
-                with open(filename, 'w') as f:
-                    json.dump(obj=received_status._json, fp=f)
+        if self.gather and 'less' in status.text:
+            filename = os.path.join(self.gather, '{}.json'.format(received_status.id))
+            with open(filename, 'w') as f:
+                json.dump(obj=received_status._json, fp=f)
 
         text = get_sanitized_text(status)
         screen_name = status.author.screen_name

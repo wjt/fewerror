@@ -1,3 +1,4 @@
+# vim: fileencoding=utf-8
 import json
 import os
 
@@ -16,6 +17,10 @@ import fewerror.twitter
 
     ('582960339714744320.json',
      "If media had shown more news curiosity in recent years, this would seem less surprising.",
+    ),
+    # No media
+    ('649911069322948608.json',
+     """OH:\n“It's all vaguely Sisyphean.”\n“Oh! THAT's the word I was looking for yesterday!”""",
     ),
 ])
 def test_sanitize(filename, expected):
