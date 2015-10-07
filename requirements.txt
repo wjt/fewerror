@@ -1,11 +1,11 @@
 argparse==1.2.1
-coverage-4.0
+coverage==4.0
 flake8==2.4.0
 nltk==3.0.1
 pip-tools==0.3.5
 py==1.4.26
 pytest==2.6.4
-pytest-cov-2.2.0
+pytest-cov==2.2.0
 python-dateutil==2.2
 PyYAML==3.10
 textblob==0.9.0
