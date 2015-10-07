@@ -7,6 +7,7 @@ from tweepy.models import Model, Status, User, List
 
 json = import_simplejson()
 import datetime
+import dateutil.parser
 import errno
 import itertools
 import os
@@ -250,7 +251,7 @@ class State(object):
     def __init__(self,
                  filename,
                  olde=None,
-                 now=datetime.datetime.now,
+                 now=datetime.datetime.utcnow,
                  timeout_seconds=120,
                  per_word_timeout_seconds=60*60):
         self._state_filename = filename
@@ -258,7 +259,7 @@ class State(object):
             int(k): v for k, v in olde.get('replied_to', {}).items()
         }
         self._last_time_for_word = {
-            k: parse_datetime(v)
+            k: dateutil.parser.parse(v)
             for k, v in olde.get('last_time_for_word', {}).items()
         }
 
@@ -272,6 +273,13 @@ class State(object):
     def __str__(self):
         return '<State: {} replied_to, {} last_time_for_word>'.format(
             len(self._replied_to), len(self._last_time_for_word))
+
+    def __eq__(self, value):
+        return (
+            self._state_filename == value._state_filename and
+            self._replied_to == value._replied_to and
+            self._last_time_for_word == value._last_time_for_word
+        )
 
     @classmethod
     def load(cls, screen_name, directory='.', **kwargs):
