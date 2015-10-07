@@ -7,6 +7,7 @@ import pytest
 from tweepy.models import Status
 
 from fewerror import get_sanitized_text
+import fewerror.twitter
 
 @pytest.mark.parametrize('filename,expected', [
     ('647349406191218688.json',
