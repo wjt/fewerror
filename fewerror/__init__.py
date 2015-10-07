@@ -464,7 +464,7 @@ class LessListener(StreamListener):
                 r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
 
-                self._state.record_reply(status_id, quantity, r_id)
+                self._state.record_reply(status.id, quantity, r.id)
         else:
             log.info('too long, not replying')
 
