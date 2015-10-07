@@ -7,7 +7,7 @@ import pytest
 
 from tweepy.models import Status
 
-from fewerror import get_sanitized_text, State
+from fewerror import get_sanitized_text
 import fewerror.twitter
 
 @pytest.mark.parametrize('filename,expected', [
@@ -34,14 +34,3 @@ def test_sanitize(filename, expected):
     assert 'http' not in text
     assert text == expected
 
-
-def test_state(tmpdir):
-    d = str(tmpdir)
-
-    s1 = State.load("test", d)
-    assert s1.replied_to_user_and_word == {}
-    s1.replied_to_user_and_word[('foo', 'bar')] = 1
-    s1.save()
-
-    s2 = State.load("test", d)
-    assert s1.replied_to_user_and_word == s2.replied_to_user_and_word

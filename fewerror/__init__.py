@@ -247,23 +247,34 @@ class Event(Model):
 
 
 class State(object):
-    def __init__(self, filename, olde=None):
+    def __init__(self,
+                 filename,
+                 olde=None,
+                 now=datetime.datetime.now,
+                 timeout_seconds=120,
+                 per_word_timeout_seconds=60*60):
         self._state_filename = filename
-        self.replied_to = {
+        self._replied_to = {
             int(k): v for k, v in olde.get('replied_to', {}).items()
         }
-        self.last_time_for_word = olde.get('last_time_for_word', {})
-        self.replied_to_user_and_word = {
-            tuple(k.split('@')): v
-            for k, v in olde.get('replied_to_user_and_word', {}).items()
+        self._last_time_for_word = {
+            k: parse_datetime(v)
+            for k, v in olde.get('last_time_for_word', {}).items()
         }
 
+        self._timeout = datetime.timedelta(seconds=timeout_seconds)
+        self._per_word_timeout = datetime.timedelta(
+            seconds=per_word_timeout_seconds)
+
+        self._now = now
+        self._last = now() - self._timeout
+
     def __str__(self):
-        return '<State: {} replied_to, {} last_time_for_word, {} replied_to_user_and_word>'.format(
-            len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
+        return '<State: {} replied_to, {} last_time_for_word>'.format(
+            len(self._replied_to), len(self._last_time_for_word))
 
     @classmethod
-    def load(cls, screen_name, directory='.'):
+    def load(cls, screen_name, directory='.', **kwargs):
         filename = os.path.join(directory, 'state.{}.json'.format(screen_name))
 
         try:
@@ -276,7 +287,7 @@ class State(object):
 
             olde = {}
 
-        state = cls(filename, olde)
+        state = cls(filename, olde, **kwargs)
         log.info('loaded %s: %s', filename, state)
         return state
 
@@ -285,15 +296,44 @@ class State(object):
                                          mode='w',
                                          delete=False) as f:
             json.dump(fp=f, obj={
-                'replied_to': self.replied_to,
-                'last_time_for_word': self.last_time_for_word,
-                'replied_to_user_and_word': {
-                    '@'.join(k): v
-                    for k, v in self.replied_to_user_and_word.items()
+                'replied_to': self._replied_to,
+                'last_time_for_word': {
+                    k: v.isoformat()
+                    for k, v in self._last_time_for_word.items()
                 },
             })
 
         os.rename(f.name, self._state_filename)
+
+    def can_reply(self, status_id, quantity):
+        quantity = quantity.lower()
+        now = self._now()
+
+        r_id = self._replied_to.get(status_id, None)
+        if r_id is not None:
+            log.info(u"…already replied: %d", r_id)
+            return False
+
+        last_for_this = self._last_time_for_word.get(quantity, None)
+        if last_for_this and now - last_for_this < self._per_word_timeout:
+            log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
+                     last_for_this + self._per_word_timeout)
+            return False
+
+        if now - self._last < self._timeout:
+            log.info(u"rate-limiting until %s…", self._last + self._timeout)
+            return False
+
+        return True
+
+    def record_reply(self, status_id, quantity, r_id):
+        now = self._now()
+
+        self._last = now
+        self._replied_to[status_id] = r_id
+        self._last_time_for_word[quantity] = now
+
+        self.save()
 
 
 def get_sanitized_text(status):
@@ -316,8 +356,6 @@ def get_sanitized_text(status):
 
 
 class LessListener(StreamListener):
-    TIMEOUT = datetime.timedelta(seconds=120)
-    PER_WORD_TIMEOUT = datetime.timedelta(seconds=60 * 60)
     HEARTS = [u'♥', u'💓']
 
     def __init__(self, *args, **kwargs):
@@ -327,7 +365,6 @@ class LessListener(StreamListener):
         self.heartbeat_interval = kwargs.pop('heartbeat_interval', 500)
         self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
-        self.last = datetime.datetime.now() - self.TIMEOUT
         self.me = self.api.me()
 
         self._state = State.load(self.me.screen_name)
@@ -389,26 +426,8 @@ class LessListener(StreamListener):
         if quantity is None:
             return
 
-        now = datetime.datetime.now()
         log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
-        r_id = self._state.replied_to.get(status.id, None)
-        if r_id is not None:
-            log.info(u"…already replied: %d", r_id)
-            return
-
-        r_id = self._state.replied_to_user_and_word.get((screen_name.lower(), quantity.lower()), None)
-        if r_id is not None:
-            log.info(u"…already corrected @%s about '%s': %d", screen_name, quantity, r_id)
-            return
-
-        last_for_this = self._state.last_time_for_word.get(quantity.lower(), None)
-        if last_for_this and now - last_for_this < self.PER_WORD_TIMEOUT:
-            log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
-                     last_for_this + self.PER_WORD_TIMEOUT)
-            return
-
-        if self.post_replies and now - self.last < self.TIMEOUT:
-            log.info(u"rate-limiting until %s…", self.last + self.TIMEOUT)
+        if not self._state.can_reply(status.id, quantity):
             return
 
         to_mention.add(screen_name)
@@ -444,13 +463,8 @@ class LessListener(StreamListener):
                 # parameter by adding media_ids before *args -- why do the tweepy tests pass?
                 r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
-                self.last = now
-                self._state.replied_to[status.id] = r.id
-                for sn in to_mention:
-                    self._state.replied_to_user_and_word[(sn.lower(), quantity.lower())] = r.id
 
-            self._state.last_time_for_word[quantity.lower()] = now
-            self._state.save()
+                self._state.record_reply(status_id, quantity, r_id)
         else:
             log.info('too long, not replying')
 
