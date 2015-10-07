@@ -2,8 +2,12 @@ language: python
 python:
   - "3.4"
     #  - "pypy3"
+cache:
+  directories:
+    - $HOME/.pip-cache/
 install:
-  - "pip install -r requirements.txt"
+  - pip install --upgrade pip
+  - "pip install -r requirements.txt --cache-dir $HOME/.pip-cache"
   - "python -m textblob.download_corpora"
 script:
   - py.test --cov=fewerror
