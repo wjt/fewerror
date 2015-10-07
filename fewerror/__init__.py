@@ -253,15 +253,18 @@ class State(object):
             int(k): v for k, v in olde.get('replied_to', {}).items()
         }
         self.last_time_for_word = olde.get('last_time_for_word', {})
-        self.replied_to_user_and_word = olde.get('replied_to_user_and_word', {})
+        self.replied_to_user_and_word = {
+            tuple(k.split('@')): v
+            for k, v in olde.get('replied_to_user_and_word', {}).items()
+        }
 
     def __str__(self):
         return '<State: {} replied_to, {} last_time_for_word, {} replied_to_user_and_word>'.format(
             len(self.replied_to), len(self.last_time_for_word), len(self.replied_to_user_and_word))
 
     @classmethod
-    def load(cls, screen_name):
-        filename = 'state.{}.json'.format(screen_name)
+    def load(cls, screen_name, directory='.'):
+        filename = os.path.join(directory, 'state.{}.json'.format(screen_name))
 
         try:
             with open(filename, 'r') as f:
@@ -284,7 +287,10 @@ class State(object):
             json.dump(fp=f, obj={
                 'replied_to': self.replied_to,
                 'last_time_for_word': self.last_time_for_word,
-                'replied_to_user_and_word': self.replied_to_user_and_word,
+                'replied_to_user_and_word': {
+                    '@'.join(k): v
+                    for k, v in self.replied_to_user_and_word.items()
+                },
             })
 
         os.rename(f.name, self._state_filename)
@@ -390,7 +396,7 @@ class LessListener(StreamListener):
             log.info(u"…already replied: %d", r_id)
             return
 
-        r_id = self._state.replied_to_user_and_word.get((screen_name, quantity.lower()), None)
+        r_id = self._state.replied_to_user_and_word.get((screen_name.lower(), quantity.lower()), None)
         if r_id is not None:
             log.info(u"…already corrected @%s about '%s': %d", screen_name, quantity, r_id)
             return
@@ -442,7 +448,7 @@ class LessListener(StreamListener):
                 self.last = now
                 self._state.replied_to[status.id] = r.id
                 for sn in to_mention:
-                    self._state.replied_to_user_and_word[(sn, quantity.lower())] = r.id
+                    self._state.replied_to_user_and_word[(sn.lower(), quantity.lower())] = r.id
 
             self._state.last_time_for_word[quantity.lower()] = now
             self._state.save()
