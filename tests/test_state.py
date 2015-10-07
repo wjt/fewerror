@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from contextlib import contextmanager
-import fewerror
 from datetime import datetime, timedelta
+
+from fewerror.state import State
 
 class Now:
     def __init__(self):
@@ -20,7 +21,7 @@ def roundtripped_state(tmpdir, timeout_seconds=-1, per_word_timeout_seconds=-1):
     now = Now()
 
     def load():
-        return fewerror.State.load(
+        return State.load(
             "test", d,
             timeout_seconds=timeout_seconds,
             per_word_timeout_seconds=per_word_timeout_seconds,
