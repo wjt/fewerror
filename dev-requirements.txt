@@ -1,5 +1,5 @@
 -r requirements.txt
-coverage==4.0
+coverage==3.7.1
 flake8==2.4.0
 py==1.4.26
 pytest-cov==2.2.0
