@@ -84,4 +84,4 @@ This thing expects to fetch authorization credentials from environment variables
 To get values for those variables, why not follow [Allison Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
 
 [![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
-[![Code Health](https://landscape.io/github/wjt/fewerror/master/landscape.svg?style=flat)](https://landscape.io/github/wjt/fewerror/master)
+[![Coverage Status](https://coveralls.io/repos/wjt/fewerror/badge.svg?branch=master&service=github)](https://coveralls.io/github/wjt/fewerror?branch=master)
