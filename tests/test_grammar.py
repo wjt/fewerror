@@ -126,6 +126,11 @@ false_positives = [
     pytest.mark.xfail(reason='TODO: split on/strip out links?')(
         u"Firefox Tweaks – An attempt to make Firefox suck less http://ift.tt/1MuFeCN",
     ),
+
+    # https://twitter.com/fewerror/status/659747048099618825
+    pytest.mark.xfail(reason='quotes')(
+        u'''I was about to do this but then realised they have reveals that say “show less” rather than “show fewer” so now _I’m_ angry :-\\''',
+    ),
 ]
 
 
