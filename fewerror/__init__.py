@@ -6,7 +6,6 @@ from tweepy.utils import import_simplejson, parse_datetime
 from tweepy.models import Model, Status, User, List
 
 json = import_simplejson()
-import itertools
 import os
 import random
 
@@ -35,12 +34,9 @@ def make_reply(text):
     if 'less' not in text.lower():
         return
 
-    if 'could care less' in text.lower():
-        return 'could care fewer'
-
     blob = TextBlob(text)
     for q in iflatmap(find_an_indiscrete_quantity, blob.sentences):
-        return 'fewer ' + q
+        return q
 
 
 class POS:
@@ -171,24 +167,25 @@ mass_nouns = mass_noun_corpora.words()
 QUANTITY_POS_TAGS = (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS)
 
 
-def find_an_indiscrete_quantity(blob):
-    tags_from_less = itertools.dropwhile((lambda word_tag: word_tag[0].lower() != 'less'),
-                                         blob.tags)
-    try:
-        less, less_pos = next(tags_from_less)
-        assert less.lower() == 'less'
-    except StopIteration:
-        return
+def match(blob, i):
+    if ["could", "care", "less"] == [w.lower() for w in blob.words[i-2:i+1]]:
+        return "could care fewer"
+
+    if i > 0:
+        v, v_pos = blob.tags[i - 1]
+        if v_pos == POS.CD and not v.endswith('%'):
+            # ignore "one less xxx" but allow "100% less xxx"
+            return
 
     try:
-        w, w_pos = next(tags_from_less)
-    except StopIteration:
+        w, w_pos = blob.tags[i + 1]
+    except IndexError:
         return
 
     if w_pos not in QUANTITY_POS_TAGS and w not in mass_nouns:
         return
 
-    for v, v_pos in tags_from_less:
+    for v, v_pos in blob.tags[i + 2:]:
         # Avoid replying "fewer lonely" to "less lonely girl"
         # why? this is "right"! but it would be better to say "fewer lonely girl"
         # but: "less happy sheep" -> "fewer happy sheep" is bad
@@ -199,7 +196,16 @@ def find_an_indiscrete_quantity(blob):
         if v_pos not in (POS.JJ, POS.VBG):
             break
 
-    yield w
+    return "fewer " + w
+
+
+def find_an_indiscrete_quantity(blob):
+    less_indices = [i for i, (word, tag) in enumerate(blob.tags) if word.lower() == 'less']
+
+    for i in less_indices:
+        q = match(blob, i)
+        if q is not None:
+            yield q
 
 
 class Event(Model):
