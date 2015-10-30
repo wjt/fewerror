@@ -34,12 +34,9 @@ def make_reply(text):
     if 'less' not in text.lower():
         return
 
-    if 'could care less' in text.lower():
-        return 'could care fewer'
-
     blob = TextBlob(text)
     for q in iflatmap(find_an_indiscrete_quantity, blob.sentences):
-        return 'fewer ' + q
+        return q
 
 
 class POS:
@@ -170,19 +167,12 @@ mass_nouns = mass_noun_corpora.words()
 QUANTITY_POS_TAGS = (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS)
 
 
-def find_an_indiscrete_quantity(blob):
-    less_indices = [i for i, (word, tag) in enumerate(blob.tags) if word.lower() == 'less']
+def match(blob, i):
+    if ["could", "care", "less"] == [w.lower() for w in blob.words[i-2:i+1]]:
+        return "could care fewer"
 
-    try:
-        i = less_indices[0]
-    except IndexError:
-        return
-
-    try:
+    if i > 0:
         v, v_pos = blob.tags[i - 1]
-    except IndexError:
-        pass
-    else:
         if v_pos == POS.CD and not v.endswith('%'):
             # ignore "one less xxx" but allow "100% less xxx"
             return
@@ -206,7 +196,16 @@ def find_an_indiscrete_quantity(blob):
         if v_pos not in (POS.JJ, POS.VBG):
             break
 
-    yield w
+    return "fewer " + w
+
+
+def find_an_indiscrete_quantity(blob):
+    less_indices = [i for i, (word, tag) in enumerate(blob.tags) if word.lower() == 'less']
+
+    for i in less_indices:
+        q = match(blob, i)
+        if q is not None:
+            yield q
 
 
 class Event(Model):

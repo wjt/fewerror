@@ -92,6 +92,16 @@ true_positives = [
     (u"it’s WAY less spiritually exhausting than constantly having to educate about race/gender/etc.",
      "fewer spiritually",  # TODO: would be nice to say "fewer spiritually exhausting"
     ),
+
+    pytest.mark.xfail(reason="issue #7")(
+        (u"""Telegram is certainly less popular, but WhatsApp is much less open.""",
+         ("fewer popular", "fewer open"),
+        ),
+    ),
+
+    (u"""I could care less""",
+     "could care fewer",
+    ),
 ]
 
 
