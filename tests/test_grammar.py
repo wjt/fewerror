@@ -152,17 +152,6 @@ def test_mass_nouns():
     assert fewerror.find_corrections("I wish I had studied less mathematics students") == []
 
 
-@pytest.mark.parametrize("fmt", [
-    (u"RT @test: {}"),
-    (u"THIS. MT @test: {}"),
-    (u'"{}" @myfriend'),
-    (u'“{}” ýéş'),
-])
-def test_ignores_manual_rts(fmt):
-    tweet = fmt.format(true_positives[0])
-    assert fewerror.make_reply(tweet) is None
-
-
 @pytest.mark.parametrize("corrections,reply", [
     (("a"), "I think you mean “a”"),
     (("a", "b"), "I think you mean “a”, and furthermore “b”"),

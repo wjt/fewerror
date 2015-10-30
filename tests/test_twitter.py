@@ -7,8 +7,7 @@ import pytest
 
 from tweepy.models import Status
 
-from fewerror import get_sanitized_text
-import fewerror.twitter
+from fewerror.twitter import get_sanitized_text
 
 @pytest.mark.parametrize('filename,expected', [
     ('647349406191218688.json',
@@ -34,3 +33,15 @@ def test_sanitize(filename, expected):
     assert 'http' not in text
     assert text == expected
 
+
+'''
+@pytest.mark.parametrize("fmt", [
+    (u"RT @test: {}"),
+    (u"THIS. MT @test: {}"),
+    (u'"{}" @myfriend'),
+    (u'“{}” ýéş'),
+])
+def test_ignores_manual_rts(fmt):
+    tweet = fmt.format(true_positives[0])
+    assert fewerror.make_reply(tweet) is None
+'''
