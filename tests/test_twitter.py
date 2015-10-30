@@ -5,9 +5,10 @@ import os
 from unittest.mock import NonCallableMock
 import pytest
 
-from tweepy.models import Status
+from tweepy.models import User, Status
+from tweepy.parsers import ModelParser
 
-from fewerror.twitter import get_sanitized_text
+from fewerror.twitter import get_sanitized_text, LessListener
 
 @pytest.mark.parametrize('filename,expected', [
     ('647349406191218688.json',
@@ -45,3 +46,57 @@ def test_ignores_manual_rts(fmt):
     tweet = fmt.format(true_positives[0])
     assert fewerror.make_reply(tweet) is None
 '''
+
+fewerror_user = {
+    "screen_name": "fewerror",
+    "id": 1932168457,
+    "id_str": "1932168457",
+    "name": "Fewer Errors",
+}
+
+
+class MockAPI:
+    parser = ModelParser()
+    friendships = {}
+
+    def __init__(self):
+        self._updates = []
+
+    def me(self):
+        return User.parse(self, fewerror_user)
+
+    def lookup_friendships(self, screen_names):
+        return [
+            self.friendships[screen_name]
+            for screen_name in screen_names
+            if screen_name in self.friendships
+        ]
+
+    def update_status(self, **kwargs):
+        self._updates.append(kwargs)
+        r = Status(api=self)
+        setattr(r, 'id', len(self._updates))
+        return r
+
+
+def test_end_to_end(tmpdir):
+    api = MockAPI()
+
+    with open('tests/640748887330942977.json', 'r') as f:
+        status = Status.parse(api, json.load(fp=f))
+
+    with tmpdir.as_cwd():
+        l = LessListener(api=api, post_replies=True)
+
+        l.on_status(status)
+
+        # Never reply to the same toot twice
+        l.on_status(status)
+
+        # Rate-limit replies for same word
+        setattr(status, 'id', status.id + 1)
+        l.on_status(status)
+
+        assert len(api._updates) == 1
+        u = api._updates[0]
+        assert u['status'] == "@krinndnz @eevee @mistydemeo I think you mean “fewer bad”."
