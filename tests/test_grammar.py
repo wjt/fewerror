@@ -93,10 +93,8 @@ true_positives = [
      "fewer spiritually",  # TODO: would be nice to say "fewer spiritually exhausting"
     ),
 
-    pytest.mark.xfail(reason="issue #7")(
-        (u"""Telegram is certainly less popular, but WhatsApp is much less open.""",
-         ("fewer popular", "fewer open"),
-        ),
+    (u"""Telegram is certainly less popular, but WhatsApp is much less open.""",
+     ["fewer popular", "fewer open"],
     ),
 
     (u"""I could care less""",
@@ -107,11 +105,9 @@ true_positives = [
 
 @pytest.mark.parametrize("tweet,reply", true_positives)
 def test_true_positives(tweet, reply):
-    actual_reply = fewerror.make_reply(tweet)
-    if not actual_reply:
-        print(TextBlob(tweet).tags)
-
-    assert fewerror.make_reply(tweet) == reply
+    replies = [reply] if isinstance(reply, str) else reply
+    actual_replies = fewerror.find_corrections(tweet)
+    assert actual_replies == replies, str(TextBlob(tweet).tags)
 
 
 false_positives = [
@@ -148,12 +144,12 @@ false_positives = [
 
 @pytest.mark.parametrize("tweet", false_positives)
 def test_false_positives(tweet):
-    assert fewerror.make_reply(tweet) is None
+    assert fewerror.find_corrections(tweet) == []
 
 
 def test_mass_nouns():
-    assert fewerror.make_reply("I wish I had studied less mathematics") == 'fewer mathematics'
-    assert fewerror.make_reply("I wish I had studied less mathematics students") is None
+    assert fewerror.find_corrections("I wish I had studied less mathematics") == ['fewer mathematics']
+    assert fewerror.find_corrections("I wish I had studied less mathematics students") == []
 
 
 @pytest.mark.parametrize("fmt", [
@@ -165,3 +161,18 @@ def test_mass_nouns():
 def test_ignores_manual_rts(fmt):
     tweet = fmt.format(true_positives[0])
     assert fewerror.make_reply(tweet) is None
+
+
+@pytest.mark.parametrize("corrections,reply", [
+    (("a"), "I think you mean “a”"),
+    (("a", "b"), "I think you mean “a”, and furthermore “b”"),
+    (("a", "b", "c"), "I think you mean “a”, “b”, and furthermore “c”"),
+    (("a", "b", "c", "d"), "I think you mean “a”, “b”, “c”, and furthermore “d”"),
+])
+def test_format_reply(corrections, reply):
+    assert fewerror.format_reply(corrections) == reply
+
+
+def test_make_reply():
+    assert fewerror.make_reply("less popular, and less open") == \
+            "I think you mean “fewer popular”, and furthermore “fewer open”"

@@ -23,6 +23,20 @@ def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
 
+def furthermore(qs):
+    if len(qs) > 1:
+        return "{}, and furthermore {}".format(
+            ", ".join(qs[:-1]),
+            qs[-1]
+        )
+    else:
+        return qs[0]
+
+
+def format_reply(corrections):
+    return "I think you mean " + furthermore(["“{}”".format(c) for c in corrections])
+
+
 def make_reply(text):
     """
     Returns a reply to 'text' (without @username) or None if there is none.
@@ -31,12 +45,10 @@ def make_reply(text):
         # We can't (reliably) figure out who to admonish so always skip these.
         return
 
-    if 'less' not in text.lower():
-        return
+    qs = find_corrections(text)
 
-    blob = TextBlob(text)
-    for q in iflatmap(find_an_indiscrete_quantity, blob.sentences):
-        return q
+    if qs:
+        return format_reply(qs)
 
 
 class POS:
@@ -199,13 +211,19 @@ def match(blob, i):
     return "fewer " + w
 
 
-def find_an_indiscrete_quantity(blob):
-    less_indices = [i for i, (word, tag) in enumerate(blob.tags) if word.lower() == 'less']
+def find_corrections(text):
+    blob = TextBlob(text)
 
-    for i in less_indices:
-        q = match(blob, i)
-        if q is not None:
-            yield q
+    def go():
+        for s in blob.sentences:
+            less_indices = [i for i, (word, tag) in enumerate(s.tags) if word.lower() == 'less']
+
+            for i in less_indices:
+                q = match(s, i)
+                if q is not None:
+                    yield q
+
+    return list(go())
 
 
 class Event(Model):
@@ -365,7 +383,7 @@ class LessListener(StreamListener):
         # TODO: hashtags?
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
-            reply = u'%s I think you mean “%s”.' % (u' '.join(mentions), quantity)
+            reply = u'%s %s.' % (u' '.join(mentions), quantity)
             if len(reply) <= 140:
                 break
 
