@@ -6,7 +6,6 @@ from tweepy.utils import import_simplejson, parse_datetime
 from tweepy.models import Model, Status, User, List
 
 json = import_simplejson()
-import itertools
 import os
 import random
 
@@ -172,23 +171,31 @@ QUANTITY_POS_TAGS = (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS)
 
 
 def find_an_indiscrete_quantity(blob):
-    tags_from_less = itertools.dropwhile((lambda word_tag: word_tag[0].lower() != 'less'),
-                                         blob.tags)
+    less_indices = [i for i, (word, tag) in enumerate(blob.tags) if word.lower() == 'less']
+
     try:
-        less, less_pos = next(tags_from_less)
-        assert less.lower() == 'less'
-    except StopIteration:
+        i = less_indices[0]
+    except IndexError:
         return
 
     try:
-        w, w_pos = next(tags_from_less)
-    except StopIteration:
+        v, v_pos = blob.tags[i - 1]
+    except IndexError:
+        pass
+    else:
+        if v_pos == POS.CD and not v.endswith('%'):
+            # ignore "one less xxx" but allow "100% less xxx"
+            return
+
+    try:
+        w, w_pos = blob.tags[i + 1]
+    except IndexError:
         return
 
     if w_pos not in QUANTITY_POS_TAGS and w not in mass_nouns:
         return
 
-    for v, v_pos in tags_from_less:
+    for v, v_pos in blob.tags[i + 2:]:
         # Avoid replying "fewer lonely" to "less lonely girl"
         # why? this is "right"! but it would be better to say "fewer lonely girl"
         # but: "less happy sheep" -> "fewer happy sheep" is bad

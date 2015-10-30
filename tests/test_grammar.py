@@ -131,6 +131,8 @@ false_positives = [
     pytest.mark.xfail(reason='quotes')(
         u'''I was about to do this but then realised they have reveals that say “show less” rather than “show fewer” so now _I’m_ angry :-\\''',
     ),
+
+    u"""it's like four swords but with one less person and internet rando multiplayer""",
 ]
 
 
