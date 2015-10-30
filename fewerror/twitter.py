@@ -14,7 +14,7 @@ from tweepy.models import Model, Status, User, List
 json = import_simplejson()
 log = logging.getLogger(__name__)
 
-from . import make_reply
+from . import find_corrections, format_reply
 from .state import State
 from .util import reverse_inits, OrderedSet, mkdir_p
 
@@ -151,16 +151,16 @@ class LessListener(StreamListener):
             return
 
         try:
-            quantity = make_reply(text)
+            quantities = find_corrections(text)
         except Exception:
             log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
             return
 
-        if quantity is None:
+        if not quantities:
             return
 
         log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
-        if not self._state.can_reply(status.id, quantity):
+        if not self._state.can_reply(status.id, quantities):
             return
 
         to_mention.add(screen_name)
@@ -184,7 +184,7 @@ class LessListener(StreamListener):
         # TODO: hashtags?
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
-            reply = u'%s %s.' % (u' '.join(mentions), quantity)
+            reply = u'%s %s.' % (u' '.join(mentions), format_reply(quantities))
             if len(reply) <= 140:
                 break
 
@@ -197,7 +197,7 @@ class LessListener(StreamListener):
                 r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
                 log.info("  https://twitter.com/_/status/%s", r.id)
 
-                self._state.record_reply(status.id, quantity, r.id)
+                self._state.record_reply(status.id, quantities, r.id)
         else:
             log.info('too long, not replying')
 

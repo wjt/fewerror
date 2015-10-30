@@ -9,7 +9,7 @@ import os
 from retry import retry
 import telegram
 
-from . import make_reply
+from . import find_corrections, format_reply
 
 log = logging.getLogger(__name__)
 
@@ -118,11 +118,11 @@ class FewerrorHandler(TelegramHandler):
     def handle_text(self, message):
         context = self._context(message)
 
-        quantity = make_reply(message.text)
-        if quantity is not None:
+        qs = find_corrections(message.text)
+        if qs:
             log.info('<%s> %s', context, message.text)
 
-            reply = u'I think you mean “{}”.'.format(quantity)
+            reply = format_reply(qs)
             log.info('--> %s', reply)
             self.bot.sendMessage(
                 chat_id=message.chat_id,

@@ -160,8 +160,3 @@ def test_mass_nouns():
 ])
 def test_format_reply(corrections, reply):
     assert fewerror.format_reply(corrections) == reply
-
-
-def test_make_reply():
-    assert fewerror.make_reply("less popular, and less open") == \
-            "I think you mean “fewer popular”, and furthermore “fewer open”"

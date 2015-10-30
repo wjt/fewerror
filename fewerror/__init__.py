@@ -22,16 +22,6 @@ def format_reply(corrections):
     return "I think you mean " + furthermore(["“{}”".format(c) for c in corrections])
 
 
-def make_reply(text):
-    """
-    Returns a reply to 'text' (without @username) or None if there is none.
-    """
-    qs = find_corrections(text)
-
-    if qs:
-        return format_reply(qs)
-
-
 class POS:
     """
     https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
