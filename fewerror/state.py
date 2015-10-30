@@ -75,32 +75,34 @@ class State(object):
 
         os.rename(f.name, self._state_filename)
 
-    def can_reply(self, status_id, quantity):
-        quantity = quantity.lower()
-        now = self._now()
+    def can_reply(self, status_id, quantities):
+        for quantity in quantities:
+            quantity = quantity.lower()
+            now = self._now()
 
-        r_id = self._replied_to.get(status_id, None)
-        if r_id is not None:
-            log.info(u"…already replied: %d", r_id)
-            return False
+            r_id = self._replied_to.get(status_id, None)
+            if r_id is not None:
+                log.info(u"…already replied: %d", r_id)
+                return False
 
-        last_for_this = self._last_time_for_word.get(quantity, None)
-        if last_for_this and now - last_for_this < self._per_word_timeout:
-            log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
-                     last_for_this + self._per_word_timeout)
-            return False
+            last_for_this = self._last_time_for_word.get(quantity, None)
+            if last_for_this and now - last_for_this < self._per_word_timeout:
+                log.info(u"…corrected '%s' at %s, waiting till %s", quantity, last_for_this,
+                         last_for_this + self._per_word_timeout)
+                return False
 
-        if now - self._last < self._timeout:
-            log.info(u"rate-limiting until %s…", self._last + self._timeout)
-            return False
+            if now - self._last < self._timeout:
+                log.info(u"rate-limiting until %s…", self._last + self._timeout)
+                return False
 
         return True
 
-    def record_reply(self, status_id, quantity, r_id):
+    def record_reply(self, status_id, quantities, r_id):
         now = self._now()
 
         self._last = now
         self._replied_to[status_id] = r_id
-        self._last_time_for_word[quantity] = now
+        for quantity in quantities:
+            self._last_time_for_word[quantity.lower()] = now
 
         self.save()
