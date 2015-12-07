@@ -66,7 +66,9 @@ class MockAPI:
         return User.parse(self, fewerror_user)
 
     def lookup_friendships(self, screen_names):
+        print("looking up {}".format(screen_names))
         return [
+            # TODO: return something for unknown so that it is actually tested.
             self.friendships[screen_name]
             for screen_name in screen_names
             if screen_name in self.friendships
@@ -79,14 +81,22 @@ class MockAPI:
         return r
 
 
-def test_end_to_end(tmpdir):
+@pytest.mark.parametrize('filename,expected', [
+    ('tests/640748887330942977.json',
+     "@krinndnz @eevee @mistydemeo I think you mean “fewer bad”."
+    ),
+    ('tests/671809680902127616.json',
+     "@benjammingh @cafuego I think you mean “fewer grip”. It is cold outside."),
+])
+def test_end_to_end(filename, expected, tmpdir):
     api = MockAPI()
 
-    with open('tests/640748887330942977.json', 'r') as f:
+    with open(filename, 'r') as f:
         status = Status.parse(api, json.load(fp=f))
 
     with tmpdir.as_cwd():
         l = LessListener(api=api, post_replies=True)
+        l.december_greetings = ('It is cold outside.',)
 
         l.on_status(status)
 
@@ -99,4 +109,4 @@ def test_end_to_end(tmpdir):
 
         assert len(api._updates) == 1
         u = api._updates[0]
-        assert u['status'] == "@krinndnz @eevee @mistydemeo I think you mean “fewer bad”."
+        assert u['status'] == expected

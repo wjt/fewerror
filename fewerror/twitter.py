@@ -122,6 +122,20 @@ class LessListener(StreamListener):
         else:
             super(LessListener, self).on_data(data)
 
+    december_greetings = (
+        'Ho ho ho!',
+        'Happy Hannukah!',
+        'Merry Christmas!',
+        'Merry Newtonmass!',
+        'Auspicious Winterval!',
+    ) + ('', ) * 5
+
+    def get_festive_greeting(self, dt):
+        if dt.month == 12:
+            return random.choice(self.december_greetings)
+        else:
+            return ''
+
     def on_status(self, received_status):
         to_mention = OrderedSet()
 
@@ -182,9 +196,14 @@ class LessListener(StreamListener):
 
         # Keep dropping mentions until the reply is short enough
         # TODO: hashtags?
+        correction = format_reply(quantities)
+        greeting = self.get_festive_greeting(received_status.created_at)
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
-            reply = u'%s %s.' % (u' '.join(mentions), format_reply(quantities))
+            reply = u'{mentions} {correction}. {greeting}'.format(
+                mentions=u' '.join(mentions),
+                correction=correction,
+                greeting=greeting).strip()
             if len(reply) <= 140:
                 break
 
