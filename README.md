@@ -63,6 +63,7 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > wonderful asshole of a bot <cite>– [@mo_ranyart](https://twitter.com/mo_ranyart/status/621071298299441153)</cite>
 
+> As Twitter accounts go, @fewerror has brought me more happiness per tweet than any other. <cite>– [@Mr_Ogrizovic](https://twitter.com/Mr_Ogrizovic/status/676717255640670208)</cite>
 
 ## For those who care about software
 
