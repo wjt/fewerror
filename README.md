@@ -63,7 +63,6 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > wonderful asshole of a bot <cite>– [@mo_ranyart](https://twitter.com/mo_ranyart/status/621071298299441153)</cite>
 
-> Are you doing a Dawkins. . . . . . <cite>– [@Jonteinspain](https://twitter.com/Jonteinspain/status/656294418199244800)</cite>
 
 ## For those who care about software
 
