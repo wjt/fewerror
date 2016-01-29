@@ -1,17 +1,11 @@
 {
   "origin": [
-    "#new_origins#",
-    "#new_origins#",
-    "#old_origins#"
-  ],
-  "old_origins": [
     "#tinfoil#",
     "#despise#",
-    "#frighten#"
-  ],
-  "new_origins": [
+    "#frighten#",
     "#menacing#",
-    "#natalist_pressure#"
+    "#natalist_pressure#",
+    "#IP#"
   ],
 
 
@@ -203,6 +197,24 @@
     "#bad_entities#",
     "#animals_that_do_animal_things#",
     "mass starvation"
+  ],
+
+  "term": [
+    "#agents#",
+    "#entity#",
+    "#bad_entities#",
+    "intellectual property"
+  ],
+
+  "confusion": [
+    "confusion",
+    "#animals_that_do_animal_things#",
+    "#bad_entities#"
+  ],
+
+  "IP": [
+    "The term \"#term#\" causes nothing but #confusion#.",
+    "If you think you \"understand\" a statement about \"#term#\", it is a false understanding."
   ],
 
 "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
