@@ -147,7 +147,16 @@ class POS:
 mass_noun_corpora = WordListCorpusReader('wordlist/massnoun', r'[a-z]+')
 mass_nouns = mass_noun_corpora.words()
 
-QUANTITY_POS_TAGS = (POS.JJ, POS.VBN, POS.NN, POS.NNP, POS.RB, POS.RBR, POS.RBS)
+QUANTITY_POS_TAGS = frozenset((
+    POS.JJ,
+    POS.VBN,
+    POS.VBP,
+    POS.NN,
+    POS.NNP,
+    POS.RB,
+    POS.RBR,
+    POS.RBS,
+))
 
 
 def match(blob, i):
