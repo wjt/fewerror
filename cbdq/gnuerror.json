@@ -5,7 +5,8 @@
     "#frighten#",
     "#menacing#",
     "#natalist_pressure#",
-    "#IP#"
+    "#IP#",
+    "#assange_denialism#"
   ],
 
 
@@ -30,7 +31,8 @@
     "Emacs",
     "Acid Burn",
     "Assange",
-    "parrots"
+    "parrots",
+    "justice"
   ],
   "bad_entities": [
     "Apple",
@@ -60,7 +62,9 @@
     "sour fruits",
     "beer",
     "coffee",
-    "the taste of alcohol"
+    "the taste of alcohol",
+
+    "intellectual property"
   ],
   "nameless_enemies": [
     "all enemies",
@@ -202,8 +206,7 @@
   "term": [
     "#agents#",
     "#entity#",
-    "#bad_entities#",
-    "intellectual property"
+    "#bad_entities#"
   ],
 
   "confusion": [
@@ -215,6 +218,11 @@
   "IP": [
     "The term \"#term#\" causes nothing but #confusion#.",
     "If you think you \"understand\" a statement about \"#term#\", it is a false understanding."
+  ],
+
+  "assange_denialism": [
+    "#bad_entities# have dragged their feet\nin a way\nthat confirms that they are not really\ninterested in #entity#",
+    "The acts that #entity# is\naccused of doing are not \"#term#\" as the term is normally\nused."
   ],
 
 "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
