@@ -67,6 +67,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > a waste of resources with no merit <cite>– [@ChuckBaggett](https://twitter.com/ChuckBaggett/status/682789578982486016)</cite>
 
+> fuck off and go listen to "Fewer Than Jake" <cite>– [@hipsterocracy](https://twitter.com/hipsterocracy/status/702148946617978882)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
