@@ -69,6 +69,8 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 > fuck off and go listen to "Fewer Than Jake" <cite>– [@hipsterocracy](https://twitter.com/hipsterocracy/status/702148946617978882)</cite>
 
+> this bot is probably almost as obnoxious as the person who coded it <cite>– [@jimperialism](https://twitter.com/jimperialism/status/711023047885455360)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
