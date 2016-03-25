@@ -158,6 +158,9 @@ QUANTITY_POS_TAGS = frozenset((
     POS.RBS,
 ))
 
+bad_words_corpora = WordListCorpusReader('wordlist/shutterstock-bad-words', r'[a-z]{2,3}')
+bad_words_en = bad_words_corpora.words('en')
+
 
 def match(blob, i):
     if ["could", "care", "less"] == [w.lower() for w in blob.words[i-2:i+1]]:
@@ -194,13 +197,17 @@ def match(blob, i):
 def find_corrections(text):
     blob = TextBlob(text)
 
-    def go():
-        for s in blob.sentences:
-            less_indices = [i for i, (word, tag) in enumerate(s.tags) if word.lower() == 'less']
+    words = []
+    for s in blob.sentences:
+        less_indices = [i for i, (word, tag) in enumerate(s.tags) if word.lower() == 'less']
 
-            for i in less_indices:
-                q = match(s, i)
-                if q is not None:
-                    yield q
+        for i in less_indices:
+            q = match(s, i)
+            if q is not None:
+                words.append(q)
 
-    return list(go())
+    for word in words:
+        if any(w in word for w in bad_words_en):
+            return []
+
+    return words

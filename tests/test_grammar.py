@@ -37,9 +37,9 @@ true_positives = [
      'fewer lucky',
     ),
 
-    # pytest.mark.xfail(reason='POS tagger thinks "wanky" is a noun')(
-        (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less wanky hopefully.",
-         'fewer wanky',
+    # pytest.mark.xfail(reason='POS tagger thinks "janky" is a noun')(
+        (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less janky hopefully.",
+         'fewer janky',
         ),
     # ),
 
@@ -147,6 +147,10 @@ false_positives = [
     ),
 
     u"""it's like four swords but with one less person and internet rando multiplayer""",
+
+    # wordfilter errs on the side of caution, that's a good idea
+    u"""I want less Scunthorpe in my life""",
+    u"""That bath was less therapeutic than I had hoped""",
 ]
 
 
