@@ -19,6 +19,7 @@ before_deploy:
   - openssl aes-256-cbc -K $encrypted_bd9cd2af8138_key -iv $encrypted_bd9cd2af8138_iv -in ssh/id_rsa.enc -out ssh/id_rsa -d
 deploy:
   provider: script
-  script: ssh -i ssh/id_rsa fewerror@gene.splice.org.uk /srv/fewerror/fewerror/update.sh
+  skip_cleanup: true
+  script: ssh -o StrictHostKeyChecking=no -i ssh/id_rsa fewerror@gene.splice.org.uk /srv/fewerror/fewerror/update.sh
   on:
     branch: master
