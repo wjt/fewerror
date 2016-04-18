@@ -8,8 +8,7 @@ import time
 
 from tweepy import OAuthHandler, Stream, API, RateLimitError
 from tweepy.streaming import StreamListener
-from tweepy.utils import import_simplejson, parse_datetime
-from tweepy.models import Model, Status, User, List
+from tweepy.utils import import_simplejson
 
 json = import_simplejson()
 log = logging.getLogger(__name__)
