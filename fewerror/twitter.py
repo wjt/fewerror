@@ -19,48 +19,6 @@ from .state import State
 from .util import reverse_inits, OrderedSet, mkdir_p
 
 
-class Event(Model):
-    """https://dev.twitter.com/streaming/overview/messages-types#Events_event
-
-    TODO: upstream this. Currently you get a Status object.
-    """
-
-    @classmethod
-    def parse(cls, api, json):
-        event = cls(api)
-        event_name = json['event']
-        user_model = getattr(api.parser.model_factory, 'user') if api else User
-        status_model = getattr(api.parser.model_factory, 'status') if api else Status
-        list_model = getattr(api.parser.model_factory, 'list') if api else List
-
-        for k, v in json.items():
-            if k == 'target':
-                user = user_model.parse(api, v)
-                setattr(event, 'target', user)
-            elif k == 'source':
-                user = user_model.parse(api, v)
-                setattr(event, 'source', user)
-            elif k == 'created_at':
-                setattr(event, k, parse_datetime(v))
-            elif k == 'target_object':
-                if event_name in ('favorite', 'unfavorite'):
-                    status = status_model.parse(api, v)
-                    setattr(event, 'target_object', status)
-                elif event_name.startswith('list_'):
-                    list_ = list_model.parse(api, v)
-                    setattr(event, 'target_object', list_)
-                else:
-                    # at the time of writing, the only other event defined to have a non-null
-                    # target_object is 'access_revoked', defined to be a 'client'. I don't have one
-                    # of those to hand.
-                    setattr(event, 'target_object', v)
-            elif k == 'event':
-                setattr(event, 'event', v)
-            else:
-                setattr(event, k, v)
-        return event
-
-
 def get_sanitized_text(status):
     text = status.text
 
@@ -115,12 +73,7 @@ class LessListener(StreamListener):
         if self._hb == 0:
             log.info(random.choice(self.HEARTS))
 
-        message = json.loads(data)
-        if message.get('event') is not None:
-            event = Event.parse(self.api, message)
-            self.on_event(event)
-        else:
-            super(LessListener, self).on_data(data)
+        super(LessListener, self).on_data(data)
 
     december_greetings = (
         'Ho ho ho!',
