@@ -151,6 +151,11 @@ false_positives = [
     # wordfilter errs on the side of caution, that's a good idea
     u"""I want less Scunthorpe in my life""",
     u"""That bath was less therapeutic than I had hoped""",
+
+    pytest.mark.xfail(reason='''Should be "bore me fewer" or nothing;
+                      "less given" is at least still wrong I suppose!''')(
+        u"""I would have thought a comic book movie might bore me less, given my history!""",
+    ),
 ]
 
 
