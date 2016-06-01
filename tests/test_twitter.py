@@ -5,7 +5,7 @@ import os
 from unittest.mock import NonCallableMock
 import pytest
 
-from tweepy.models import User, Status
+from tweepy.models import User, Status, Relationship
 from tweepy.parsers import ModelParser
 
 from fewerror.twitter import get_sanitized_text, LessListener
@@ -57,7 +57,7 @@ fewerror_user = {
 
 class MockAPI:
     parser = ModelParser()
-    friendships = {}
+    connections = {}
 
     def __init__(self):
         self._updates = []
@@ -68,11 +68,24 @@ class MockAPI:
     def lookup_friendships(self, screen_names):
         print("looking up {}".format(screen_names))
         return [
-            # TODO: return something for unknown so that it is actually tested.
-            self.friendships[screen_name]
-            for screen_name in screen_names
-            if screen_name in self.friendships
+            Relationship.parse(self, {
+                "name": "{x}y Mc{x}face".format(x=screen_name),
+                "screen_name": screen_name,
+                "id": i,
+                "id_str": str(i),
+                "connections": self.connections.get(screen_name, [
+                    # "following",
+                    # "followed_by",
+                ]),
+            })
+            for i, screen_name in enumerate(screen_names, 2 ** 32)
         ]
+
+    def destroy_friendship(self, user_id):
+        try:
+            self.connections[user_id].remove("following")
+        except (KeyError, ValueError):
+            pass
 
     def update_status(self, **kwargs):
         self._updates.append(kwargs)
@@ -81,15 +94,27 @@ class MockAPI:
         return r
 
 
-@pytest.mark.parametrize('filename,expected', [
+@pytest.mark.parametrize('filename,connections,expected', [
     ('tests/640748887330942977.json',
-     "@krinndnz @eevee @mistydemeo I think you mean “fewer bad”."
+     {
+         "krinndnz": ["following", "followed_by"],
+         "eevee": ["following", "followed_by"],
+         "mistydemeo": ["following"],
+     },
+     "@krinndnz @eevee I think you mean “fewer bad”."
     ),
     ('tests/671809680902127616.json',
-     "@benjammingh @cafuego I think you mean “fewer grip”. It is cold outside."),
+     {
+         "benjammingh": ["following", "followed_by"],
+     },
+     "@benjammingh I think you mean “fewer grip”. It is cold outside."),
+    ('tests/671809680902127616.json',
+     {},
+     None),
 ])
-def test_end_to_end(filename, expected, tmpdir):
+def test_end_to_end(filename, connections, expected, tmpdir):
     api = MockAPI()
+    api.connections = dict(connections)
 
     with open(filename, 'r') as f:
         status = Status.parse(api, json.load(fp=f))
@@ -107,6 +132,9 @@ def test_end_to_end(filename, expected, tmpdir):
         setattr(status, 'id', status.id + 1)
         l.on_status(status)
 
-        assert len(api._updates) == 1
-        u = api._updates[0]
-        assert u['status'] == expected
+        if expected is None:
+            assert api._updates == []
+        else:
+            assert len(api._updates) == 1
+            u = api._updates[0]
+            assert u['status'] == expected
