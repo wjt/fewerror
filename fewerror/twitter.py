@@ -133,7 +133,8 @@ class LessListener(StreamListener):
         for x in status.entities['user_mentions']:
             to_mention.add(x['screen_name'])
 
-        mentioned_me = to_mention.discard(self.me.screen_name)
+        mentioned_me = self.me.screen_name in to_mention
+        to_mention.discard(self.me.screen_name)
 
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:

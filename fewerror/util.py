@@ -8,15 +8,26 @@ def reverse_inits(xs):
         yield xs[:i]
 
 
-class OrderedSet(collections.OrderedDict):
-    def add(self, elem):
-        self[elem] = True
+class OrderedSet(collections.abc.MutableSet):
+    def __init__(self):
+        super(OrderedSet, self).__init__()
 
-    def remove(self, elem):
-        del self[elem]
+        self._map = collections.OrderedDict()
+
+    def __contains__(self, elem):
+        return elem in self._map
+
+    def __iter__(self):
+        yield from self._map
+
+    def __len__(self):
+        return len(self._map)
+
+    def add(self, elem):
+        self._map[elem] = None
 
     def discard(self, elem):
-        return self.pop(elem, False)
+        self._map.pop(elem, None)
 
 
 def mkdir_p(path):
