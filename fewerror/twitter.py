@@ -103,9 +103,15 @@ class LessListener(StreamListener):
             status = received_status
             rt_log_prefix = ''
 
-            # Don't log RTs, no point in getting a million duplicates in the corpus.
+        # Don't log RTs, no point in getting a million duplicates in the corpus.
         if self.gather and 'less' in status.text:
-            filename = os.path.join(self.gather, '{}.json'.format(received_status.id))
+            id_ = received_status.id
+
+            id_bits = [id_[i:i+2] for i in (0, 2, 4)]
+            dir_ = os.path.join(self.gather, *id_bits)
+            mkdir_p(dir_)
+
+            filename = os.path.join(dir_, '{}.json'.format(id_))
             with open(filename, 'w') as f:
                 json.dump(obj=received_status._json, fp=f)
 
