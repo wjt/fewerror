@@ -66,7 +66,6 @@ class MockAPI:
         return User.parse(self, fewerror_user)
 
     def lookup_friendships(self, screen_names):
-        print("looking up {}".format(screen_names))
         return [
             Relationship.parse(self, {
                 "name": "{x}y Mc{x}face".format(x=screen_name),
@@ -111,6 +110,12 @@ class MockAPI:
     ('tests/671809680902127616.json',
      {},
      None),
+    ('tests/738052925646340096.json',
+     {
+         'ArosOrcidae': ['following', 'followed_by'],
+     },
+     "@Renferos @ArosOrcidae I think you mean “fewer skilled”.",
+    ),
 ])
 def test_end_to_end(filename, connections, expected, tmpdir):
     api = MockAPI()

@@ -133,10 +133,13 @@ class LessListener(StreamListener):
         for x in status.entities['user_mentions']:
             to_mention.add(x['screen_name'])
 
-        to_mention.discard(self.me.screen_name)
+        mentioned_me = to_mention.discard(self.me.screen_name)
+
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:
-                to_mention.discard(rel.screen_name)
+                # If someone explicitly tags us, they're fair game
+                if not (rel.screen_name == screen_name and mentioned_me):
+                    to_mention.discard(rel.screen_name)
 
                 if rel.is_following:
                     log.info(u"%s no longer follows us; unfollowing", rel.screen_name)

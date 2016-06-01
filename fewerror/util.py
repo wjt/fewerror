@@ -10,13 +10,13 @@ def reverse_inits(xs):
 
 class OrderedSet(collections.OrderedDict):
     def add(self, elem):
-        self[elem] = None
+        self[elem] = True
 
     def remove(self, elem):
         del self[elem]
 
     def discard(self, elem):
-        self.pop(elem, None)
+        return self.pop(elem, False)
 
 
 def mkdir_p(path):
