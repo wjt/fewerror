@@ -6,7 +6,8 @@
     "#menacing#",
     "#natalist_pressure#",
     "#IP#",
-    "#assange_denialism#"
+    "#assange_denialism#",
+    "#wizard#"
   ],
 
 
@@ -225,13 +226,13 @@
     "The acts that #entity# is\naccused of doing are not \"#term#\" as the term is normally\nused."
   ],
 
+  "wizard": [
+    "For someone who is not #entity#, personal\nguidance from #entity# is likely to be more helpful than #bad_entities#."
+  ],
+
 "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
 
 
 
   "___": "___"
 }
-
-
-
-
