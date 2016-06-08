@@ -105,7 +105,7 @@ class LessListener(StreamListener):
 
         # Don't log RTs, no point in getting a million duplicates in the corpus.
         if self.gather and 'less' in status.text:
-            id_ = received_status.id
+            id_ = received_status.id_str
 
             id_bits = [id_[i:i+2] for i in (0, 2, 4)]
             dir_ = os.path.join(self.gather, *id_bits)

@@ -125,7 +125,7 @@ def test_end_to_end(filename, connections, expected, tmpdir):
         status = Status.parse(api, json.load(fp=f))
 
     with tmpdir.as_cwd():
-        l = LessListener(api=api, post_replies=True)
+        l = LessListener(api=api, post_replies=True, gather='tweets')
         l.december_greetings = ('It is cold outside.',)
 
         l.on_status(status)
