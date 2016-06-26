@@ -156,6 +156,8 @@ false_positives = [
                       "less given" is at least still wrong I suppose!''')(
         u"""I would have thought a comic book movie might bore me less, given my history!""",
     ),
+
+    u"""get back to being ~electable~ by doing all the horrible oppressive things the Tories do but just ~slightly less~? hope voters buy that?""",
 ]
 
 

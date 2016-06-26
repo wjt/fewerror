@@ -180,6 +180,9 @@ def match(blob, i):
     if w_pos not in QUANTITY_POS_TAGS and w not in mass_nouns:
         return
 
+    if not w.isalpha():
+        return
+
     for v, v_pos in blob.tags[i + 2:]:
         # Avoid replying "fewer lonely" to "less lonely girl"
         # why? this is "right"! but it would be better to say "fewer lonely girl"
