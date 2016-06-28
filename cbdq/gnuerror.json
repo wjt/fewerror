@@ -7,7 +7,8 @@
     "#natalist_pressure#",
     "#IP#",
     "#assange_denialism#",
-    "#wizard#"
+    "#wizard#",
+    "#facebook#"
   ],
 
 
@@ -21,7 +22,9 @@
     "GCHQ agents",
     "Xamarin employees",
     "Netflix employees",
-    "Google employees"
+    "Google employees",
+    "Facebook employees",
+    "parents"
   ],
   "entity": [
     "the Constitution",
@@ -47,6 +50,10 @@
     "non-free JavaScript",
     "Swedish prosecutors",
     "The Plague",
+
+    "Facebook",
+    "MasterCard",
+    "the NSA",
 
     "avocado",
     "eggplant",
@@ -107,7 +114,8 @@
     "parrot",
     "fish",
     "seahorse",
-    "baby"
+    "baby",
+    "kid"
   ],
   "animals": [
     "dogs",
@@ -115,7 +123,8 @@
     "parrots",
     "fish",
     "seahorses",
-    "babies"
+    "babies",
+    "kids"
   ],
 
 
@@ -230,9 +239,11 @@
     "For someone who is not #entity#, personal\nguidance from #entity# is likely to be more helpful than #bad_entities#."
   ],
 
-"QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
+  "facebook": [
+    "#QUOTE#Innocent-seeming text posted on\n#bad_entities# could cause you lots of trouble, due to development\nof #bad_entities# to deduce things about\nyou.",
+    "#QUOTE##agents# should regard #bad_entities# as a\nsort of gang that you don't want\nyour #animals# to get mixed up in.",
+    "#QUOTE#Americans' social networks are\ntracked by #enemies#, and #enemies# is just\none source."
+  ],
 
-
-
-  "___": "___"
+  "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"]
 }
