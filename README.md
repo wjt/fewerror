@@ -1,6 +1,10 @@
-[@fewerror][] is a Twitter (and [Telegram](http://telegram.me/fewerrorbot)) bot in the [@StealthMountain][] genre. It corrects people when they say “less” but *should* have said “fewer”. It is 100% accurate all of the time.
+# @fewerror
 
-It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) streaming API to receive all tweets containing the word *less*, and replied to one at most every two minutes. Unfortunately, it was quickly banned for “sending multiple unsolicited mentions to other users”. (I'm not sure how [@StealthMountain][] escapes the same fate.) So now it just follows people who follow it, and “helps” them out with their grammar.
+[@fewerror][] is a Twitter (and [Telegram](http://telegram.me/fewerrorbot)) bot in the [@StealthMountain][] genre. If you follow it, it will correct you when you say “less” but *should* have said “fewer”. It is 100% accurate all of the time.
+
+## Context
+
+Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/151462998480/three-years-of-fewerror).
 
 ## Praise for [@fewerror][]
 
@@ -90,6 +94,8 @@ This thing expects to fetch authorization credentials from environment variables
     export ACCESS_TOKEN_SECRET="..."
 
 To get values for those variables, why not follow [Allison Parrish's instructions for everywordbot](https://github.com/aparrish/everywordbot#obtaining-twitter-authorization-credentials)? You might alternatively find `get_oauth_token.py` useful for `ACCESS_TOKEN` and `ACCESS_TOKEN_SECRET`.
+
+It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) streaming API to receive all tweets containing the word *less*, and replied to one at most every two minutes. Unfortunately, it was quickly banned for “sending multiple unsolicited mentions to other users”. (I'm not sure how [@StealthMountain][] escapes the same fate.)
 
 [![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
 [![Coverage Status](https://coveralls.io/repos/wjt/fewerror/badge.svg?branch=master&service=github)](https://coveralls.io/github/wjt/fewerror?branch=master)
