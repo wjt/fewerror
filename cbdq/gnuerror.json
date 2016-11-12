@@ -1,4 +1,5 @@
 {
+
   "origin": [
     "#tinfoil#",
     "#despise#",
@@ -8,23 +9,19 @@
     "#IP#",
     "#assange_denialism#",
     "#wizard#",
-    "#facebook#"
+    "#facebook#",
+    "#uber#",
+    "#spotify#"
   ],
-
 
   "tinfoil": [
     "#QUOTE#To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
   ],
   "agents": [
-    "CIA agents",
-    "NSA agents",
-    "FBI agents",
-    "GCHQ agents",
-    "Xamarin employees",
-    "Netflix employees",
-    "Google employees",
-    "Facebook employees",
-    "parents"
+    "#bad_TLA# agents",
+    "#bad_company# employees",
+    "parents",
+    "attractive models of either sex"
   ],
   "entity": [
     "the Constitution",
@@ -36,11 +33,37 @@
     "Acid Burn",
     "Assange",
     "parrots",
-    "justice"
+    "justice",
+    "the sharing economy"
   ],
-  "bad_entities": [
+  "bad_TLA": [
+    "CIA",
+    "NSA",
+    "FBI",
+    "GCHQ"
+  ],
+  "bad_company": [
+    "Airbnb",
+    "Amazon",
+    "Amtrak",
     "Apple",
+    "Eventbrite",
+    "Facebook",
+    "Google",
+    "Intel",
+    "MasterCard",
+    "Meetup.com",
     "Microsoft",
+    "Netflix",
+    "Skype",
+    "Spotify",
+    "Twitter",
+    "Uber",
+    "Xamarin"
+],
+  "bad_entities": [
+    "#bad_company#",
+    "the #bad_TLA#",
     "Linus Torvalds",
     "Mark Zuckerberg",
     "Miguel de Icaza",
@@ -50,10 +73,6 @@
     "non-free JavaScript",
     "Swedish prosecutors",
     "The Plague",
-
-    "Facebook",
-    "MasterCard",
-    "the NSA",
 
     "avocado",
     "eggplant",
@@ -72,7 +91,16 @@
     "coffee",
     "the taste of alcohol",
 
-    "intellectual property"
+    "intellectual property",
+
+    "technology that mistreats me",
+    "#bad_company.a# car",
+    "companies like #bad_company#",
+    "taxi rides",
+
+    "snooping",
+    "proprietary malware",
+    "\"music screaming\" dis-services"
   ],
   "nameless_enemies": [
     "all enemies",
@@ -96,18 +124,15 @@
     "Saint IGNUcius’"
   ],
 
-
-
   "despise": [
     "#QUOTE#Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
   ],
   "despisers": [
-    "#animals#",
+    "#animal.s#",
     "#agents#"
   ],
 
-
-  "animals_that_do_animal_things": "#animals# that #animal_action#",
+  "animals_that_do_animal_things": "#animal.s# that #animal_action#",
   "animal": [
     "dog",
     "cat",
@@ -117,16 +142,6 @@
     "baby",
     "kid"
   ],
-  "animals": [
-    "dogs",
-    "cats",
-    "parrots",
-    "fish",
-    "seahorses",
-    "babies",
-    "kids"
-  ],
-
 
   "animal_action": [
     "bark angrily",
@@ -160,12 +175,12 @@
   ],
 
 
-  "frighten": "#QUOTE##animals# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
+  "frighten": "#QUOTE##animal.s.capitalize# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
 
   "menacing": "#QUOTE#Hundreds of thousands of #menacing_births# are\n#menacing_born# every day: the whole phenomenon\n#is_menacing#.",
 
   "menacing_births": [
-    "#animals#",
+    "#animal.s#",
     "#agents#",
     "GNU programs"
   ],
@@ -203,7 +218,7 @@
   "natalist_extinctions": [
     "wildlife",
     "#entity#",
-    "#animals#"
+    "#animal.s#"
   ],
   "natalist_effects": [
     "#bad_entities#",
@@ -231,7 +246,7 @@
   ],
 
   "assange_denialism": [
-    "#bad_entities# have dragged their feet\nin a way\nthat confirms that they are not really\ninterested in #entity#",
+    "#bad_entities.capitalize# have dragged their feet\nin a way\nthat confirms that they are not really\ninterested in #entity#",
     "The acts that #entity# is\naccused of doing are not \"#term#\" as the term is normally\nused."
   ],
 
@@ -241,9 +256,30 @@
 
   "facebook": [
     "#QUOTE#Innocent-seeming text posted on\n#bad_entities# could cause you lots of trouble, due to development\nof #bad_entities# to deduce things about\nyou.",
-    "#QUOTE##agents# should regard #bad_entities# as a\nsort of gang that you don't want\nyour #animals# to get mixed up in.",
+    "#QUOTE##agents.capitalize# should regard #bad_entities# as a\nsort of gang that you don't want\nyour #animal.s# to get mixed up in.",
     "#QUOTE#Americans' social networks are\ntracked by #enemies#, and #enemies# is just\none source."
   ],
+
+"_uber_source_": "https://stallman.org/uber.html",
+"promotional_term": "#term#",
+"drivers": [
+    "#bad_entities#",
+    "#animals_that_do_animal_things#",
+    "#agents#",
+    "a #natalist_births#"
+],
+
+"uber": "#QUOTE##_uber#",
+"_uber": [
+  "We should\nnot accept the promotional term \"#term#\"\nfor #enemies#.",
+  "Because I reject #entity#,\nI will never order or pay\n for #enemies#.",
+  "I\ndon't see\nanything wrong in\noffering #bad_entities# driven\nby #drivers#."
+],
+
+ "_spotify_source_": "",
+ "spotify": [
+  "#QUOTE#Like most\n#enemies#, #enemies# is\n based on #bad_entities#\nand #bad_entities#."
+],
 
   "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"]
 }
