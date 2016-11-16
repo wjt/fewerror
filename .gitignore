@@ -5,3 +5,5 @@ __pycache
 /log
 /tweets
 /ssh/id_rsa
+
+/cbdq/gnuerror.json

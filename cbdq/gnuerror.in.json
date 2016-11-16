@@ -1,6 +1,7 @@
 {
 
-  "origin": [
+  "origin": "#QUOTE##_origin#",
+  "_origin": [
     "#tinfoil#",
     "#despise#",
     "#frighten#",
@@ -15,7 +16,7 @@
   ],
 
   "tinfoil": [
-    "#QUOTE#To any #agents# reading: please\nconsider whether defending #entity#\nagainst #enemies# requires\nyou to follow #whistleblower# example."
+    "To any #agents# reading: please consider whether defending #entity# against #enemies# requires you to follow #whistleblower# example."
   ],
   "agents": [
     "#bad_TLA# agents",
@@ -100,7 +101,7 @@
 
     "snooping",
     "proprietary malware",
-    "\"music screaming\" dis-services"
+    "'music screaming' dis-services"
   ],
   "nameless_enemies": [
     "all enemies",
@@ -125,7 +126,7 @@
   ],
 
   "despise": [
-    "#QUOTE#Many #agents#\nutterly despise #bad_entities#,\nand some contribute to free\nsoftware based on that feeling."
+    "Many #agents# utterly despise #bad_entities#, and some contribute to free software based on that feeling."
   ],
   "despisers": [
     "#animal.s#",
@@ -175,9 +176,9 @@
   ],
 
 
-  "frighten": "#QUOTE##animal.s.capitalize# that #animal_action# and/or #computer_action#\n#fr# me, unless they #animal_nature#",
+  "frighten": "#animal.s.capitalize# that #animal_action# and/or #computer_action# #fr# me, unless they #animal_nature#",
 
-  "menacing": "#QUOTE#Hundreds of thousands of #menacing_births# are\n#menacing_born# every day: the whole phenomenon\n#is_menacing#.",
+  "menacing": "Hundreds of thousands of #menacing_births# are #menacing_born# every day: the whole phenomenon #is_menacing#.",
 
   "menacing_births": [
     "#animal.s#",
@@ -201,7 +202,7 @@
   ],
 
 
-  "natalist_pressure": "#QUOTE##natalist_verbs# a #natalist_births# fuels natalist pressure, which leads\nto #natalist_effects#, extinction of #natalist_extinctions#, and\nultimately #natalist_effects#.",
+  "natalist_pressure": "#natalist_verbs# a #natalist_births# fuels natalist pressure, which leads to #natalist_effects#, extinction of #natalist_extinctions#, and ultimately #natalist_effects#.",
 
   "natalist_verbs": [
     "Having",
@@ -246,18 +247,18 @@
   ],
 
   "assange_denialism": [
-    "#bad_entities.capitalize# have dragged their feet\nin a way\nthat confirms that they are not really\ninterested in #entity#",
-    "The acts that #entity# is\naccused of doing are not \"#term#\" as the term is normally\nused."
+    "#bad_entities.capitalize# have dragged their feet in a way that confirms that they are not really interested in #entity#",
+    "The acts that #entity# is accused of doing are not \"#term#\" as the term is normally used."
   ],
 
   "wizard": [
-    "For someone who is not #entity#, personal\nguidance from #entity# is likely to be more helpful than #bad_entities#."
+    "For someone who is not #entity#, personal guidance from #entity# is likely to be more helpful than #bad_entities#."
   ],
 
   "facebook": [
-    "#QUOTE#Innocent-seeming text posted on\n#bad_entities# could cause you lots of trouble, due to development\nof #bad_entities# to deduce things about\nyou.",
-    "#QUOTE##agents.capitalize# should regard #bad_entities# as a\nsort of gang that you don't want\nyour #animal.s# to get mixed up in.",
-    "#QUOTE#Americans' social networks are\ntracked by #enemies#, and #enemies# is just\none source."
+    "Innocent-seeming text posted on #bad_entities# could cause you lots of trouble, due to development of #bad_entities# to deduce things about you.",
+    "#agents.capitalize# should regard #bad_entities# as a sort of gang that you don't want your #animal.s# to get mixed up in.",
+    "Americans' social networks are tracked by #enemies#, and #enemies# is just one source."
   ],
 
 "_uber_source_": "https://stallman.org/uber.html",
@@ -269,17 +270,30 @@
     "a #natalist_births#"
 ],
 
-"uber": "#QUOTE##_uber#",
+"uber": "#_uber#",
 "_uber": [
-  "We should\nnot accept the promotional term \"#term#\"\nfor #enemies#.",
-  "Because I reject #entity#,\nI will never order or pay\n for #enemies#.",
-  "I\ndon't see\nanything wrong in\noffering #bad_entities# driven\nby #drivers#."
+  "We should not accept the promotional term \"#term#\" for #enemies#.",
+  "Because I reject #entity#, I will never order or pay  for #enemies#.",
+  "I don't see anything wrong in offering #bad_entities# driven by #drivers#."
 ],
 
- "_spotify_source_": "",
+ "_spotify_source_": "https://stallman.org/spotify.html",
  "spotify": [
-  "#QUOTE#Like most\n#enemies#, #enemies# is\n based on #bad_entities#\nand #bad_entities#."
+  "Like most #enemies#, #enemies# is  based on #bad_entities# and #bad_entities#."
 ],
 
-  "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"]
+  "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
+  "SPACE": [
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      "\u00a0",
+      "\n",
+      "#SPACE##SPACE#"
+  ]
 }
