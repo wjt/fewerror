@@ -4,7 +4,7 @@ import sys
 import json
 
 
-skip_keys = frozenset(('QUOTE', 'SPACE'))
+skip_keys = frozenset(('QUOTE', 'SPACE', '00-SOURCE'))
 
 
 def fmap(f, val):
@@ -32,11 +32,6 @@ def main():
 
     j = json.load(fp=a.source)
     j_ = transform(j)
-    j_['00-source'] = [
-        'Original source at',
-        'https://github.com/wjt/fewerror/blob/master/cbdq/gnuerror.json',
-        'transformed with a script in the same folder'
-    ]
     json.dump(j_, sys.stdout, indent=2, sort_keys=True)
 
 
