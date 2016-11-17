@@ -108,6 +108,12 @@ true_positives = [
          "fewer pain",  # NN
      ],
     ),
+
+    pytest.mark.xfail(reason='should match case of the matched LESS')(
+        (u"""the intersection becomes LESS SAFE than before""",
+         "FEWER SAFE",
+        ),
+    ),
 ]
 
 
@@ -137,14 +143,10 @@ false_positives = [
 
     u"I wish there were less pretentious motherfucking ass holes on this planet...i feel so worthless right now",
 
-    pytest.mark.xfail(reason='TODO: split on/strip out links?')(
-        u"Firefox Tweaks – An attempt to make Firefox suck less http://ift.tt/1MuFeCN",
-    ),
+    u"Firefox Tweaks – An attempt to make Firefox suck less http://ift.tt/1MuFeCN",
 
     # https://twitter.com/fewerror/status/659747048099618825
-    pytest.mark.xfail(reason='quotes')(
-        u'''I was about to do this but then realised they have reveals that say “show less” rather than “show fewer” so now _I’m_ angry :-\\''',
-    ),
+    u'''I was about to do this but then realised they have reveals that say “show less” rather than “show fewer” so now _I’m_ angry :-\\''',
 
     u"""it's like four swords but with one less person and internet rando multiplayer""",
 
