@@ -1,5 +1,6 @@
 # coding=utf-8
 import argparse
+import json
 import logging
 import logging.config
 import os
@@ -8,14 +9,12 @@ import time
 
 from tweepy import OAuthHandler, Stream, API, RateLimitError
 from tweepy.streaming import StreamListener
-from tweepy.utils import import_simplejson
-
-json = import_simplejson()
-log = logging.getLogger(__name__)
 
 from . import find_corrections, format_reply
 from .state import State
 from .util import reverse_inits, OrderedSet, mkdir_p
+
+log = logging.getLogger(__name__)
 
 
 def get_sanitized_text(status):
