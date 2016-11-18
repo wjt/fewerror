@@ -4,7 +4,7 @@ set -e
 set -x
 cd $(dirname "$0")
 
-if [[ "$#" -gt 1 ]]; then
+if [[ "$#" -ge 1 ]]; then
     git remote update
     git checkout -qf $1
 fi
