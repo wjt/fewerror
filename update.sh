@@ -9,6 +9,8 @@ if [[ "$#" -gt 1 ]]; then
     git checkout -qf $1
 fi
 
+../env/bin/pip install --upgrade pip wheel
 ../env/bin/pip install -r requirements.txt
 ../env/bin/python -m textblob.download_corpora
+
 sudo systemctl restart fewerror-twitter fewerror-telegram
