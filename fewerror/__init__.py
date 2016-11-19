@@ -172,6 +172,12 @@ def match(blob, i):
             # ignore "one less xxx" but allow "100% less xxx"
             return
 
+    less, less_pos = blob.tags[i]
+    if less.isupper():
+        fewer = 'FEWER'
+    else:
+        fewer = 'fewer'
+
     try:
         w, w_pos = blob.tags[i + 1]
     except IndexError:
@@ -194,7 +200,7 @@ def match(blob, i):
         if v_pos not in (POS.JJ, POS.VBG):
             break
 
-    return "fewer " + w
+    return fewer + " " + w
 
 
 def find_corrections(text):

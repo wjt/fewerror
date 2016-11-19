@@ -109,10 +109,8 @@ true_positives = [
      ],
     ),
 
-    pytest.mark.xfail(reason='should match case of the matched LESS')(
-        (u"""the intersection becomes LESS SAFE than before""",
-         "FEWER SAFE",
-        ),
+    (u"""the intersection becomes LESS SAFE than before""",
+     "FEWER SAFE",
     ),
 ]
 
