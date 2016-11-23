@@ -57,10 +57,10 @@ fewerror_user = {
 
 class MockAPI:
     parser = ModelParser()
-    connections = {}
 
-    def __init__(self):
+    def __init__(self, connections):
         self._updates = []
+        self._connections = {k: set(v) for k, v in connections.items()}
 
     def me(self):
         return User.parse(self, fewerror_user)
@@ -72,7 +72,7 @@ class MockAPI:
                 "screen_name": screen_name,
                 "id": i,
                 "id_str": str(i),
-                "connections": self.connections.get(screen_name, [
+                "connections": self._connections.get(screen_name, [
                     # "following",
                     # "followed_by",
                 ]),
@@ -80,11 +80,8 @@ class MockAPI:
             for i, screen_name in enumerate(screen_names, 2 ** 32)
         ]
 
-    def destroy_friendship(self, user_id):
-        try:
-            self.connections[user_id].remove("following")
-        except (KeyError, ValueError):
-            pass
+    def destroy_friendship(self, screen_name):
+        self._connections[screen_name] -= {"following"}
 
     def update_status(self, **kwargs):
         self._updates.append(kwargs)
@@ -116,10 +113,18 @@ class MockAPI:
      },
      "@Renferos @ArosOrcidae I think you mean “fewer skilled”.",
     ),
+    # Tweet from @davidgerard, who we were following but had stopped following
+    # us. We correctly unfollowed him, and
+    ('tests/801120047829753856.json',
+     {
+        'mjg59': ['following', 'followed_by'],
+        'davidgerard': ['following'],
+     },
+     None,
+    ),
 ])
 def test_end_to_end(filename, connections, expected, tmpdir):
-    api = MockAPI()
-    api.connections = dict(connections)
+    api = MockAPI(connections=connections)
 
     with open(filename, 'r') as f:
         status = Status.parse(api, json.load(fp=f))
@@ -127,6 +132,7 @@ def test_end_to_end(filename, connections, expected, tmpdir):
     with tmpdir.as_cwd():
         l = LessListener(api=api, post_replies=True, gather='tweets')
         l.december_greetings = ('It is cold outside.',)
+        l.festive_probability = 1.
 
         l.on_status(status)
 
@@ -143,3 +149,8 @@ def test_end_to_end(filename, connections, expected, tmpdir):
             assert len(api._updates) == 1
             u = api._updates[0]
             assert u['status'] == expected
+
+    for k, before in connections.items():
+        after = api._connections[k]
+        assert ('following' in after) == ('followed_by' in before), \
+            (k, before, after)
