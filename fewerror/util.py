@@ -1,7 +1,5 @@
 import collections
 import collections.abc
-import errno
-import os
 
 
 def reverse_inits(xs):
