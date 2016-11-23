@@ -12,7 +12,7 @@ from tweepy.streaming import StreamListener
 
 from . import find_corrections, format_reply
 from .state import State
-from .util import reverse_inits, OrderedSet, mkdir_p
+from .util import reverse_inits, OrderedSet
 
 log = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class LessListener(StreamListener):
         self._hb = 0
 
         if self.gather:
-            mkdir_p(self.gather)
+            os.makedirs(self.gather, exist_ok=True)
 
     def on_connect(self):
         me = self.me
@@ -114,7 +114,7 @@ class LessListener(StreamListener):
 
             id_bits = [id_[i:i+2] for i in (0, 2, 4)]
             dir_ = os.path.join(self.gather, *id_bits)
-            mkdir_p(dir_)
+            os.makedirs(dir_, exist_ok=True)
 
             filename = os.path.join(dir_, '{}.json'.format(id_))
             with open(filename, 'w') as f:

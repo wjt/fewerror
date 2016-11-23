@@ -37,12 +37,3 @@ class OrderedSet(collections.abc.MutableSet):
 
     def __str__(self):
         return '{' + ', '.join(map(str, self)) + '}'
-
-
-def mkdir_p(path):
-    # how many times must I write this function?
-    try:
-        os.makedirs(path)
-    except OSError as e:
-        if e.errno != errno.EEXIST or not os.path.isdir(path):
-            raise
