@@ -156,7 +156,7 @@ class LessListener(StreamListener):
 
                 if rel.is_following:
                     log.info(u"%s no longer follows us; unfollowing", rel.screen_name)
-                    self.api.destroy_friendship(user_id=rel.id)
+                    self.api.destroy_friendship(screen_name=rel.screen_name)
 
         if not (to_mention & senders):
             log.info('senders do not follow us (any more), not replying: %s',
