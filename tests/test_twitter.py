@@ -116,6 +116,15 @@ class MockAPI:
      },
      "@Renferos @ArosOrcidae I think you mean “fewer skilled”.",
     ),
+    # Tweet from @davidgerard, who we were following but had stopped following
+    # us. We correctly unfollowed him, and
+    ('tests/801120047829753856.json',
+     {
+        'mjg59': ['following', 'followed_by'],
+        'davidgerard': ['following'],
+     },
+     None,
+    ),
 ])
 def test_end_to_end(filename, connections, expected, tmpdir):
     api = MockAPI()

@@ -103,6 +103,11 @@ class LessListener(StreamListener):
             status = received_status
             rt_log_prefix = ''
 
+        senders = frozenset((
+            received_status.author.screen_name,
+            status.author.screen_name,
+        ))
+
         # Don't log RTs, no point in getting a million duplicates in the corpus.
         if self.gather and 'less' in status.text:
             id_ = received_status.id_str
@@ -141,6 +146,7 @@ class LessListener(StreamListener):
 
         mentioned_me = self.me.screen_name in to_mention
         to_mention.discard(self.me.screen_name)
+        log.info('would like to mention %s', to_mention)
 
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:
@@ -152,8 +158,9 @@ class LessListener(StreamListener):
                     log.info(u"%s no longer follows us; unfollowing", rel.screen_name)
                     self.api.destroy_friendship(user_id=rel.id)
 
-        if not to_mention:
-            log.info('no-one who follows us to reply to')
+        if not (to_mention & senders):
+            log.info('senders do not follow us (any more), not replying: %s',
+                     senders)
             return
 
         # Keep dropping mentions until the reply is short enough
