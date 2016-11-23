@@ -79,10 +79,11 @@ class LessListener(StreamListener):
         'Merry Christmas!',
         'Merry Newtonmass!',
         'Auspicious Winterval!',
-    ) + ('', ) * 5
+    )
+    festive_probability = 0.5
 
     def get_festive_greeting(self, dt):
-        if dt.month == 12:
+        if dt.month == 12 and random.random() < self.festive_probability:
             return random.choice(self.december_greetings)
         else:
             return ''
