@@ -106,7 +106,8 @@ class LessListener(StreamListener):
         if 'less' not in status.text.lower():
             return
         log.info("%s [%s@%s] %s",
-                 received_status.id_str, rt_log_prefix, screen_name, text)
+                 received_status.id_str, rt_log_prefix,
+                 received_status.author.screen_name, text)
 
         senders = frozenset((
             received_status.author.screen_name,
@@ -125,7 +126,6 @@ class LessListener(StreamListener):
                 json.dump(obj=received_status._json, fp=f)
 
         text = get_sanitized_text(status)
-        screen_name = status.author.screen_name
 
         if looks_like_retweet(text):
             log.info('…looks like a manual RT, skipping')
@@ -143,7 +143,7 @@ class LessListener(StreamListener):
         if not self._state.can_reply(status.id, quantities):
             return
 
-        to_mention.add(screen_name)
+        to_mention.add(status.author.screen_name)
         for x in status.entities['user_mentions']:
             to_mention.add(x['screen_name'])
 
@@ -154,7 +154,8 @@ class LessListener(StreamListener):
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:
                 # If someone explicitly tags us, they're fair game
-                if not (rel.screen_name == screen_name and mentioned_me):
+                if not (rel.screen_name == status.author.screen_name
+                        and mentioned_me):
                     to_mention.discard(rel.screen_name)
 
                 if rel.is_following:
