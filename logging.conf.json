@@ -17,6 +17,14 @@
       "class": "logging.handlers.RotatingFileHandler",
       "level": "DEBUG",
       "formatter": "simple",
+      "filename": "log/debug.log",
+      "maxBytes": 1048576,
+      "backupCount": 7
+    },
+    "file_info": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
       "filename": "log/fewerror.log",
       "maxBytes": 1048576,
       "backupCount": 7
@@ -24,7 +32,7 @@
   },
   "root": {
     "level": "DEBUG",
-    "handlers": ["file_debug"],
+    "handlers": ["file_debug", "file_info"],
     "_handlers": ["console_info", "file_debug"]
   }
 }
