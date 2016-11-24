@@ -103,13 +103,17 @@ class LessListener(StreamListener):
             status = received_status
             rt_log_prefix = ''
 
+        if 'less' not in status.text.lower():
+            return
+        log.info("%s [%s@%s] %s",
+                 received_status.id_str, rt_log_prefix, screen_name, text)
+
         senders = frozenset((
             received_status.author.screen_name,
             status.author.screen_name,
         ))
 
-        # Don't log RTs, no point in getting a million duplicates in the corpus.
-        if self.gather and 'less' in status.text:
+        if self.gather:
             id_ = received_status.id_str
 
             id_bits = [id_[i:i+2] for i in (0, 2, 4)]
@@ -124,19 +128,18 @@ class LessListener(StreamListener):
         screen_name = status.author.screen_name
 
         if looks_like_retweet(text):
-            # We can't (reliably) figure out who to admonish so always skip these.
+            log.info('…looks like a manual RT, skipping')
             return
 
         try:
             quantities = find_corrections(text)
         except Exception:
-            log.warning(u'exception while wrangling ‘%s’:', text, exc_info=True)
+            log.exception(u'exception while wrangling ‘%s’:', text)
             return
 
         if not quantities:
             return
 
-        log.info("[%s@%s] %s", rt_log_prefix, screen_name, text)
         if not self._state.can_reply(status.id, quantities):
             return
 
