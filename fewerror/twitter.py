@@ -105,6 +105,8 @@ class LessListener(StreamListener):
 
         if 'less' not in status.text.lower():
             return
+
+        text = get_sanitized_text(status)
         log.info("%s [%s@%s] %s",
                  received_status.id_str, rt_log_prefix,
                  received_status.author.screen_name, text)
@@ -124,8 +126,6 @@ class LessListener(StreamListener):
             filename = os.path.join(dir_, '{}.json'.format(id_))
             with open(filename, 'w') as f:
                 json.dump(obj=received_status._json, fp=f)
-
-        text = get_sanitized_text(status)
 
         if looks_like_retweet(text):
             log.info('…looks like a manual RT, skipping')
