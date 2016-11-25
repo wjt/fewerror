@@ -87,6 +87,8 @@ class MockAPI:
         self._updates.append(kwargs)
         r = Status(api=self)
         setattr(r, 'id', len(self._updates))
+        setattr(r, 'author', self.me())
+        # Status.user is "DEPRECIATED" so we omit it
         return r
 
 

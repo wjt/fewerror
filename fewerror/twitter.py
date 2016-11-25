@@ -40,6 +40,10 @@ def looks_like_retweet(text):
     return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
 
 
+def status_url(status):
+    return "https://twitter.com/{}/status/{}".format(status.author.screen_name, status.id)
+
+
 class LessListener(StreamListener):
     HEARTS = [u'♥', u'💓']
 
@@ -187,7 +191,7 @@ class LessListener(StreamListener):
                 # TODO: I think tweepy commit f99b1da broke calling this without naming the status
                 # parameter by adding media_ids before *args -- why do the tweepy tests pass?
                 r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
-                log.info("  https://twitter.com/_/status/%s", r.id)
+                log.info("  %s", status_url(r))
 
                 self._state.record_reply(status.id, quantities, r.id)
         else:
