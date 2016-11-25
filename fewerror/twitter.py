@@ -205,9 +205,10 @@ class LessListener(StreamListener):
             log.info("followed by @%s", event.source.screen_name)
             self.maybe_follow(event.source)
 
-        if self.follow_on_favs:
-            if event.event == 'favorite' and event.target.id == self.me.id:
-                log.info("tweet favorited by @%s", event.source.screen_name)
+        if event.event == 'favorite' and event.target.id == self.me.id:
+            log.info("tweet favorited by @%s: %s", event.source.screen_name,
+                     status_url(event.target_object))
+            if self.follow_on_favs:
                 self.maybe_follow(event.source)
 
     def maybe_follow(self, whom):
