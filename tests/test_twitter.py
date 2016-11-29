@@ -22,6 +22,14 @@ from fewerror.twitter import get_sanitized_text, LessListener
     ('649911069322948608.json',
      """OH:\n“It's all vaguely Sisyphean.”\n“Oh! THAT's the word I was looking for yesterday!”""",
     ),
+    # extended_tweet with trailing quoted tweet link
+    ('793203535626309632.json',
+     """Imagine thinking giving the nuclear codes to someone who treats classified material carelessly wouldn't be a problem.""",
+    ),
+    # extended_tweet with leading @replies
+    ('793561534861574144.json',
+     """Evolution is on the curriculum, so this is irrelevant. Unless you're proposing we apply "pressure" by continuing exactly as we are?""",
+    ),
 ])
 def test_sanitize(filename, expected):
     api = NonCallableMock()

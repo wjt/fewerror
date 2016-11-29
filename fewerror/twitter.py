@@ -18,13 +18,28 @@ log = logging.getLogger(__name__)
 
 
 def get_sanitized_text(status):
-    text = status.text
+    if hasattr(status, 'extended_tweet'):
+        # https://dev.twitter.com/overview/api/upcoming-changes-to-tweets#compatibility-mode-json-rendering
+        # Note that the field containing “The full set of entities” is helpfully
+        # documented as “entities/extended_entities, etc.” We could use
+        # display_text_range to strip leading usernames and trailing URLs but we
+        # also want to remove internal entities.
+        text = status.extended_tweet['full_text']
+        for key in ('entities', 'extended_entities'):
+            if key in status.extended_tweet:
+                entities = status.extended_tweet[key]
+                break
+        else:
+            raise ValueError("Can't find entities in extended_tweet", status._json)
+    else:
+        text = status.text
+        entities = status.entities
 
     flat_entities = [
         e
-        for k in ('media', 'urls')  # TODO: what about hashtags?
-        if k in status.entities
-        for e in status.entities[k]
+        for k in ('media', 'urls', 'user_mentions')  # TODO: what about hashtags?
+        if k in entities
+        for e in entities[k]
     ]
     flat_entities.sort(key=lambda e: e['indices'], reverse=True)
 
