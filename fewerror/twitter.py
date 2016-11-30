@@ -122,10 +122,10 @@ class LessListener(StreamListener):
             status = received_status
             rt_log_prefix = ''
 
-        if 'less' not in status.text.lower():
+        text = get_sanitized_text(status)
+        if 'less' not in text.lower():
             return
 
-        text = get_sanitized_text(status)
         log.info("%s [%s@%s] %s",
                  received_status.id_str, rt_log_prefix,
                  received_status.author.screen_name, text)

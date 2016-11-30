@@ -132,6 +132,16 @@ class MockAPI:
      },
      None,
     ),
+    # Modified version of 793561534861574144.json where the string 'less' only appears in the
+    # full_text, not in the truncated text. Regression test for a bug where we dropped any such
+    # tweet.
+    ('tests/less-only-in-extended-text.json',
+     {
+         'RobTH26': ['following', 'followed_by'],
+     },
+     '@RobTH26 I think you mean “fewer cake”.',
+    ),
+
 ])
 def test_end_to_end(filename, connections, expected, tmpdir):
     api = MockAPI(connections=connections)
