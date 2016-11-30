@@ -126,8 +126,9 @@ class LessListener(StreamListener):
         if 'less' not in text.lower():
             return
 
-        log.info("%s [%s@%s] %s",
-                 received_status.id_str, rt_log_prefix,
+        log.info("%s", status_url(received_status))
+        log.info("[%s@%s] %s",
+                 rt_log_prefix,
                  received_status.author.screen_name, text)
 
         senders = frozenset((
