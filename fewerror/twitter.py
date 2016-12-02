@@ -94,12 +94,11 @@ class LessListener(StreamListener):
 
     december_greetings = (
         'Ho ho ho!',
-        'Happy Hannukah!',
         'Merry Christmas!',
-        'Merry Newtonmass!',
-        'Auspicious Winterval!',
+        '🎅🎅🎅',
+        '🎄🎄🎄',
     )
-    festive_probability = 0.5
+    festive_probability = 0.25
 
     def get_festive_greeting(self, dt):
         if dt.month == 12 and random.random() < self.festive_probability:
