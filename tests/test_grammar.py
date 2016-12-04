@@ -158,12 +158,15 @@ false_positives = [
     ),
 
     u"""get back to being ~electable~ by doing all the horrible oppressive things the Tories do but just ~slightly less~? hope voters buy that?""",
+
+    # https://twitter.com/fewerror/status/803742976291663872
+    """★★ 97% Of People Can't Find The Horse In This Picture In LESS Than 5 Seconds. Can You?""",
 ]
 
 
 @pytest.mark.parametrize("tweet", false_positives)
 def test_false_positives(tweet):
-    assert fewerror.find_corrections(tweet) == []
+    assert fewerror.find_corrections(tweet) == [], str(TextBlob(tweet).tags)
 
 
 def test_mass_nouns():

@@ -196,6 +196,10 @@ def match(blob, i):
         if POS.nounish(v, v_pos):
             return
 
+        # less than 5 Seconds
+        if v_pos in (POS.CD,):
+            return
+
         # if we reject "less happy sheep" we should also reject "less happy fluffy sheep".
         if v_pos not in (POS.JJ, POS.VBG):
             break
