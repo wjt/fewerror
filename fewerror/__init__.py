@@ -216,7 +216,7 @@ def find_corrections(text):
         # across a comma, ellipsis, etc. In fact, it's not clear there is
         # all that much point splitting into sentences…
         s_tags = [(Word(word, pos_tag=t), str(t))
-                for word, t in s.pos_tagger.tag(s.raw)]
+                  for word, t in s.pos_tagger.tag(s.raw)]
         less_indices = [i for i, (word, tag) in enumerate(s_tags) if word.lower() == 'less']
 
         for i in less_indices:
