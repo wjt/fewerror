@@ -1,6 +1,7 @@
 # vim: fileencoding=utf-8
 import json
 import os
+import datetime as dt
 
 from unittest.mock import NonCallableMock
 import pytest
@@ -151,8 +152,11 @@ def test_end_to_end(filename, connections, expected, tmpdir):
 
     with tmpdir.as_cwd():
         l = LessListener(api=api, post_replies=True, gather='tweets')
+
+        # 100% festivity for all of December
         l.december_greetings = ('It is cold outside.',)
         l.festive_probability = 1.
+        assert l.get_festive_probability(dt.date(2016, 12, 5)) == 1.
 
         l.on_status(status)
 
@@ -174,3 +178,19 @@ def test_end_to_end(filename, connections, expected, tmpdir):
         after = api._connections[k]
         assert ('following' in after) == ('followed_by' in before), \
             (k, before, after)
+
+@pytest.mark.parametrize('date,p', [
+    (dt.date(2016, 11, 30), 0),
+    (dt.date(2016, 12, 1), 0.25),
+    (dt.date(2016, 12, 9), 0.5),
+    (dt.date(2016, 12, 17), 0.75),
+    (dt.date(2016, 12, 25), 1),
+    (dt.date(2016, 12, 26), 0),
+])
+def test_festivity(date, p, tmpdir):
+    api = MockAPI(connections={})
+
+    with tmpdir.as_cwd():
+        l = LessListener(api=api, post_replies=True, gather='tweets')
+
+        assert l.get_festive_probability(date) == p

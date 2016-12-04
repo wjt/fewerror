@@ -100,8 +100,20 @@ class LessListener(StreamListener):
     )
     festive_probability = 0.25
 
-    def get_festive_greeting(self, dt):
-        if dt.month == 12 and random.random() < self.festive_probability:
+    def get_festive_probability(self, d):
+        """Festivities increase linearly as crim cram approaches"""
+        if d.month != 12 or d.day > 25:
+            return 0
+
+        x = (d.day - 1) / 24
+        c = self.festive_probability
+        m = 1 - c
+        p = m * x + c
+        return p
+
+    def get_festive_greeting(self, d):
+        p = self.get_festive_probability(d)
+        if random.random() < p:
             return random.choice(self.december_greetings)
         else:
             return ''
