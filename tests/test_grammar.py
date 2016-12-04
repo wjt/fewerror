@@ -141,7 +141,7 @@ false_positives = [
 
     u"I wish there were less pretentious motherfucking ass holes on this planet...i feel so worthless right now",
 
-    u"Firefox Tweaks – An attempt to make Firefox suck less http://ift.tt/1MuFeCN",
+    u"Firefox Tweaks – An attempt to make Firefox suck less",
 
     # https://twitter.com/fewerror/status/659747048099618825
     u'''I was about to do this but then realised they have reveals that say “show less” rather than “show fewer” so now _I’m_ angry :-\\''',
@@ -152,21 +152,22 @@ false_positives = [
     u"""I want less Scunthorpe in my life""",
     u"""That bath was less therapeutic than I had hoped""",
 
-    pytest.mark.xfail(reason='''Should be "bore me fewer" or nothing;
-                      "less given" is at least still wrong I suppose!''')(
-        u"""I would have thought a comic book movie might bore me less, given my history!""",
-    ),
+    # Would be nice to be "bore me fewer" here
+    u"""I would have thought a comic book movie might bore me less, given my history!""",
 
     u"""get back to being ~electable~ by doing all the horrible oppressive things the Tories do but just ~slightly less~? hope voters buy that?""",
 
     # https://twitter.com/fewerror/status/803742976291663872
     """★★ 97% Of People Can't Find The Horse In This Picture In LESS Than 5 Seconds. Can You?""",
+
+    # https://twitter.com/fewerror/status/805181450182070273
+    """Can I have a ham sandwich please? So what does that mean...? Just what it says... no more no less... Focus is obvious LOL""",
 ]
 
 
 @pytest.mark.parametrize("tweet", false_positives)
 def test_false_positives(tweet):
-    assert fewerror.find_corrections(tweet) == [], str(TextBlob(tweet).tags)
+    assert fewerror.find_corrections(tweet) == [], str([s.tags for s in TextBlob(tweet).sentences])
 
 
 def test_mass_nouns():

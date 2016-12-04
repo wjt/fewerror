@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 
-from textblob import TextBlob
+from textblob import TextBlob, Word
 from nltk.corpus.reader import WordListCorpusReader
 
 
@@ -162,24 +162,24 @@ bad_words_corpora = WordListCorpusReader('wordlist/shutterstock-bad-words', r'[a
 bad_words_en = bad_words_corpora.words('en')
 
 
-def match(blob, i):
-    if ["could", "care", "less"] == [w.lower() for w in blob.words[i-2:i+1]]:
+def match(blob_tags, i):
+    if ["could", "care", "less"] == [w.lower() for w, tag in blob_tags[i-2:i+1]]:
         return "could care fewer"
 
     if i > 0:
-        v, v_pos = blob.tags[i - 1]
+        v, v_pos = blob_tags[i - 1]
         if v_pos == POS.CD and not v.endswith('%'):
             # ignore "one less xxx" but allow "100% less xxx"
             return
 
-    less, less_pos = blob.tags[i]
+    less, less_pos = blob_tags[i]
     if less.isupper():
         fewer = 'FEWER'
     else:
         fewer = 'fewer'
 
     try:
-        w, w_pos = blob.tags[i + 1]
+        w, w_pos = blob_tags[i + 1]
     except IndexError:
         return
 
@@ -189,7 +189,7 @@ def match(blob, i):
     if not w.isalpha():
         return
 
-    for v, v_pos in blob.tags[i + 2:]:
+    for v, v_pos in blob_tags[i + 2:]:
         # Avoid replying "fewer lonely" to "less lonely girl"
         # why? this is "right"! but it would be better to say "fewer lonely girl"
         # but: "less happy sheep" -> "fewer happy sheep" is bad
@@ -212,10 +212,15 @@ def find_corrections(text):
 
     words = []
     for s in blob.sentences:
-        less_indices = [i for i, (word, tag) in enumerate(s.tags) if word.lower() == 'less']
+        # blob.tags excludes punctuation, but we need that to avoid correcting
+        # across a comma, ellipsis, etc. In fact, it's not clear there is
+        # all that much point splitting into sentences…
+        s_tags = [(Word(word, pos_tag=t), str(t))
+                for word, t in s.pos_tagger.tag(s.raw)]
+        less_indices = [i for i, (word, tag) in enumerate(s_tags) if word.lower() == 'less']
 
         for i in less_indices:
-            q = match(s, i)
+            q = match(s_tags, i)
             if q is not None:
                 words.append(q)
 
