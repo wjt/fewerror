@@ -109,6 +109,7 @@ class LessListener(StreamListener):
         c = self.festive_probability
         m = 1 - c
         p = m * x + c
+        log.info("%s -> %.2f", d, p)
         return p
 
     def get_festive_greeting(self, d):
