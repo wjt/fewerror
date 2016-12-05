@@ -110,6 +110,11 @@ true_positives = [
     (u"""the intersection becomes LESS SAFE than before""",
      "FEWER SAFE",
     ),
+
+    # https://twitter.com/resiak/status/805478063270137857
+    ("I've never seen him less happy to be there.",
+     "fewer happy",
+    ),
 ]
 
 
