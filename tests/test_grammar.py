@@ -37,11 +37,9 @@ true_positives = [
      'fewer lucky',
     ),
 
-    # pytest.mark.xfail(reason='POS tagger thinks "janky" is a noun')(
-        (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less janky hopefully.",
-         'fewer janky',
-        ),
-    # ),
+    (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less janky hopefully.",
+     'fewer janky',
+    ),
 
     (u"(And I know it's heresy to say it, but while Hissing Fauna is excellent I'm less keen on the direction it heralded)",
      'fewer keen',
