@@ -2,6 +2,8 @@
 *.pyc
 __pycache
 
+/.cache
+/.env
 /log
 /tweets
 /ssh/id_rsa
