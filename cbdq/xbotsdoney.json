@@ -1,0 +1,131 @@
+{
+    "origin": "#cheap.capitalize# #bots#, #done# #quick#.",
+
+    "__cheap_sources": [
+        "https://wordnik.com/words/cheap"
+    ],
+    "cheap": [
+        "bargain",
+        "buy",
+        "common",
+        "easy",
+        "flimsy",
+        "frugal",
+        "inexpensive",
+        "mean",
+        "meretricious",
+        "no-frills",
+        "popular",
+        "priced-off",
+        "purchase",
+        "vulgar",
+        "affordable",
+        "bargain-priced",
+        "catchpenny",
+        "cut-price",
+        "cut-rate",
+        "dirt-cheap",
+        "inferior",
+        "low-budget",
+        "low-cost",
+        "low-priced",
+        "nickel-and-dime",
+        "sixpenny",
+        "stingy",
+        "tasteless",
+        "threepenny",
+        "tuppeny",
+        "two-a-penny",
+        "twopenny",
+        "twopenny-halfpenny",
+        "ungenerous"
+    ],
+
+    "__bots_sources": [
+        "https://wordnik.com/words/robot",
+        "https://wordnik.com/words/automaton",
+        "https://wordnik.com/words/mechanism"
+    ],
+    "bots": [
+        "mechanisms",
+        "automata",
+        "machines",
+        "androids",
+        "apparata"
+    ],
+
+    "__done_sources": [
+        "https://wordnik.com/words/done",
+        "https://wordnik.com/words/achieve",
+        "https://wordnik.com/words/accomplish"
+    ],
+    "done": [
+        "accomplished",
+        "achieved",
+        "attained",
+        "carried out",
+        "completed",
+        "completed",
+        "consummated",
+        "contrived",
+        "cooked",
+        "delivered",
+        "dispatched",
+        "effected",
+        "effectuated",
+        "equipped",
+        "executed",
+        "executed",
+        "expedited",
+        "finished",
+        "finished",
+        "fulfill",
+        "fulfilled",
+        "furnished",
+        "gained",
+        "given",
+        "issued",
+        "managed",
+        "negotiated",
+        "obtained",
+        "perfected",
+        "performed",
+        "performed",
+        "realized"
+    ],
+
+    "__quick_sources": [
+        "https://wordnik.com/words/quick",
+        "https://wordnik.com/words/brief"
+    ],
+
+    "quick": [
+        "animatedly",
+        "bracingly",
+        "briskly",
+        "concisely",
+        "curtly",
+        "eagerly",
+        "expeditiously",
+        "fast",
+        "fleetingly",
+        "hastily",
+        "impatiently",
+        "keenly",
+        "momentarily",
+        "nimbly",
+        "passionately",
+        "promptly",
+        "rapidly",
+        "readily",
+        "sharp",
+        "speedily",
+        "succinctly",
+        "summarily",
+        "swiftly",
+        "tersely",
+        "unceremoniously"
+    ]
+}
+
+
