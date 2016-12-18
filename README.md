@@ -75,6 +75,8 @@ Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/
 
 > this bot is probably almost as obnoxious as the person who coded it <cite>– [@jimperialism](https://twitter.com/jimperialism/status/711023047885455360)</cite>
 
+> don't come on my TL and talk shit to my friend Fewer Error, I love this bot <cite>– [@yellowcardigan](https://twitter.com/yellowcardigan/status/810227823248019456)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
