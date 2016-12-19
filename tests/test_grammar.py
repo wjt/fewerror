@@ -165,6 +165,13 @@ false_positives = [
 
     # https://twitter.com/fewerror/status/805181450182070273
     """Can I have a ham sandwich please? So what does that mean...? Just what it says... no more no less... Focus is obvious LOL""",
+
+    # Wow, I can't believe this one wasn't in the test suite. Sentence case is fine:
+    """Less errors!""",
+    # ...but shouty-case is not:
+    pytest.mark.xfail(reason='all-caps words are assumed to be singular proper nouns')(
+        """LESS ERRORS!""",
+    ),
 ]
 
 
