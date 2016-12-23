@@ -60,19 +60,15 @@ def status_url(status):
 
 
 class LessListener(StreamListener):
-    HEARTS = [u'♥', u'💓']
-
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
         self.reply_to_rts = kwargs.pop('reply_to_rts', False)
         self.follow_on_favs = kwargs.pop('follow_on_favs', False)
-        self.heartbeat_interval = kwargs.pop('heartbeat_interval', 500)
         self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
         self.me = self.api.me()
 
         self._state = State.load(self.me.screen_name)
-        self._hb = 0
 
         if self.gather:
             os.makedirs(self.gather, exist_ok=True)
@@ -84,13 +80,6 @@ class LessListener(StreamListener):
     def on_error(self, status_code):
         log.info("HTTP status %d", status_code)
         return True  # permit tweepy.Stream to retry
-
-    def on_data(self, data):
-        self._hb = (self._hb + 1) % self.heartbeat_interval
-        if self._hb == 0:
-            log.info(random.choice(self.HEARTS))
-
-        super(LessListener, self).on_data(data)
 
     december_greetings = (
         'Ho ho ho!',
@@ -272,7 +261,6 @@ def main():
                         help='reply to retweets (makes the bot a little less opt-in)')
     parser.add_argument('--follow-on-favs', action='store_true',
                         help='follow people who fav us (makes the bot a little less opt-in)')
-    parser.add_argument('--heartbeat-interval', type=int, default=500)
 
     parser.add_argument('--log-config',
                         type=argparse.FileType('r'),
@@ -301,7 +289,6 @@ def main():
                              post_replies=args.post_replies,
                              reply_to_rts=args.reply_to_retweets,
                              follow_on_favs=args.follow_on_favs,
-                             heartbeat_interval=args.heartbeat_interval,
                              gather=args.gather)
 
             stream = Stream(auth, l)
