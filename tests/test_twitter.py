@@ -197,8 +197,8 @@ def test_festivity(date, p, tmpdir):
 
 
 @pytest.mark.parametrize('id_,expected_filename', [
-    ('649911069322948608', '64/99/11/649911069322948608.json'),
-    ('1649911069322948608', '164/99/11/1649911069322948608.json'),
+    ('649911069322948608', '64/649911069322948608.json'),
+    ('1649911069322948608', '164/1649911069322948608.json'),
 ])
 def test_save_tweet(tmpdir, id_, expected_filename):
     api = MockAPI(connections={})

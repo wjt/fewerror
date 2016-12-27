@@ -113,11 +113,8 @@ class LessListener(StreamListener):
             return
 
         id_ = received_status.id_str
-
         id_bits = [
             id_[0:-16],
-            id_[-16:-14],
-            id_[-14:-12],
         ]
         dir_ = os.path.join(self.gather, *id_bits)
         os.makedirs(dir_, exist_ok=True)
