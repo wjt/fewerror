@@ -191,6 +191,25 @@ def test_festivity(date, p, tmpdir):
     api = MockAPI(connections={})
 
     with tmpdir.as_cwd():
-        l = LessListener(api=api, post_replies=True, gather='tweets')
+        l = LessListener(api=api, post_replies=True, gather=None)
 
         assert l.get_festive_probability(date) == p
+
+
+@pytest.mark.parametrize('id_,expected_filename', [
+    ('649911069322948608', '64/99/11/649911069322948608.json'),
+    ('1649911069322948608', '164/99/11/1649911069322948608.json'),
+])
+def test_save_tweet(tmpdir, id_, expected_filename):
+    api = MockAPI(connections={})
+
+    with tmpdir.as_cwd():
+        l = LessListener(api=api, gather='foo')
+        s = Status.parse(api=api, json={
+            'id': int(id_),
+            'id_str': id_,
+        })
+        l.save_tweet(s)
+
+        j = tmpdir.join('foo', expected_filename)
+        assert j.check()

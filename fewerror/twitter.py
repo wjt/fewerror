@@ -108,6 +108,24 @@ class LessListener(StreamListener):
         else:
             return ''
 
+    def save_tweet(self, received_status):
+        if not self.gather:
+            return
+
+        id_ = received_status.id_str
+
+        id_bits = [
+            id_[0:-16],
+            id_[-16:-14],
+            id_[-14:-12],
+        ]
+        dir_ = os.path.join(self.gather, *id_bits)
+        os.makedirs(dir_, exist_ok=True)
+
+        filename = os.path.join(dir_, '{}.json'.format(id_))
+        with open(filename, 'w') as f:
+            json.dump(obj=received_status._json, fp=f)
+
     def on_status(self, received_status):
         to_mention = OrderedSet()
 
@@ -137,16 +155,7 @@ class LessListener(StreamListener):
             status.author.screen_name,
         ))
 
-        if self.gather:
-            id_ = received_status.id_str
-
-            id_bits = [id_[i:i+2] for i in (0, 2, 4)]
-            dir_ = os.path.join(self.gather, *id_bits)
-            os.makedirs(dir_, exist_ok=True)
-
-            filename = os.path.join(dir_, '{}.json'.format(id_))
-            with open(filename, 'w') as f:
-                json.dump(obj=received_status._json, fp=f)
+        self.save_tweet(received_status)
 
         if looks_like_retweet(text):
             log.info('…looks like a manual RT, skipping')
