@@ -77,6 +77,8 @@ Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/
 
 > don't come on my TL and talk shit to my friend Fewer Error, I love this bot <cite>– [@yellowcardigan](https://twitter.com/yellowcardigan/status/810227823248019456)</cite>
 
+> Incorrect again. [#WorstBotEver](https://twitter.com/hashtag/WorstBotEver?src=hash) <cite>– [@JennUndercover](https://twitter.com/JennUndercover/status/834365018246377472)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
