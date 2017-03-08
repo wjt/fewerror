@@ -13,6 +13,7 @@ install:
 script:
   - py.test --cov=fewerror
   - flake8
+  - make -C cbdq check
 after_success:
   - coveralls
 before_deploy:

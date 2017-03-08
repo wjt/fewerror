@@ -46,12 +46,16 @@ def transform(j):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('source', nargs='?', type=argparse.FileType(mode='r'), default=sys.stdin)
+    p.add_argument('--verify', action='store_true')
     a = p.parse_args()
 
     j = yaml.load(a.source)
     validate(j)
     j_ = transform(j)
-    json.dump(j_, sys.stdout, indent=2, sort_keys=True)
+    if a.verify:
+        json.dumps(j_)
+    else:
+        json.dump(j_, sys.stdout, indent=2, sort_keys=True)
 
 
 if __name__ == '__main__':
