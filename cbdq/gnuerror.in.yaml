@@ -332,7 +332,7 @@
    "#entity#",
    "#bad_company#"
  ],
- "#hunt_moose#": [
+ "hunt_moose": [
    "hunt #moose_in_finland#",
    "#computer_action#",
    "#animal_action#",
