@@ -282,28 +282,28 @@
     "Americans' social networks are tracked by #enemies#, and #enemies# is just one source."
   ],
 
-"_uber_source_": "https://stallman.org/uber.html",
-"promotional_term": "#term#",
-"drivers": [
-    "#bad_entities#",
-    "#animals_that_do_animal_things#",
-    "#agents#",
-    "a #natalist_births#"
-],
+  # https://stallman.org/uber.html
+  "promotional_term": "#term#",
+  "drivers": [
+      "#bad_entities#",
+      "#animals_that_do_animal_things#",
+      "#agents#",
+      "a #natalist_births#"
+  ],
 
-"uber": "#_uber#",
-"_uber": [
-  "We should not accept the promotional term \"#term#\" for #enemies#.",
-  "Because I reject #entity#, I will never order or pay  for #enemies#.",
-  "I don't see anything wrong in offering #bad_entities# driven by #drivers#."
-],
+  "uber": "#_uber#",
+  "_uber": [
+    "We should not accept the promotional term \"#term#\" for #enemies#.",
+    "Because I reject #entity#, I will never order or pay  for #enemies#.",
+    "I don't see anything wrong in offering #bad_entities# driven by #drivers#."
+  ],
 
- "_spotify_source_": "https://stallman.org/spotify.html",
- "spotify": [
-  "Like most #enemies#, #enemies# is  based on #bad_entities# and #bad_entities#."
-],
+  # https://stallman.org/spotify.html
+  "spotify": [
+    "Like most #enemies#, #enemies# is  based on #bad_entities# and #bad_entities#."
+  ],
 
- "_2017_jan_apr_source_": "https://stallman.org/archives/2017-jan-apr.html",
+  # https://stallman.org/archives/2017-jan-apr.html
  "thing_that_is_frustrating_to_use__is": [
    "#bad_company# is",
    "#bad_food# is",
@@ -336,7 +336,7 @@
  "activate": "I find most #stuff_that_is_hard_to_activate# very difficult to activate.",
  "wolves_are_numerous": "#wolves_in_finland.capitalize# in #country# are so numerous that they endanger the #dogs_in_finland# that rural people use to hunt #moose_in_finland#.",
 
- "country_source": "https://github.com/dariusk/corpora/blob/master/data/geography/countries.json",
+ # https://github.com/dariusk/corpora/blob/master/data/geography/countries.json
  "country": [
     "Afghanistan",
     "Albania",
@@ -534,7 +534,7 @@
     "Vietnam",
     "Yemen",
     "Zambia",
-    "Zimbabwe"
+    "Zimbabwe",
   ],
 
   "QUOTE": ["", "", "", "", ">", ">>", ">> >", ">> > >>> >>"],
