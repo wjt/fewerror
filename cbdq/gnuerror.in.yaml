@@ -332,9 +332,14 @@
    "#entity#",
    "#bad_company#"
  ],
+ "#hunt_moose#": [
+   "hunt #moose_in_finland#",
+   "#computer_action#",
+   "#animal_action#",
+ ],
  "frustrating": "#thing_that_is_frustrating_to_use__is.capitalize# increasingly frustrating to use. Even in the bathroom.",
  "activate": "I find most #stuff_that_is_hard_to_activate# very difficult to activate.",
- "wolves_are_numerous": "#wolves_in_finland.capitalize# in #country# are so numerous that they endanger the #dogs_in_finland# that rural people use to hunt #moose_in_finland#.",
+ "wolves_are_numerous": "#wolves_in_finland.capitalize# in #country# are so numerous that they endanger the #dogs_in_finland# that rural people use to #hunt_moose#.",
 
  # https://github.com/dariusk/corpora/blob/master/data/geography/countries.json
  "country": [
