@@ -145,7 +145,7 @@
   ],
 
   "despise": [
-    "Many #agents# utterly despise #bad_entities#, and some contribute to free software based on that feeling."
+    "Many #despisers# utterly despise #bad_entities#, and some contribute to free software based on that feeling."
   ],
   "despisers": [
     "#animal.s#",
@@ -283,7 +283,6 @@
   ],
 
   # https://stallman.org/uber.html
-  "promotional_term": "#term#",
   "drivers": [
       "#bad_entities#",
       "#animals_that_do_animal_things#",
