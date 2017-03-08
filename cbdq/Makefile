@@ -1,4 +1,4 @@
 .PHONY: all
 
-copy: gnuerror.in.json gnewline.py
+copy: gnuerror.in.yaml gnewline.py
 	./gnewline.py $< | xsel -b

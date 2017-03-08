@@ -1,7 +1,7 @@
 {
   "00-SOURCE": [
       "Original source at",
-      "https://github.com/wjt/fewerror/blob/master/cbdq/gnuerror.in.json",
+      "https://github.com/wjt/fewerror/blob/master/cbdq/gnuerror.in.yaml",
       "transformed by",
       "https://github.com/wjt/fewerror/blob/master/cbdq/gnewline.py",
       "for chaotic spacing effect"

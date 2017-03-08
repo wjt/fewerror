@@ -2,6 +2,7 @@
 import argparse
 import sys
 import json
+import yaml
 
 
 skip_keys = frozenset(('QUOTE', 'SPACE', '00-SOURCE'))
@@ -30,7 +31,7 @@ def main():
     p.add_argument('source', nargs='?', type=argparse.FileType(mode='r'), default=sys.stdin)
     a = p.parse_args()
 
-    j = json.load(fp=a.source)
+    j = yaml.load(a.source)
     j_ = transform(j)
     json.dump(j_, sys.stdout, indent=2, sort_keys=True)
 
