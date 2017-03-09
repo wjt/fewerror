@@ -25,6 +25,7 @@ def _context(message):
 
 
 def on_start(bot, update):
+    log.info('<%s> %s', _context(update.message), update.message.text)
     bot.sendMessage(chat_id=update.message.chat_id,
                     text="Hi. I'll let you know when you say ‘less’ but "
                          "should say ‘fewer’.")
