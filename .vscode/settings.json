@@ -1,7 +1,7 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "python.pythonPath": ".env/bin/python",
+    "python.pythonPath": ".fewerror3/bin/python",
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": ".env/bin/flake8"
+    "python.linting.flake8Path": ".fewerror3/bin/flake8"
 }
