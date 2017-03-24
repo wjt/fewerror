@@ -10,3 +10,6 @@ Taken from the sidebar of
 
 It is not clear to me what those additional terms could be.
 
+## misc
+
+Artisinal, hand-curated wordlist.

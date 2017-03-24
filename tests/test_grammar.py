@@ -115,6 +115,10 @@ true_positives = [
     ("I've never seen him less happy to be there.",
      "fewer happy",
     ),
+
+    ("less politics please",
+     "fewer politics",
+    ),
 ]
 
 
