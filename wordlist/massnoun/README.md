@@ -12,4 +12,4 @@ It is not clear to me what those additional terms could be.
 
 ## misc
 
-Artisinal, hand-curated wordlist.
+Artisanal, hand-curated wordlist.
