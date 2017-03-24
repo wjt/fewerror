@@ -1,0 +1,5 @@
+# https://landscape.io/github/wjt/fewerror
+python-targets:
+  - 3
+pep8:
+  full: true
