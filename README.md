@@ -103,3 +103,4 @@ It originally used the [statuses/filter](https://dev.twitter.com/docs/api/1.1/po
 
 [![Build Status](https://travis-ci.org/wjt/fewerror.svg?branch=master)](https://travis-ci.org/wjt/fewerror)
 [![Coverage Status](https://coveralls.io/repos/wjt/fewerror/badge.svg?branch=master&service=github)](https://coveralls.io/github/wjt/fewerror?branch=master)
+[![Code Health](https://landscape.io/github/wjt/fewerror/landscape/landscape.svg?style=flat)](https://landscape.io/github/wjt/fewerror/landscape)
