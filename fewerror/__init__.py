@@ -172,7 +172,7 @@ def match(blob_tags, i):
             # ignore "one less xxx" but allow "100% less xxx"
             return
 
-    less, less_pos = blob_tags[i]
+    less, _less_pos = blob_tags[i]
     if less.isupper():
         fewer = 'FEWER'
     else:

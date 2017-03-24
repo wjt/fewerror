@@ -24,7 +24,7 @@ def space(val):
 def validate(j):
     used = {'origin'} | skip_keys
     for k, v in j.items():
-        def _validate(val):
+        def _validate(val, k=k):
             for var in traceryish_rx.findall(val):
                 if var not in j:
                     raise ValueError(k, val, var)
