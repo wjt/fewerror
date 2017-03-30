@@ -99,6 +99,10 @@ true_positives = [
      "could care fewer",
     ),
 
+    (u"""I love less than jake""",
+     u"Fewer Than Jake",
+    ),
+
     (u"""Goals\n\nLess hate.\nLess stress.\nLess pain.\nMore love.\nMore rest.\nMore joy.""",
      [
          "fewer hate",  # VBP

@@ -166,6 +166,9 @@ def match(blob_tags, i):
     if ["could", "care", "less"] == [w.lower() for w, tag in blob_tags[i-2:i+1]]:
         return "could care fewer"
 
+    if ["less", "than", "jake"] == [w.lower() for w, tag in blob_tags[i:i+3]]:
+        return "Fewer Than Jake"
+
     if i > 0:
         v, v_pos = blob_tags[i - 1]
         if v_pos == POS.CD and not v.endswith('%'):
