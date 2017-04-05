@@ -4,6 +4,7 @@ import logging
 from textblob import TextBlob, Word
 from nltk.corpus.reader import WordListCorpusReader
 
+from . import checkedshirt
 
 log = logging.getLogger(__name__)
 
@@ -232,3 +233,10 @@ def find_corrections(text):
             return []
 
     return words
+
+
+__all__ = [
+    checkedshirt,
+    find_corrections,
+    format_reply,
+]

@@ -10,7 +10,7 @@ import time
 from tweepy import OAuthHandler, Stream, API, RateLimitError
 from tweepy.streaming import StreamListener
 
-from . import find_corrections, format_reply
+from . import checkedshirt, find_corrections, format_reply
 from .state import State
 from .util import reverse_inits, OrderedSet
 
@@ -267,20 +267,11 @@ def main():
                         help='reply to retweets (makes the bot a little less opt-in)')
     parser.add_argument('--follow-on-favs', action='store_true',
                         help='follow people who fav us (makes the bot a little less opt-in)')
-
-    parser.add_argument('--log-config',
-                        type=argparse.FileType('r'),
-                        metavar='FILE.json',
-                        help='Read logging config from FILE.json (default: DEBUG to stdout)')
+    checkedshirt.add_arguments(parser)
 
     args = parser.parse_args()
 
-    if args.log_config:
-        log_config = json.load(args.log_config)
-        logging.config.dictConfig(log_config)
-    else:
-        logging.basicConfig(level='DEBUG',
-                            format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
+    checkedshirt.init(args)
 
     auth = auth_from_env()
     api = API(auth,

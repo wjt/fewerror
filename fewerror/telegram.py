@@ -9,7 +9,7 @@ from telegram.ext import (
     Updater, CommandHandler, MessageHandler, Filters,
 )
 
-from . import find_corrections, format_reply
+from . import checkedshirt, find_corrections, format_reply
 
 log = logging.getLogger(__name__)
 
@@ -47,14 +47,12 @@ def on_message(bot, update):
 
 
 def main():
-    p = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description='Annoy some Telegram users. '
                     'Set $TELEGRAM_BOT_TOKEN for success.')
-    p.add_argument('--debug', action='store_true', help='enable debug output')
-    a = p.parse_args()
-
-    logging.basicConfig(level=('DEBUG' if a.debug else 'INFO'),
-                        format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
+    checkedshirt.add_arguments(parser)
+    args = parser.parse_args()
+    checkedshirt.init(args)
 
     token = os.environ['TELEGRAM_BOT_TOKEN']
     updater = Updater(token=token)
