@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 
-from mastodon import Mastodon
+from mastodon import Mastodon, StreamListener
 from . import checkedshirt, find_corrections, format_reply
 
 
@@ -37,6 +37,20 @@ def do_login(args):
     mastodon.log_in(args.username, args.password, to_file=args.user_creds)
 
 
+import pprint
+
+
+class Listener(StreamListener):
+    def on_update(self, status):
+        log.debug('update: %s', pprint.pformat(status))
+
+    def on_notification(self, status):
+        log.debug('notification: %s', pprint.pformat(status))
+
+    def on_delete(self, status):
+        log.debug('delete: %s', pprint.pformat(status))
+
+
 def do_run(args):
     if not os.path.exists(args.client_creds):
         raise ValueError('%r does not exist (try "register")' % args.client_creds)
@@ -48,10 +62,16 @@ def do_run(args):
         client_id=args.client_creds,
         access_token=args.user_creds,
         api_base_url=args.api_base_url)
+
+    wjt_id = mastodon.account_search('wjjjjt@mastodon.club')[0]['id']
+    print(mastodon.account_follow(wjt_id))
+
+    mastodon.user_stream(Listener())
+    """
+
     # wjt_id = mastodon.account_search('wjt@mastodon.social')[0]['id']
     # print(mastodon.account_follow(wjt_id))
     for toot in mastodon.timeline():
-        import pprint
         log.debug(pprint.pformat(toot))
         html = toot['content']
         text = html  # TODO
@@ -59,6 +79,7 @@ def do_run(args):
         if quantities:
             correction = format_reply(quantities)
             log.info("want to correct %s: %s", toot['account']['acct'], correction)
+    """
 
 
 def main():
