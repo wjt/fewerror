@@ -123,6 +123,10 @@ true_positives = [
     ("less politics please",
      "fewer politics",
     ),
+
+    ("""“‘Sometimes’ is less controversial than ‘often’”""",
+     "fewer controversial",
+    ),
 ]
 
 

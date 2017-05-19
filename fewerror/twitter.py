@@ -5,6 +5,7 @@ import logging
 import logging.config
 import os
 import random
+import re
 import time
 
 from tweepy import OAuthHandler, Stream, API, RateLimitError
@@ -51,8 +52,12 @@ def get_sanitized_text(status):
     return text.strip()
 
 
+manual_rt_rx = re.compile(r'''\b[RM]T\b''')
+quote_rx = re.compile(r'''^['"‘“]''')
+
+
 def looks_like_retweet(text):
-    return "RT" in text or "MT" in text or text.startswith('"') or text.startswith(u'“')
+    return manual_rt_rx.search(text)  # or quote_rx.match(text)
 
 
 def status_url(status):
