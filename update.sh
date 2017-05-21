@@ -13,5 +13,5 @@ else
     ../env/bin/pip install -r requirements.txt
     ../env/bin/python -m textblob.download_corpora
 
-    sudo systemctl restart fewerror-twitter fewerror-telegram
+    sudo systemctl restart fewerror-twitter
 fi
