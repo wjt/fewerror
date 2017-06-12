@@ -81,6 +81,8 @@ Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/
 
 > lol this bot is always wrong <cite>– [@thelessisay](https://twitter.com/thelessisay/status/873937645025370112)</cite>
 
+> oh fewey, in such dark days of disappointment you are a beacon of consistency <cite>– [@stopmoving](https://twitter.com/stopmoving/status/825311691357446144)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
