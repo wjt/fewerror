@@ -79,6 +79,8 @@ Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/
 
 > Incorrect again. [#WorstBotEver](https://twitter.com/hashtag/WorstBotEver?src=hash) <cite>– [@JennUndercover](https://twitter.com/JennUndercover/status/834365018246377472)</cite>
 
+> lol this bot is always wrong <cite>– [@thelessisay](https://twitter.com/thelessisay/status/873937645025370112)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
