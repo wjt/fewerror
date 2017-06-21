@@ -7,7 +7,7 @@ cd $(dirname "$0")
 if [[ "$#" -ge 1 ]]; then
     git remote update
     git checkout -qf $1
-    exec "$0"
+    exec flock ./update.lock "$0"
 else
     PARENT="$(readlink -f ..)"
     ENV_LINK=$PARENT/env
