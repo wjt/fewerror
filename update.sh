@@ -10,6 +10,7 @@ if [[ "$#" -ge 1 ]]; then
     exec "$0"
 else
     PARENT="$(readlink -f ..)"
+    ENV_LINK=$PARENT/env
     ENV_DIR=$(mktemp -d -p "$PARENT" env.XXXXXXXXXX)
     PYTHON3="$(which python3)"
 
@@ -19,6 +20,8 @@ else
     $ENV_DIR/bin/pip install -r requirements.txt
     $ENV_DIR/bin/python -m textblob.download_corpora
 
-    ln -s --force $ENV_DIR $PARENT/env
+    OLD_ENV_DIR="$(readlink -f "$ENV_LINK")"
+    ln -s --force "$ENV_DIR" "$ENV_LINK"
+    rm -r "$OLD_ENV_DIR"
     sudo systemctl restart fewerror-twitter
 fi
