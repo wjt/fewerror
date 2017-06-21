@@ -13,7 +13,7 @@ else
     ENV_DIR=$(mktemp -d -p "$PARENT" env.XXXXXXXXXX)
     PYTHON3="$(which python3)"
 
-    mkvirtualenv --python="$PYTHON3" "$ENV_DIR"
+    virtualenv --python="$PYTHON3" "$ENV_DIR"
 
     $ENV_DIR/bin/pip install --upgrade pip wheel
     $ENV_DIR/bin/pip install -r requirements.txt
