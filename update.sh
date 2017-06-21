@@ -21,7 +21,7 @@ else
     $ENV_DIR/bin/python -m textblob.download_corpora
 
     OLD_ENV_DIR="$(readlink -f "$ENV_LINK")"
-    ln -s --force "$ENV_DIR" "$ENV_LINK"
-    rm -r "$OLD_ENV_DIR"
+    ln -s -T --force "$ENV_DIR" "$ENV_LINK"
+    rm -rf "$OLD_ENV_DIR"
     sudo systemctl restart fewerror-twitter
 fi
