@@ -10,13 +10,16 @@
     "#not#",
     "#is#",
   ],
-  "not": [
-    # "That's not my #object#. Its #feature.is# too #description#.",
-    "That's not my #object#. Its #feature.s# are too #description#.",
+  "not": "That's not my #object#. #whynot#",
+  "whynot": [
+    "Its #feature.is# too #description#.",
+    "Its #feature.s# are too #description#.",
+
   ],
-  "is": [
-    "THAT'S my #object#. Its #feature.is# so #description#!",
-    "THAT'S my #object#. Its #feature.s# are so #description#!",
+  "is": "THAT'S my #object#. #whyis#",
+  "whyis": [
+    "Its #feature.is# so #description#!",
+    "Its #feature.s# are so #description#!",
   ],
   "object": [
     "#personalNouns#",
