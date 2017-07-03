@@ -9,3 +9,4 @@ textblob==0.11.1
 -e git+git://github.com/wjt/tweepy@796923ecc12f0568764e8900e61ed6f46085a601#egg=tweepy
 
 python-telegram-bot==5.3.0
+tracery==0.1.1
