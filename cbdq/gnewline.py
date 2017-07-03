@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import re
 import sys
-import json
 import yaml
 
 
@@ -45,11 +45,11 @@ def transform(j):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument('source', nargs='?', type=argparse.FileType(mode='r'), default=sys.stdin)
+    p.add_argument('source', type=argparse.FileType(mode='r'))
     p.add_argument('--verify', action='store_true')
     a = p.parse_args()
 
-    j = yaml.load(a.source)
+    j = yaml.load(a.source, Loader=yaml.CLoader)
     validate(j)
     j_ = transform(j)
     if a.verify:
