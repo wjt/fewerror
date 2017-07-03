@@ -49,7 +49,7 @@ def main():
     p.add_argument('--verify', action='store_true')
     a = p.parse_args()
 
-    j = yaml.load(a.source)
+    j = yaml.load(a.source, Loader=yaml.CLoader)
     validate(j)
     j_ = transform(j)
     if a.verify:
