@@ -70,6 +70,7 @@ class ThatsNotMyBot(object):
 
     def tweet(self, state_filename):
         '''🐦🐦🐦'''
+        log.info('Loading state from %s', state_filename)
         try:
             with open(state_filename, 'r', encoding='utf-8') as f:
                 state = yaml.load(f)
@@ -90,8 +91,9 @@ class ThatsNotMyBot(object):
         yes = random.random() < prob
 
         status = self.grammar.flatten('#{}#'.format('is' if yes else 'not'))
-        log.info(status)
-        log.info("(in reply to %s)", last_id)
+        log.info("Posting “%s”", status)
+        if last_id is not None:
+            log.info("  in reply to %s", last_id)
 
         auth = auth_from_env()
         api = tweepy.API(auth,
@@ -99,7 +101,7 @@ class ThatsNotMyBot(object):
                          wait_on_rate_limit_notify=True,
                          retry_count=1)
         r = api.update_status(status, in_reply_to_status_id=last_id)
-        log.info("  %s", status_url(r))
+        log.info("Posted %s", status_url(r))
 
         if yes:
             state = {}
@@ -107,6 +109,7 @@ class ThatsNotMyBot(object):
             state['object'] = object_
             state['last_id'] = r.id
             state['prob'] = prob + 0.1
+        log.info('Saving state to %s', state_filename)
         with open(state_filename, 'w', encoding='utf-8') as f:
             yaml.dump(state, f)
 
@@ -125,13 +128,19 @@ class ThatsNotMyBot(object):
         s.add_parser('validate',
                      help='Just validate the tracery source (default)')
 
+        def add_argument(x, *args, **kwargs):
+            kwargs['help'] += ' (default: {})'.format(kwargs['default'])
+            return x.add_argument(*args, **kwargs)
+
         sample_parser = s.add_parser('sample', help=self.sample.__doc__)
-        sample_parser.add_argument('n', type=int, nargs='?', default=5,
-                                   help='Number of sample texts (default: 5)')
+        add_argument(sample_parser, 'n', type=int, nargs='?', default=5,
+                     help='Number of sample texts')
         sample_parser.set_defaults(cmd=lambda args: self.sample(args.n))
 
         tweet_parser = s.add_parser('tweet', help=self.tweet.__doc__)
-        tweet_parser.add_argument('--state', default='thatsnotmybot.state.yaml')
+        add_argument(tweet_parser, '--state',
+                     default=os.path.abspath('thatsnotmybot.state.yaml'),
+                     help='Load and save state to STATE')
         tweet_parser.set_defaults(cmd=lambda args: self.tweet(args.state))
 
         normalize = s.add_parser('normalize', help=self.normalize.__doc__)
