@@ -87,8 +87,8 @@ class ThatsNotMyBot(object):
         self.grammar.pop_rules('object')
         self.grammar.push_rules('object', object_)
 
-        prob = state.get('prob', 0)
-        yes = random.random() < prob
+        n = state.get('n', 0) + 1
+        yes = n >= 8
 
         status = self.grammar.flatten('#{}#'.format('is' if yes else 'not'))
         log.info("Posting “%s”", status)
@@ -108,7 +108,7 @@ class ThatsNotMyBot(object):
         else:
             state['object'] = object_
             state['last_id'] = r.id
-            state['prob'] = prob + 0.1
+            state['n'] = n
         log.info('Saving state to %s', state_filename)
         with open(state_filename, 'w', encoding='utf-8') as f:
             yaml.dump(state, f)
