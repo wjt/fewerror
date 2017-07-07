@@ -67,6 +67,15 @@ class ThatsNotMyBot(object):
         for _ in range(n):
             print(self.generate())
 
+    @staticmethod
+    def get_twitter_api():
+        auth = auth_from_env()
+        api = tweepy.API(auth,
+                         wait_on_rate_limit=True,
+                         wait_on_rate_limit_notify=True,
+                         retry_count=1)
+        return api
+
     def tweet(self, state_filename):
         '''🐦🐦🐦'''
         log.info('Loading state from %s', state_filename)
@@ -94,11 +103,7 @@ class ThatsNotMyBot(object):
         if last_id is not None:
             log.info("  in reply to %s", last_id)
 
-        auth = auth_from_env()
-        api = tweepy.API(auth,
-                         wait_on_rate_limit=True,
-                         wait_on_rate_limit_notify=True,
-                         retry_count=1)
+        api = self.get_twitter_api()
         r = api.update_status(status, in_reply_to_status_id=last_id)
         log.info("Posted %s", status_url(r))
 
