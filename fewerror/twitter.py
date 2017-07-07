@@ -186,8 +186,8 @@ class LessListener(StreamListener):
         for rel in self.api.lookup_friendships(screen_names=tuple(to_mention)):
             if not rel.is_followed_by:
                 # If someone explicitly tags us, they're fair game
-                if not (rel.screen_name == status.author.screen_name
-                        and mentioned_me):
+                is_author = rel.screen_name == status.author.screen_name
+                if not (is_author and mentioned_me):
                     to_mention.discard(rel.screen_name)
 
                 if rel.is_following:
