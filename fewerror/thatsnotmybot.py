@@ -82,6 +82,7 @@ class ThatsNotMyBot(object):
         try:
             with open(state_filename, 'r', encoding='utf-8') as f:
                 state = yaml.load(f)
+            log.info('Loaded state %s', state)
         except FileNotFoundError:
             state = {}
 
@@ -113,7 +114,7 @@ class ThatsNotMyBot(object):
             state['object'] = object_
             state['last_id'] = r.id
             state['n'] = n
-        log.info('Saving state to %s', state_filename)
+        log.info('Saving state %s to %s', state, state_filename)
         with open(state_filename, 'w', encoding='utf-8') as f:
             yaml.dump(state, f)
 
