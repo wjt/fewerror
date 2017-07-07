@@ -7,7 +7,6 @@ import textblob
 import tracery
 import tweepy
 import yaml
-import random
 
 from tracery.modifiers import base_english
 
