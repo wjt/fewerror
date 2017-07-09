@@ -93,13 +93,13 @@ class ThatsNotMyBot(object):
             object_ = self.grammar.flatten('#object#')
             last_id = None
 
-        self.grammar.pop_rules('object')
-        self.grammar.push_rules('object', object_)
-
         n = state.get('n', 0) + 1
         yes = n >= 8
 
-        status = self.grammar.flatten('#{}#'.format('is' if yes else 'not'))
+        status = self.grammar.flatten(
+            '#[object:{}]{}#'.format(
+                object_,
+                'is' if yes else 'not'))
         log.info("Posting “%s”", status)
         if last_id is not None:
             log.info("  in reply to %s", last_id)
