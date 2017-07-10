@@ -83,6 +83,8 @@ Here's a piece reflecting on [three years of @fewerror](http://t.wjt.me.uk/post/
 
 > oh fewey, in such dark days of disappointment you are a beacon of consistency <cite>– [@stopmoving](https://twitter.com/stopmoving/status/825311691357446144)</cite>
 
+> Thing you'll find you're wrong again […]. Three strikes & you're out! <cite>– [@TomfooleryH](https://twitter.com/TomfooleryH/status/884380006759223297)</cite>
+
 ## For those who care about software
 
 Thanks to the unstoppable [@aparrish][] for pointing me in the direction of [TextBlob][] in her post on [the making of @VoynichTechNews][voynich].
