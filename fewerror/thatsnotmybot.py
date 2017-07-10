@@ -158,4 +158,7 @@ class ThatsNotMyBot(object):
 
 
 if __name__ == '__main__':
-    ThatsNotMyBot().main()
+    try:
+        ThatsNotMyBot().main()
+    finally:
+        logging.shutdown()
