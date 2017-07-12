@@ -4,6 +4,8 @@ import logging
 from textblob import TextBlob, Word
 from nltk.corpus.reader import WordListCorpusReader
 
+from .util import OrderedSet
+
 log = logging.getLogger(__name__)
 
 
@@ -212,7 +214,7 @@ def match(blob_tags, i):
 def find_corrections(text):
     blob = TextBlob(text)
 
-    words = []
+    words = OrderedSet()
     for s in blob.sentences:
         # blob.tags excludes punctuation, but we need that to avoid correcting
         # across a comma, ellipsis, etc. In fact, it's not clear there is
@@ -224,8 +226,9 @@ def find_corrections(text):
         for i in less_indices:
             q = match(s_tags, i)
             if q is not None:
-                words.append(q)
+                words.add(q)
 
+    words = list(words)
     for word in words:
         if any(w in word for w in bad_words_en):
             return []

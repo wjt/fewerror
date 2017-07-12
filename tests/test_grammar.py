@@ -127,6 +127,11 @@ true_positives = [
     ("""“‘Sometimes’ is less controversial than ‘often’”""",
      "fewer controversial",
     ),
+    ("""I guess in the same way as the mom gets less effective as she gets
+     better at testing, he gets less effective as he succumbs to
+     cirrhosis…""",
+     "fewer effective",
+    ),
 ]
 
 
