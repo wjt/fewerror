@@ -19,7 +19,7 @@ true_positives = [
         ),
     ),
     (u"Sitting next to Dan Winship here at the @WebKitGTK hackfest, turned out it was a missing TCP_NODELAY. Fixed! HTTPS now 33% less slow :)",
-     'fewer slow',
+     '33% fewer slow',
     ),
     (u"My phone is more or less screwed.",
      'more or fewer screwed',
@@ -34,7 +34,7 @@ true_positives = [
      'fewer annoyed',
     ),
     (u"We're not from a faraway country. We were just less lucky than you.",
-     'fewer lucky',
+     'just fewer lucky',
     ),
 
     (u"@tellingfibulas Awww cheers mate. That's much appreciated :D I'm getting less janky hopefully.",
@@ -61,13 +61,11 @@ true_positives = [
 
     # https://github.com/wjt/fewerror/issues/2
     (u"In the context of https://medium.com/@b_k/https-the-end-of-an-era-c106acded474 … it’s striking that the problems setting up ssh are much much less onerous",
-     'fewer onerous',
+     'much fewer onerous',
     ),
 
-    pytest.mark.xfail(reason='not implemented')(
-        ("which is to say I found it no less surprising than 'with' itself.",
-         'no fewer surprising',
-        ),
+    ("which is to say I found it no less surprising than 'with' itself.",
+     'no fewer surprising',
     ),
 
     (u"So if I say fewer less often all is well?",
@@ -80,7 +78,7 @@ true_positives = [
 
     # [100%] fewer exercise is be ungrammatical, though "100% fewer exercises" would be grammatical...
     (u"I've eaten 50% more food and done 100% less exercise since I got to NY.",
-     "fewer exercise",
+     "100% fewer exercise",
     ),
 
     (u"The One True Syntax Pedant Bot is @fewerror. Much less bad than all others.",
@@ -92,7 +90,10 @@ true_positives = [
     ),
 
     (u"""Telegram is certainly less popular, but WhatsApp is much less open.""",
-     ["fewer popular", "fewer open"],
+     [
+         "certainly fewer popular",
+         "much fewer open",
+     ],
     ),
 
     (u"""I could care less""",

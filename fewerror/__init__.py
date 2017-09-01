@@ -170,11 +170,25 @@ def match(blob_tags, i):
     if ["less", "than", "jake"] == [w.lower() for w, tag in blob_tags[i:i+3]]:
         return "Fewer Than Jake"
 
+    reply_words = []
+
     if i > 0:
         v, v_pos = blob_tags[i - 1]
         if v_pos == POS.CD and not v.endswith('%'):
             # ignore "one less xxx" but allow "100% less xxx"
             return
+
+        if i > 1:
+            u, u_pos = blob_tags[i - 2]
+
+            if u.lower() == 'more' and v.lower() == 'or':
+                reply_words.extend([u, v])
+            elif u.isdigit() and v == '%':
+                reply_words.append(u + v)
+
+        if not reply_words:
+            if v_pos in (POS.RB, POS.DT):
+                reply_words.append(v)
 
     less, _less_pos = blob_tags[i]
     if less.isupper():
@@ -210,16 +224,8 @@ def match(blob_tags, i):
         if v_pos not in (POS.JJ, POS.VBG):
             break
 
-    words = [fewer, w]
-
-    if i >= 2:
-        u, u_pos = blob_tags[i - 2]
-        v, v_pos = blob_tags[i - 1]
-
-        if u.lower() == 'more' and v.lower() == 'or':
-            words[:0] = [u, v]
-
-    return ' '.join(words)
+    reply_words.extend([fewer, w])
+    return ' '.join(reply_words)
 
 
 def find_corrections(text):
