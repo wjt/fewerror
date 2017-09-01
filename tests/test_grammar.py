@@ -10,7 +10,7 @@ from textblob import TextBlob
 true_positives = [
     (u"I don't know whether I find the Believe.in thing more or less offensive than Tesco Clubcard sending HTML with `text/plain`",
 
-     'fewer offensive',
+     'more or fewer offensive',
     ),
 
     pytest.mark.xfail(reason='regressed at some point; maybe splitting subclauses would help')(
@@ -22,13 +22,13 @@ true_positives = [
      'fewer slow',
     ),
     (u"My phone is more or less screwed.",
-     'fewer screwed',
+     'more or fewer screwed',
     ),
     (u"One broken string, one shock from a microphone, and one admonition from the sound guy to rock less hard. Success! Thanks for coming.",
      'fewer hard',
     ),
     (u"Hispanic-American Adults Are Less Catholic and More ‘Unaffiliated’ Than Ever Before",
-     'fewer Catholic',
+     'Fewer Catholic',
     ),
     (u"Okay, it was an ad for an emergency-alarm watch. I feel less annoyed now.",
      'fewer annoyed',
@@ -105,7 +105,9 @@ true_positives = [
 
     (u"""Goals\n\nLess hate.\nLess stress.\nLess pain.\nMore love.\nMore rest.\nMore joy.""",
      [
-         "fewer hate",  # VBP
+         # TODO: "Less hate." here is really a new sentence so the titlecase logic shouldn't kick
+         # in.
+         "Fewer hate",  # VBP
          "fewer stress",  # NN
          "fewer pain",  # NN
      ],
@@ -131,6 +133,12 @@ true_positives = [
      better at testing, he gets less effective as he succumbs to
      cirrhosis…""",
      "fewer effective",
+    ),
+
+    # referenced by https://twitter.com/ruskin147/status/903178201941377024
+    # I think this makes the joke better.
+    ("""More or Less back on cracking form - do 65% of Irish exports go to UK as claimed by DUP?""",
+     "More or Fewer back",
     ),
 ]
 

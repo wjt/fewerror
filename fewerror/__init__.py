@@ -179,6 +179,8 @@ def match(blob_tags, i):
     less, _less_pos = blob_tags[i]
     if less.isupper():
         fewer = 'FEWER'
+    elif less.istitle() and i != 0:
+        fewer = 'Fewer'
     else:
         fewer = 'fewer'
 
@@ -208,7 +210,16 @@ def match(blob_tags, i):
         if v_pos not in (POS.JJ, POS.VBG):
             break
 
-    return fewer + " " + w
+    words = [fewer, w]
+
+    if i >= 2:
+        u, u_pos = blob_tags[i - 2]
+        v, v_pos = blob_tags[i - 1]
+
+        if u.lower() == 'more' and v.lower() == 'or':
+            words[:0] = [u, v]
+
+    return ' '.join(words)
 
 
 def find_corrections(text):
