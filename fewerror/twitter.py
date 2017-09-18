@@ -240,15 +240,16 @@ def auth_from_env():
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description=u'annoy some tweeps',
-        epilog=u'Note that --post-replies --use-public-stream will get you banned pretty quickly')
-    parser.add_argument('--post-replies', action='store_true',
-                        help='post (rate-limited) replies, rather than just printing them locally')
+    parser = argparse.ArgumentParser(description=u'annoy some tweeps')
     parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
                         help='save matched tweets in DIR for later degustation')
-    parser.add_argument('--use-public-stream', action='store_true',
-                        help='search public tweets for "less", rather than your own stream')
+
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument('--post-replies', action='store_true',
+                       help='post (rate-limited) replies, rather than just printing them locally')
+    modes.add_argument('--use-public-stream', action='store_true',
+                       help='search public tweets for "less", rather than your own stream')
+
     checkedshirt.add_arguments(parser)
 
     args = parser.parse_args()
