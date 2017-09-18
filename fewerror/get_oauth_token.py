@@ -23,7 +23,7 @@ def main():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
     try:
-        redirect_url = auth.get_authorization_url(access_type='write')
+        redirect_url = auth.get_authorization_url()
     except tweepy.TweepError:
         log.exception('Failed to get authorization URL')
         exit(1)
