@@ -67,8 +67,6 @@ def status_url(status):
 class LessListener(StreamListener):
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
-        self.reply_to_rts = kwargs.pop('reply_to_rts', False)
-        self.follow_on_favs = kwargs.pop('follow_on_favs', False)
         self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
         self.me = self.api.me()
@@ -128,36 +126,21 @@ class LessListener(StreamListener):
         with open(filename, 'w') as f:
             json.dump(obj=received_status._json, fp=f)
 
-    def on_status(self, received_status):
+    def on_status(self, status):
         to_mention = OrderedSet()
 
         # Reply to the original when a tweet is RTed properly
-        if hasattr(received_status, 'retweeted_status'):
-            if not self.reply_to_rts:
-                return
-
-            status = received_status.retweeted_status
-            rt_log_prefix = '@%s RT ' % received_status.author.screen_name
-            to_mention.add(received_status.author.screen_name)
-        else:
-            status = received_status
-            rt_log_prefix = ''
+        if hasattr(status, 'retweeted_status'):
+            # Ignore real RTs
+            return
 
         text = get_sanitized_text(status)
         if 'less' not in text.lower():
             return
 
-        log.info("%s", status_url(received_status))
-        log.info("[%s@%s] %s",
-                 rt_log_prefix,
-                 received_status.author.screen_name, text)
+        log.info("%s %s", status_url(status), text)
 
-        senders = frozenset((
-            received_status.author.screen_name,
-            status.author.screen_name,
-        ))
-
-        self.save_tweet(received_status)
+        self.save_tweet(status)
 
         if looks_like_retweet(text):
             log.info('…looks like a manual RT, skipping')
@@ -194,15 +177,15 @@ class LessListener(StreamListener):
                     log.info(u"%s no longer follows us; unfollowing", rel.screen_name)
                     self.api.destroy_friendship(screen_name=rel.screen_name)
 
-        if not (to_mention & senders):
-            log.info('senders do not follow us (any more), not replying: %s',
-                     senders)
+        if status.author.screen_name not in to_mention:
+            log.info('sender %s does not follow us (any more), not replying',
+                     status.author.screen_name)
             return
 
         # Keep dropping mentions until the reply is short enough
         # TODO: hashtags?
         correction = format_reply(quantities)
-        greeting = self.get_festive_greeting(received_status.created_at)
+        greeting = self.get_festive_greeting(status.created_at)
         reply = None
         for mentions in reverse_inits([u'@' + sn for sn in to_mention]):
             reply = u'{mentions} {correction}. {greeting}'.format(
@@ -218,7 +201,7 @@ class LessListener(StreamListener):
             if self.post_replies:
                 # TODO: I think tweepy commit f99b1da broke calling this without naming the status
                 # parameter by adding media_ids before *args -- why do the tweepy tests pass?
-                r = self.api.update_status(status=reply, in_reply_to_status_id=received_status.id)
+                r = self.api.update_status(status=reply, in_reply_to_status_id=status.id)
                 log.info("  %s", status_url(r))
 
                 self._state.record_reply(status.id, quantities, r.id)
@@ -236,8 +219,6 @@ class LessListener(StreamListener):
         if event.event == 'favorite' and event.target.id == self.me.id:
             log.info("tweet favorited by @%s: %s", event.source.screen_name,
                      status_url(event.target_object))
-            if self.follow_on_favs:
-                self.maybe_follow(event.source)
 
     def maybe_follow(self, whom):
         if not whom.following:
@@ -268,10 +249,6 @@ def main():
                         help='save matched tweets in DIR for later degustation')
     parser.add_argument('--use-public-stream', action='store_true',
                         help='search public tweets for "less", rather than your own stream')
-    parser.add_argument('--reply-to-retweets', action='store_true',
-                        help='reply to retweets (makes the bot a little less opt-in)')
-    parser.add_argument('--follow-on-favs', action='store_true',
-                        help='follow people who fav us (makes the bot a little less opt-in)')
     checkedshirt.add_arguments(parser)
 
     args = parser.parse_args()
@@ -289,8 +266,6 @@ def main():
         try:
             l = LessListener(api,
                              post_replies=args.post_replies,
-                             reply_to_rts=args.reply_to_retweets,
-                             follow_on_favs=args.follow_on_favs,
                              gather=args.gather)
 
             stream = Stream(auth, l)
