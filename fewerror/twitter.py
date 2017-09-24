@@ -295,5 +295,5 @@ if __name__ == '__main__':
     except SystemExit:
         raise
     except:
-        log.error('Bye :-(', exc_info=True)
+        log.exception('Bye :-(')
         raise
