@@ -262,6 +262,25 @@ def stream(api, auth, args):
             time.sleep(15 * 60)
 
 
+def mass_report(api, args):
+    to_block_ids = set(map(int, args.report))
+    log.info('would like to block %d ids', len(to_block_ids))
+
+    # Exclude existing blocks.
+    # TODO: block_ids is actually paginated, but Tweepy doesn't think it is.
+    existing_block_ids = set(api.blocks_ids()['ids'])
+    to_block_ids.difference_update(existing_block_ids)
+
+    n = len(to_block_ids)
+    for i, to_block_id in enumerate(to_block_ids, 1):
+        log.info('[%d/%d] reporting #%d',
+                 i, n, to_block_id)
+        u = api.report_spam(user_id=to_block_id, perform_block=True)
+        log.info('reported and blocked #%d (@%s)', to_block_id, u.screen_name)
+        if i < n:
+            time.sleep(30)
+
+
 def main():
     parser = argparse.ArgumentParser(description=u'annoy some tweeps')
     parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
@@ -272,6 +291,8 @@ def main():
                        help='post (rate-limited) replies, rather than just printing them locally')
     modes.add_argument('--use-public-stream', action='store_true',
                        help='search public tweets for "less", rather than your own stream')
+    modes.add_argument('--report', metavar='ID_FILE', type=argparse.FileType('r'),
+                       help='Report and block numeric user ids in ID_FILE (one per line)')
 
     checkedshirt.add_arguments(parser)
 
@@ -286,7 +307,10 @@ def main():
               # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
               # actually retry after a rate limit.
               retry_count=1)
-    stream(api, auth, args)
+    if args.report:
+        mass_report(api, args)
+    else:
+        stream(api, auth, args)
 
 
 if __name__ == '__main__':
