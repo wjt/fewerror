@@ -60,8 +60,12 @@ def looks_like_retweet(text):
     return manual_rt_rx.search(text)  # or quote_rx.match(text)
 
 
+def user_url(user):
+    return "https://twitter.com/{}".format(user.screen_name)
+
+
 def status_url(status):
-    return "https://twitter.com/{}/status/{}".format(status.author.screen_name, status.id)
+    return "{}/status/{}".format(user_url(status.author), status.id)
 
 
 class LessListener(StreamListener):
@@ -213,11 +217,12 @@ class LessListener(StreamListener):
             return
 
         if event.event == 'follow' and event.target.id == self.me.id:
-            log.info("followed by @%s", event.source.screen_name)
+            log.info("followed by %s", user_url(event.source))
             self.maybe_follow(event.source)
 
         if event.event == 'favorite' and event.target.id == self.me.id:
-            log.info("tweet favorited by @%s: %s", event.source.screen_name,
+            log.info("tweet favorited by %s: %s",
+                     user_url(event.source),
                      status_url(event.target_object))
 
     def maybe_follow(self, whom):
