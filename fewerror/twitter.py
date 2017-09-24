@@ -244,6 +244,24 @@ def auth_from_env():
     return auth
 
 
+def stream(api, auth, args):
+    while True:
+        try:
+            l = LessListener(api,
+                             post_replies=args.post_replies,
+                             gather=args.gather)
+
+            stream = Stream(auth, l)
+            if args.use_public_stream:
+                stream.filter(track=['less'])
+            else:
+                stream.userstream(replies='all')
+        except RateLimitError:
+            log.warning("Rate-limited, and Tweepy didn't save us; time for a nap",
+                        exc_info=True)
+            time.sleep(15 * 60)
+
+
 def main():
     parser = argparse.ArgumentParser(description=u'annoy some tweeps')
     parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
@@ -268,21 +286,7 @@ def main():
               # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
               # actually retry after a rate limit.
               retry_count=1)
-    while True:
-        try:
-            l = LessListener(api,
-                             post_replies=args.post_replies,
-                             gather=args.gather)
-
-            stream = Stream(auth, l)
-            if args.use_public_stream:
-                stream.filter(track=['less'])
-            else:
-                stream.userstream(replies='all')
-        except RateLimitError:
-            log.warning("Rate-limited, and Tweepy didn't save us; time for a nap",
-                        exc_info=True)
-            time.sleep(15 * 60)
+    stream(api, auth, args)
 
 
 if __name__ == '__main__':
