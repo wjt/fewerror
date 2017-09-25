@@ -324,7 +324,9 @@ def mass_report(api, args):
             log.info('blocked %s (#%d)', user_url(u), to_block_id)
 
         if i < n:
-            time.sleep(30)
+            # Experimentation suggests the limit is 50 spam reports per 30 minute window,
+            # or 1 spam report per 36 seconds. Round up...
+            time.sleep(45)
 
 
 def main():
