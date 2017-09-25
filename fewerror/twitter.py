@@ -8,7 +8,7 @@ import random
 import re
 import time
 
-from tweepy import OAuthHandler, Stream, API, RateLimitError
+import tweepy
 from tweepy.streaming import StreamListener
 
 from . import checkedshirt, find_corrections, format_reply
@@ -238,7 +238,7 @@ def auth_from_env():
     access_token = os.environ["ACCESS_TOKEN"]
     access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
 
-    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
 
     return auth
@@ -247,16 +247,16 @@ def auth_from_env():
 def stream(api, auth, args):
     while True:
         try:
-            l = LessListener(api,
-                             post_replies=args.post_replies,
-                             gather=args.gather)
+            l = tweepy.LessListener(api,
+                                    post_replies=args.post_replies,
+                                    gather=args.gather)
 
-            stream = Stream(auth, l)
+            stream = tweepy.Stream(auth, l)
             if args.use_public_stream:
                 stream.filter(track=['less'])
             else:
                 stream.userstream(replies='all')
-        except RateLimitError:
+        except tweepy.RateLimitError:
             log.warning("Rate-limited, and Tweepy didn't save us; time for a nap",
                         exc_info=True)
             time.sleep(15 * 60)
@@ -314,12 +314,13 @@ def main():
     checkedshirt.init(args)
 
     auth = auth_from_env()
-    api = API(auth,
-              wait_on_rate_limit=True,
-              wait_on_rate_limit_notify=True,
-              # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
-              # actually retry after a rate limit.
-              retry_count=1)
+    api = tweepy.API(
+        auth,
+        wait_on_rate_limit=True,
+        wait_on_rate_limit_notify=True,
+        # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
+        # actually retry after a rate limit.
+        retry_count=1)
     if args.block:
         mass_report(api, args)
     else:
