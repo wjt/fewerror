@@ -298,13 +298,13 @@ def mass_report(api, args):
         if report:
             log.info('[%d/%d] reporting #%d', i, n, to_block_id)
             u = report_spam(api, user_id=to_block_id, perform_block=True)
-            log.info('reported and blocked #%d (@%s)', to_block_id, u.screen_name)
+            log.info('reported and blocked %s (#%d)', user_url(u), to_block_id)
         else:
             log.info('[%d/%d] blocking #%d', i, n, to_block_id)
             u = api.create_block(user_id=to_block_id,
                                  include_entities=False,
                                  skip_status=True)
-            log.info('blocked #%d (@%s)', to_block_id, u.screen_name)
+            log.info('blocked %s (#%d)', user_url(u), to_block_id)
 
         if i < n:
             time.sleep(30)
