@@ -230,6 +230,9 @@ class LessListener(StreamListener):
         if whom.following:
             return
 
+        # Apparently 'status' is not included.
+        log.debug("%s", json.dumps(whom._json, indent=2))
+
         # zh-cn => zh
         langs = {x.split('-')[0] for x in (whom.lang, whom.status.lang)}
         # Sorry if you speak these languages, but after getting several
