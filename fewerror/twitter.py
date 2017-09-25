@@ -263,7 +263,10 @@ def stream(api, auth, args):
 
 
 def mass_report(api, args):
-    to_block_ids = set(map(int, args.report))
+    '''Block (and report as spam) many user IDs.'''
+    report = args.report
+
+    to_block_ids = set(map(int, args.block))
     log.info('would like to block %d ids', len(to_block_ids))
 
     # Exclude existing blocks.
@@ -273,10 +276,17 @@ def mass_report(api, args):
 
     n = len(to_block_ids)
     for i, to_block_id in enumerate(to_block_ids, 1):
-        log.info('[%d/%d] reporting #%d',
-                 i, n, to_block_id)
-        u = api.report_spam(user_id=to_block_id, perform_block=True)
-        log.info('reported and blocked #%d (@%s)', to_block_id, u.screen_name)
+        if report:
+            log.info('[%d/%d] reporting #%d', i, n, to_block_id)
+            u = api.report_spam(user_id=to_block_id, perform_block=True)
+            log.info('reported and blocked #%d (@%s)', to_block_id, u.screen_name)
+        else:
+            log.info('[%d/%d] blocking #%d', i, n, to_block_id)
+            u = api.create_block(user_id=to_block_id,
+                                 include_entities=False,
+                                 skip_status=True)
+            log.info('blocked #%d (@%s)', to_block_id, u.screen_name)
+
         if i < n:
             time.sleep(30)
 
@@ -291,8 +301,11 @@ def main():
                        help='post (rate-limited) replies, rather than just printing them locally')
     modes.add_argument('--use-public-stream', action='store_true',
                        help='search public tweets for "less", rather than your own stream')
-    modes.add_argument('--report', metavar='ID_FILE', type=argparse.FileType('r'),
-                       help='Report and block numeric user ids in ID_FILE (one per line)')
+    modes.add_argument('--block', metavar='ID_FILE', type=argparse.FileType('r'),
+                       help='Block numeric user ids in ID_FILE (one per line)')
+
+    parser.add_argument('--report', action='store_true',
+                        help='with --block, also report for spam')
 
     checkedshirt.add_arguments(parser)
 
@@ -307,7 +320,7 @@ def main():
               # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
               # actually retry after a rate limit.
               retry_count=1)
-    if args.report:
+    if args.block:
         mass_report(api, args)
     else:
         stream(api, auth, args)
