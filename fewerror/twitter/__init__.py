@@ -328,7 +328,10 @@ def mass_report(api, args):
                                      skip_status=True)
                 log.info('blocked %s (#%d)', user_url(u), to_block_id)
         except tweepy.TweepError as e:
-            if e.api_code == 34:
+            if e.api_code in (
+                34,  # reported by report_spam
+                50,  # reported by create_block
+            ):
                 log.info('#%d no longer exists', to_block_id)
             else:
                 raise
