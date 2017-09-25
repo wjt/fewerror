@@ -1,6 +1,8 @@
 import argparse
 import json
 import logging
+import raven
+from raven.handlers.logging import SentryHandler
 
 
 def add_arguments(parser):
@@ -21,3 +23,9 @@ def init(args):
     else:
         logging.basicConfig(level=args.log_level,
                             format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
+
+    # Log to Sentry
+    client = raven.Client()
+    handler = SentryHandler(client)
+    handler.setLevel(logging.WARNING)
+    raven.conf.setup_logging(handler)
