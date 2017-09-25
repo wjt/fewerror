@@ -68,6 +68,11 @@ def status_url(status):
     return "{}/status/{}".format(user_url(status.author), status.id)
 
 
+def lang_base(lang):
+    base, *rest = lang.split('-')
+    return base
+
+
 class LessListener(StreamListener):
     def __init__(self, *args, **kwargs):
         self.post_replies = kwargs.pop('post_replies', False)
@@ -230,24 +235,37 @@ class LessListener(StreamListener):
         if whom.following:
             return
 
-        # Apparently 'status' is not included.
-        log.debug("%s", json.dumps(whom._json, indent=2))
-
-        # zh-cn => zh
-        langs = {x.split('-')[0] for x in (whom.lang, whom.status.lang)}
         # Sorry if you speak these languages, but after getting several
         # thousand spam followers I needed a crude signal.
         forbidden_langs = {'ar', 'ja', 'zh'}
-        oh_no = langs & forbidden_langs
-        if oh_no:
-            log.info("%s has bad lang %s; blocking",
-                     user_url(whom), ', '.join(oh_no))
-            self.api.create_block(user_id=whom.id,
-                                  include_entities=False,
-                                  skip_status=True)
-        else:
-            log.info("following %s back", user_url(whom))
-            whom.follow()
+        if lang_base(whom.lang) in forbidden_langs:
+            log.info('%s has forbidden lang %s; blocking',
+                     user_url(whom), whom.lang)
+            self.block(whom.id)
+            return
+
+        # Many spam users had user.lang == 'en' but tweet only in those languages.
+        statuses = self.api.user_timeline(user_id=whom.id, count=20)
+        langs = {lang_base(status.lang) for status in statuses}
+        if langs & forbidden_langs:
+            log.info('%s tweets in forbidden lang %s; blocking',
+                     user_url(whom), ', '.join(langs & forbidden_langs))
+            self.block(whom.id)
+            return
+
+        if 'en' not in langs:
+            log.info('%s does not tweet in English -- why are they following us?',
+                     user_url(whom))
+            return
+
+        # TODO: delay this
+        log.info("following %s back", user_url(whom))
+        whom.follow()
+
+    def block(self, user_id):
+        self.api.create_block(user_id=user_id,
+                              include_entities=False,
+                              skip_status=True)
 
 
 def auth_from_env():
