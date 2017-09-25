@@ -262,6 +262,26 @@ def stream(api, auth, args):
             time.sleep(15 * 60)
 
 
+def report_spam(api, *args, **kwargs):
+    for i in reversed(range(5)):
+        try:
+            return api.report_spam(*args, **kwargs)
+        except tweepy.TweepError as e:
+            if e.api_code == 205 and i > 0:
+                # **You are over the limit for spam reports.** The account
+                # limit for reporting spam has # been reached. Try again
+                # later.
+                #
+                # Annoyingly this is a different code to the normal
+                # "rate-limited" code so tweepy's built-in rate limiting
+                # doesn't apply.
+                log.warning("Over the spam-report limit; sleeping",
+                            exc_info=True)
+                time.sleep(15 * 60)
+            else:
+                raise
+
+
 def mass_report(api, args):
     '''Block (and report as spam) many user IDs.'''
     report = args.report
@@ -277,7 +297,7 @@ def mass_report(api, args):
     for i, to_block_id in enumerate(to_block_ids, 1):
         if report:
             log.info('[%d/%d] reporting #%d', i, n, to_block_id)
-            u = api.report_spam(user_id=to_block_id, perform_block=True)
+            u = report_spam(api, user_id=to_block_id, perform_block=True)
             log.info('reported and blocked #%d (@%s)', to_block_id, u.screen_name)
         else:
             log.info('[%d/%d] blocking #%d', i, n, to_block_id)
