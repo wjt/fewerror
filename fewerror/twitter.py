@@ -316,16 +316,22 @@ def mass_report(api, args):
 
     n = len(to_block_ids)
     for i, to_block_id in enumerate(to_block_ids, 1):
-        if report:
-            log.info('[%d/%d] reporting #%d', i, n, to_block_id)
-            u = report_spam(api, user_id=to_block_id, perform_block=True)
-            log.info('reported and blocked %s (#%d)', user_url(u), to_block_id)
-        else:
-            log.info('[%d/%d] blocking #%d', i, n, to_block_id)
-            u = api.create_block(user_id=to_block_id,
-                                 include_entities=False,
-                                 skip_status=True)
-            log.info('blocked %s (#%d)', user_url(u), to_block_id)
+        try:
+            if report:
+                log.info('[%d/%d] reporting #%d', i, n, to_block_id)
+                u = report_spam(api, user_id=to_block_id, perform_block=True)
+                log.info('reported and blocked %s (#%d)', user_url(u), to_block_id)
+            else:
+                log.info('[%d/%d] blocking #%d', i, n, to_block_id)
+                u = api.create_block(user_id=to_block_id,
+                                     include_entities=False,
+                                     skip_status=True)
+                log.info('blocked %s (#%d)', user_url(u), to_block_id)
+        except TweepError as e:
+            if e.api_code == 34:
+                log.info('#%d no longer exists', to_block_id)
+            else:
+                raise
 
         if i < n:
             # Experimentation suggests the limit is 50 spam reports per 30 minute window,
