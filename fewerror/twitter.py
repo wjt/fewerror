@@ -217,7 +217,7 @@ class LessListener(StreamListener):
             return
 
         if event.event == 'follow' and event.target.id == self.me.id:
-            log.info("followed by %s", user_url(event.source))
+            self.on_follow(event.source)
             self.maybe_follow(event.source)
 
         if event.event == 'favorite' and event.target.id == self.me.id:
@@ -225,9 +225,26 @@ class LessListener(StreamListener):
                      user_url(event.source),
                      status_url(event.target_object))
 
-    def maybe_follow(self, whom):
-        if not whom.following:
-            log.info("... following back")
+    def on_follow(self, whom):
+        log.info("followed by %s", user_url(whom))
+
+        if whom.following:
+            return
+
+        # zh-cn => zh
+        langs = {x.split('-')[0] for x in (whom.lang, whom.status.lang)}
+        # Sorry if you speak these languages, but after getting several
+        # thousand spam followers I needed a crude signal.
+        forbidden_langs = {'ar', 'ja', 'zh'}
+        oh_no = langs & forbidden_langs
+        if oh_no:
+            log.info("%s has bad lang %s; blocking",
+                     user_url(whom), ', '.join(oh_no))
+            self.api.create_block(user_id=whom.id,
+                                  include_entities=False,
+                                  skip_status=True)
+        else:
+            log.info("following %s back", user_url(whom))
             whom.follow()
 
 
