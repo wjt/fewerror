@@ -11,9 +11,9 @@ import time
 import tweepy
 from tweepy.streaming import StreamListener
 
-from . import checkedshirt, find_corrections, format_reply
-from .state import State
-from .util import reverse_inits, OrderedSet
+from .. import checkedshirt, find_corrections, format_reply
+from ..state import State
+from ..util import reverse_inits, OrderedSet
 
 log = logging.getLogger(__name__)
 
@@ -327,7 +327,7 @@ def mass_report(api, args):
                                      include_entities=False,
                                      skip_status=True)
                 log.info('blocked %s (#%d)', user_url(u), to_block_id)
-        except TweepError as e:
+        except tweepy.TweepError as e:
             if e.api_code == 34:
                 log.info('#%d no longer exists', to_block_id)
             else:
@@ -361,6 +361,7 @@ def main():
 
     checkedshirt.init(args)
 
+    log.info('Initializing API')
     auth = auth_from_env()
     api = tweepy.API(
         auth,
