@@ -30,6 +30,9 @@ def init(args):
         # dsn=os.environ.get('SENTRY_DSN'),
         include_paths=['fewerror'],
         release=raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+        ignore_exceptions=[
+            KeyboardInterrupt,
+        ],
     )
     handler = SentryHandler(client)
     handler.setLevel(logging.WARNING)
