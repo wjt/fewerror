@@ -269,9 +269,8 @@ def mass_report(api, args):
     to_block_ids = set(map(int, args.block))
     log.info('would like to block %d ids', len(to_block_ids))
 
-    # Exclude existing blocks.
-    # TODO: block_ids is actually paginated, but Tweepy doesn't think it is.
-    existing_block_ids = set(api.blocks_ids()['ids'])
+    existing_block_ids = set(tweepy.Cursor(api.blocks_ids).items())
+    log.info('%d existing blocks', len(existing_block_ids))
     to_block_ids.difference_update(existing_block_ids)
 
     n = len(to_block_ids)
