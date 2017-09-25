@@ -279,21 +279,23 @@ def stream(api, auth, args):
 
 
 def report_spam(api, *args, **kwargs):
+    sleep_time = 15 * 60
+
     for i in reversed(range(5)):
         try:
             return api.report_spam(*args, **kwargs)
         except tweepy.TweepError as e:
             if e.api_code == 205 and i > 0:
-                # **You are over the limit for spam reports.** The account
-                # limit for reporting spam has # been reached. Try again
-                # later.
+                # “You are over the limit for spam reports.  The account limit
+                # for reporting spam has been reached. Try again later.”
                 #
-                # Annoyingly this is a different code to the normal
-                # "rate-limited" code so tweepy's built-in rate limiting
+                # Annoyingly, this is a different error code to the normal
+                # “rate-limited“ error code so tweepy's built-in rate limiting
                 # doesn't apply.
-                log.warning("Over the spam-report limit; sleeping",
-                            exc_info=True)
-                time.sleep(15 * 60)
+                log.info("Over the spam-report limit; sleeping for %ds",
+                         sleep_time, exc_info=True)
+                time.sleep(sleep_time)
+                sleep_time *= 1.5
             else:
                 raise
 
