@@ -218,7 +218,6 @@ class LessListener(StreamListener):
 
         if event.event == 'follow' and event.target.id == self.me.id:
             self.on_follow(event.source)
-            self.maybe_follow(event.source)
 
         if event.event == 'favorite' and event.target.id == self.me.id:
             log.info("tweet favorited by %s: %s",
