@@ -375,5 +375,5 @@ if __name__ == '__main__':
     except SystemExit:
         raise
     except:
-        log.exception('Bye :-(')
+        log.info('oh no', exc_info=True)
         raise
