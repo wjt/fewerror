@@ -237,7 +237,7 @@ class LessListener(StreamListener):
 
         # Sorry if you speak these languages, but after getting several
         # thousand spam followers I needed a crude signal.
-        forbidden_langs = {'ar', 'ja', 'zh'}
+        forbidden_langs = {'ar', 'ja', 'tr', 'zh'}
         if lang_base(whom.lang) in forbidden_langs:
             log.info('%s has forbidden lang %s; blocking',
                      user_url(whom), whom.lang)
