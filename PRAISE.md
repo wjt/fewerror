@@ -77,4 +77,6 @@
 
 > Thing you'll find you're wrong again […]. Three strikes & you're out! <cite>– [@TomfooleryH](https://twitter.com/TomfooleryH/status/884380006759223297)</cite>
 
+> I think [@fewerror][] is my favourite account on Twitter. I know it’s automated and writing this is pointless but I really couldn’t care fewer <cite>– [@gregjames](https://twitter.com/gregjames/status/914920833545641985)</cite>
+
 [@fewerror]: https://twitter.com/fewerror/
