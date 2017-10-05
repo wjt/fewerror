@@ -281,14 +281,14 @@ def auth_from_env():
     return auth
 
 
-def stream(api, auth, args):
+def stream(api, args):
     while True:
         try:
             l = LessListener(api,
                              post_replies=args.post_replies,
                              gather=args.gather)
 
-            stream = tweepy.Stream(auth, l)
+            stream = tweepy.Stream(api.auth, l)
             if args.use_public_stream:
                 stream.filter(track=['less'])
             else:
@@ -361,25 +361,31 @@ def mass_report(api, args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=u'annoy some tweeps')
-    parser.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
-                        help='save matched tweets in DIR for later degustation')
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help='subcommand', dest='mode')
+    subparsers.required = True
 
-    modes = parser.add_mutually_exclusive_group()
+    stream_p = subparsers.add_parser('stream', help=u'annoy some tweeps')
+    stream_p.set_defaults(func=stream)
+    stream_p.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
+                          help='save matched tweets in DIR for later degustation')
+
+    modes = stream_p.add_argument_group('stream mode').add_mutually_exclusive_group()
     modes.add_argument('--post-replies', action='store_true',
                        help='post (rate-limited) replies, rather than just printing them locally')
     modes.add_argument('--use-public-stream', action='store_true',
                        help='search public tweets for "less", rather than your own stream')
-    modes.add_argument('--block', metavar='ID_FILE', type=argparse.FileType('r'),
-                       help='Block numeric user ids in ID_FILE (one per line)')
 
-    parser.add_argument('--report', action='store_true',
-                        help='with --block, also report for spam')
+    block_p = subparsers.add_parser('block', help='block some tweeps')
+    block_p.set_defaults(func=mass_report)
+    block_p.add_argument('id_file', type=argparse.FileType('r'),
+                         help='File with one numeric user id per line')
+    block_p.add_argument('--report', action='store_true',
+                         help='with --block, also report for spam')
 
     checkedshirt.add_arguments(parser)
 
     args = parser.parse_args()
-
     checkedshirt.init(args)
 
     log.info('Initializing API')
@@ -391,10 +397,7 @@ def main():
         # It looks like if retry_count is 0 (the default), wait_on_rate_limit=True will not
         # actually retry after a rate limit.
         retry_count=1)
-    if args.block:
-        mass_report(api, args)
-    else:
-        stream(api, auth, args)
+    args.func(api, args)
 
 
 if __name__ == '__main__':
