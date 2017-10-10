@@ -317,7 +317,7 @@ def stream(api, args):
             l = LessListener(api,
                              post_replies=args.post_replies,
                              gather=args.gather,
-                             state_dir=args.state_dir)
+                             state_dir=args.state)
 
             stream = tweepy.Stream(api.auth, l)
             if args.use_public_stream:
