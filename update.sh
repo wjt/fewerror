@@ -3,13 +3,13 @@
 set -e
 set -x
 cd $(dirname "$0")
+PARENT="$(readlink -f ..)"
 
 if [[ "$#" -ge 1 ]]; then
     git remote update
     git checkout -qf $1
-    exec flock ./update.lock "$0"
+    exec flock $PARENT/update.lock "$0"
 else
-    PARENT="$(readlink -f ..)"
     ENV_LINK=$PARENT/env
     ENV_DIR=$(mktemp -d -p "$PARENT" env.XXXXXXXXXX)
     PYTHON3="$(which python3)"

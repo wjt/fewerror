@@ -4,7 +4,7 @@ import errno
 import json
 import logging
 import os
-import tempfile
+from tempfile import NamedTemporaryFile
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class State(object):
         )
 
     @classmethod
-    def load(cls, screen_name, directory='.', **kwargs):
+    def load(cls, screen_name, directory, **kwargs):
         filename = os.path.join(directory, 'state.{}.json'.format(screen_name))
 
         try:
@@ -62,9 +62,10 @@ class State(object):
         return state
 
     def save(self):
-        with tempfile.NamedTemporaryFile(prefix=self._state_filename, suffix='.tmp', dir='.',
-                                         mode='w',
-                                         delete=False) as f:
+        state_dir = os.path.dirname(self._state_filename)
+
+        with NamedTemporaryFile(prefix=self._state_filename, suffix='.tmp',
+                                dir=state_dir, mode='w', delete=False) as f:
             json.dump(fp=f, obj={
                 'replied_to': self._replied_to,
                 'last_time_for_word': {

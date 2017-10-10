@@ -150,29 +150,28 @@ def test_end_to_end(filename, connections, expected, tmpdir):
     with open(filename, 'r') as f:
         status = Status.parse(api, json.load(fp=f))
 
-    with tmpdir.as_cwd():
-        l = LessListener(api=api, post_replies=True, gather='tweets')
+    l = LessListener(api=api, post_replies=True, gather='tweets', state_dir=str(tmpdir))
 
-        # 100% festivity for all of December
-        l.december_greetings = ('It is cold outside.',)
-        l.festive_probability = 1.
-        assert l.get_festive_probability(dt.date(2016, 12, 5)) == 1.
+    # 100% festivity for all of December
+    l.december_greetings = ('It is cold outside.',)
+    l.festive_probability = 1.
+    assert l.get_festive_probability(dt.date(2016, 12, 5)) == 1.
 
-        l.on_status(status)
+    l.on_status(status)
 
-        # Never reply to the same toot twice
-        l.on_status(status)
+    # Never reply to the same toot twice
+    l.on_status(status)
 
-        # Rate-limit replies for same word
-        setattr(status, 'id', status.id + 1)
-        l.on_status(status)
+    # Rate-limit replies for same word
+    setattr(status, 'id', status.id + 1)
+    l.on_status(status)
 
-        if expected is None:
-            assert api._updates == []
-        else:
-            assert len(api._updates) == 1
-            u = api._updates[0]
-            assert u['status'] == expected
+    if expected is None:
+        assert api._updates == []
+    else:
+        assert len(api._updates) == 1
+        u = api._updates[0]
+        assert u['status'] == expected
 
     for k, before in connections.items():
         after = api._connections[k]
@@ -190,10 +189,9 @@ def test_end_to_end(filename, connections, expected, tmpdir):
 def test_festivity(date, p, tmpdir):
     api = MockAPI(connections={})
 
-    with tmpdir.as_cwd():
-        l = LessListener(api=api, post_replies=True, gather=None)
+    l = LessListener(api=api, post_replies=True, gather=None, state_dir=str(tmpdir))
 
-        assert l.get_festive_probability(date) == p
+    assert l.get_festive_probability(date) == p
 
 
 @pytest.mark.parametrize('id_,expected_filename', [
@@ -202,14 +200,14 @@ def test_festivity(date, p, tmpdir):
 ])
 def test_save_tweet(tmpdir, id_, expected_filename):
     api = MockAPI(connections={})
+    foo = tmpdir.join('foo')
 
-    with tmpdir.as_cwd():
-        l = LessListener(api=api, gather='foo')
-        s = Status.parse(api=api, json={
-            'id': int(id_),
-            'id_str': id_,
-        })
-        l.save_tweet(s)
+    l = LessListener(api=api, gather=str(foo), state_dir=str(tmpdir))
+    s = Status.parse(api=api, json={
+        'id': int(id_),
+        'id_str': id_,
+    })
+    l.save_tweet(s)
 
-        j = tmpdir.join('foo', expected_filename)
-        assert j.check()
+    j = tmpdir.join('foo', expected_filename)
+    assert j.check()

@@ -123,12 +123,13 @@ def classify_user(api, whom, fetch_statuses=True):
 
 class LessListener(StreamListener):
     def __init__(self, *args, **kwargs):
+        state_dir = kwargs.pop('state_dir')
         self.post_replies = kwargs.pop('post_replies', False)
         self.gather = kwargs.pop('gather', None)
         StreamListener.__init__(self, *args, **kwargs)
         self.me = self.api.me()
 
-        self._state = State.load(self.me.screen_name)
+        self._state = State.load(self.me.screen_name, state_dir)
 
         if self.gather:
             os.makedirs(self.gather, exist_ok=True)
@@ -315,7 +316,8 @@ def stream(api, args):
         try:
             l = LessListener(api,
                              post_replies=args.post_replies,
-                             gather=args.gather)
+                             gather=args.gather,
+                             state_dir=args.state_dir)
 
             stream = tweepy.Stream(api.auth, l)
             if args.use_public_stream:
@@ -434,6 +436,14 @@ def main():
     var = os.path.abspath('var')
 
     parser = argparse.ArgumentParser()
+
+    # Annoyingly you really do have to write
+    #   python -m fewerror.twitter --log-level DEBUG stream
+    # rather than
+    #   python -m fewerror.twitter stream --log-level DEBUG
+    # but life is too short.
+    checkedshirt.add_arguments(parser)
+
     subparsers = parser.add_subparsers(help='subcommand', dest='mode')
     subparsers.required = True
 
@@ -445,6 +455,8 @@ def main():
                           const=gather_dir, default=None,
                           help='save matched tweets in DIR for later '
                                'degustation (default: {})'.format(gather_dir))
+    stream_p.add_argument('--state', metavar='DIR', default=var,
+                          help='store state in DIR (default: {})'.format(var))
 
     modes = stream_p.add_argument_group('stream mode').add_mutually_exclusive_group()
     modes.add_argument('--post-replies', action='store_true',
@@ -476,8 +488,6 @@ def main():
                          help='file with one numeric user id per line')
     block_p.add_argument('--report', action='store_true',
                          help='with --block, also report for spam')
-
-    checkedshirt.add_arguments(parser)
 
     args = parser.parse_args()
     checkedshirt.init(args)
