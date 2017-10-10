@@ -5,6 +5,8 @@ import os
 import raven
 from raven.handlers.logging import SentryHandler
 
+log = logging.getLogger(__name__)
+
 
 def add_arguments(parser):
     g = parser.add_argument_group('logging').add_mutually_exclusive_group()
@@ -25,11 +27,15 @@ def init(args):
         logging.basicConfig(level=args.log_level,
                             format='%(asctime)s %(levelname)8s [%(name)s] %(message)s')
 
+    log.info('--- Starting ---')
+    git_sha = raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__)))
+    log.info('Git commit: %s', git_sha)
+
     # Log errors to Sentry
     client = raven.Client(
         # dsn=os.environ.get('SENTRY_DSN'),
         include_paths=['fewerror'],
-        release=raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+        release=git_sha,
         ignore_exceptions=[
             KeyboardInterrupt,
         ],
