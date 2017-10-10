@@ -6,6 +6,7 @@ __pycache
 /.cache
 /.env
 /log
+/var
 /tweets
 /ssh/id_rsa
 

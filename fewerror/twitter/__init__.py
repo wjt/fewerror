@@ -1,5 +1,6 @@
 # coding=utf-8
 import argparse
+import enum
 import json
 import logging
 import logging.config
@@ -71,6 +72,53 @@ def status_url(status):
 def lang_base(lang):
     base, *rest = lang.split('-')
     return base
+
+
+class FMK(enum.Enum):
+    '''Classification for new followers.'''
+    FOLLOW_BACK = 1
+    NEUTRAL = 2
+    BLOCK = 3
+
+
+def classify_user(api, whom, fetch_statuses=True):
+    '''Crude attempt to identify spammy followers. It appears that this bot
+    was used to boost follower counts since it always followed back.
+
+    Returns an entry from FMK.'''
+
+    # Sorry if you speak these languages, but after getting several
+    # thousand spam followers I needed a crude signal.
+    forbidden_langs = {'ar', 'ja', 'tr', 'zh'}
+    if lang_base(whom.lang) in forbidden_langs:
+        log.info('%s has forbidden lang %s',
+                 user_url(whom), whom.lang)
+        return FMK.BLOCK
+
+    # Many spam users had user.lang == 'en' but tweet only in those languages.
+    try:
+        # "fully-hydrated" users have a status on them
+        statuses = [whom.status]
+    except AttributeError:
+        # but users in follow notifications do not
+        if fetch_statuses:
+            # TODO: this fails for protected accounts who haven't accepted our request
+            statuses = api.user_timeline(user_id=whom.id, count=20)
+        else:
+            statuses = []
+
+    langs = {lang_base(status.lang) for status in statuses}
+    if langs & forbidden_langs:
+        log.info('%s tweets in forbidden lang %s',
+                 user_url(whom), ', '.join(langs & forbidden_langs))
+        return FMK.BLOCK
+
+    if 'en' not in langs:
+        log.info('%s does not tweet in English -- why are they following us?',
+                 user_url(whom))
+        return FMK.NEUTRAL
+
+    return FMK.FOLLOW_BACK
 
 
 class LessListener(StreamListener):
@@ -231,36 +279,17 @@ class LessListener(StreamListener):
 
     def on_follow(self, whom):
         log.info("followed by %s", user_url(whom))
-
         if whom.following:
             return
 
-        # Sorry if you speak these languages, but after getting several
-        # thousand spam followers I needed a crude signal.
-        forbidden_langs = {'ar', 'ja', 'tr', 'zh'}
-        if lang_base(whom.lang) in forbidden_langs:
-            log.info('%s has forbidden lang %s; blocking',
-                     user_url(whom), whom.lang)
+        classification = classify_user(self.api, whom)
+        if classification == FMK.BLOCK:
+            log.info('blocking %s', user_url(whom))
             self.block(whom.id)
-            return
-
-        # Many spam users had user.lang == 'en' but tweet only in those languages.
-        statuses = self.api.user_timeline(user_id=whom.id, count=20)
-        langs = {lang_base(status.lang) for status in statuses}
-        if langs & forbidden_langs:
-            log.info('%s tweets in forbidden lang %s; blocking',
-                     user_url(whom), ', '.join(langs & forbidden_langs))
-            self.block(whom.id)
-            return
-
-        if 'en' not in langs:
-            log.info('%s does not tweet in English -- why are they following us?',
-                     user_url(whom))
-            return
-
-        # TODO: delay this
-        log.info("following %s back", user_url(whom))
-        whom.follow()
+        elif classification == FMK.FOLLOW_BACK:
+            # TODO: delay this
+            log.info("following %s back", user_url(whom))
+            whom.follow()
 
     def block(self, user_id):
         self.api.create_block(user_id=user_id,
@@ -299,6 +328,47 @@ def stream(api, args):
             time.sleep(15 * 60)
 
 
+def save_user(user, directory):
+    path = os.path.join(directory, 'user.{}.json'.format(user.id_str))
+    with open(path, 'w') as f:
+        json.dump(obj=user._json, fp=f)
+
+
+def fetch_followers(api, args):
+    '''Fetches all followers' JSON and saves them to the given directory.
+
+    Files will have names of the form 'user.<numeric id>.json'.'''
+    os.makedirs(args.directory, exist_ok=True)
+
+    n = api.me().followers_count
+    g = tweepy.Cursor(api.followers, count=200).items()
+
+    for i, follower in enumerate(g, 1):
+        log.info('[%d/%d] %s', i, n, follower.screen_name)
+        save_user(follower, args.directory)
+
+
+def classify(api, args):
+    classes = {e: [] for e in FMK}
+    for dirpath, _, filenames in os.walk(args.directory):
+        for filename in filenames:
+            if not re.match(r'user.\d+.json', filename):
+                continue
+
+            with open(os.path.join(dirpath, filename), 'rb') as f:
+                j = json.load(f)
+
+            user = tweepy.models.User.parse(api, j)
+            c = classify_user(api, user, fetch_statuses=False)
+            classes[c].append(user)
+
+    for user in classes[FMK.BLOCK]:
+        args.block_file.write('{}\n'.format(user.id))
+
+    for e, us in classes.items():
+        print('{}: {} users'.format(e, len(us)))
+
+
 def report_spam(api, *args, **kwargs):
     sleep_time = 15 * 60
 
@@ -321,7 +391,7 @@ def report_spam(api, *args, **kwargs):
                 raise
 
 
-def mass_report(api, args):
+def block(api, args):
     '''Block (and report as spam) many user IDs.'''
     report = args.report
 
@@ -361,14 +431,20 @@ def mass_report(api, args):
 
 
 def main():
+    var = os.path.abspath('var')
+
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='subcommand', dest='mode')
     subparsers.required = True
 
+    # stream
     stream_p = subparsers.add_parser('stream', help=u'annoy some tweeps')
     stream_p.set_defaults(func=stream)
-    stream_p.add_argument('--gather', metavar='DIR', nargs='?', const='tweets', default=None,
-                          help='save matched tweets in DIR for later degustation')
+    gather_dir = os.path.join(var, 'tweets')
+    stream_p.add_argument('--gather', metavar='DIR', nargs='?',
+                          const=gather_dir, default=None,
+                          help='save matched tweets in DIR for later '
+                               'degustation (default: {})'.format(gather_dir))
 
     modes = stream_p.add_argument_group('stream mode').add_mutually_exclusive_group()
     modes.add_argument('--post-replies', action='store_true',
@@ -376,10 +452,28 @@ def main():
     modes.add_argument('--use-public-stream', action='store_true',
                        help='search public tweets for "less", rather than your own stream')
 
+    # fetch-followers
+    fetch_p = subparsers.add_parser('fetch-followers', help='fetch some tweeps',
+                                    description=fetch_followers.__doc__)
+    fetch_p.set_defaults(func=fetch_followers)
+    default_fetch_directory = os.path.join(var, 'followers')
+    fetch_p.add_argument('directory', default=default_fetch_directory,
+                         help='(default: {})'.format(default_fetch_directory))
+
+    # classify
+    classify_p = subparsers.add_parser('classify', help='group some tweeps')
+    classify_p.set_defaults(func=classify)
+    classify_p.add_argument('directory', default=default_fetch_directory,
+                            help='(default: {})'.format(default_fetch_directory))
+    classify_p.add_argument('block_file', type=argparse.FileType('w'),
+                            help='file to store one numeric user id per line, '
+                                 'as used by "block" command')
+
+    # block
     block_p = subparsers.add_parser('block', help='block some tweeps')
-    block_p.set_defaults(func=mass_report)
+    block_p.set_defaults(func=block)
     block_p.add_argument('id_file', type=argparse.FileType('r'),
-                         help='File with one numeric user id per line')
+                         help='file with one numeric user id per line')
     block_p.add_argument('--report', action='store_true',
                          help='with --block, also report for spam')
 
