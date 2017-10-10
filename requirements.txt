@@ -6,7 +6,7 @@ PyYAML==3.12
 textblob==0.12.0
 
 #tweepy==3.5.0
--e git+git://github.com/wjt/tweepy@b843d9f8f8c92818ea16d4083ab5224540899528#egg=tweepy
+-e git+git://github.com/wjt/tweepy@8e0782633906c3ebfebb80b428968465bf826ab8#egg=tweepy
 
 # python-telegram-bot==5.3.0
 
