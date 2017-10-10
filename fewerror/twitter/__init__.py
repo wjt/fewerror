@@ -497,7 +497,7 @@ def main():
     # block
     block_p = subparsers.add_parser('block', help='block some tweeps')
     block_p.set_defaults(func=block)
-    block_p.add_argument('id_file', type=argparse.FileType('r'),
+    block_p.add_argument('block_file', type=argparse.FileType('r'),
                          help='file with one numeric user id per line')
     block_p.add_argument('--report', action='store_true',
                          help='with --block, also report for spam')
