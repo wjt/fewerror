@@ -76,9 +76,9 @@ def lang_base(lang):
 
 class FMK(enum.Enum):
     '''Classification for new followers.'''
-    FOLLOW_BACK = 1
-    NEUTRAL = 2
-    BLOCK = 3
+    FOLLOW_BACK = enum.auto()
+    NEUTRAL = enum.auto()
+    BLOCK = enum.auto()
 
 
 def classify_user(api, whom, fetch_statuses=True):
@@ -86,13 +86,14 @@ def classify_user(api, whom, fetch_statuses=True):
     was used to boost follower counts since it always followed back.
 
     Returns an entry from FMK.'''
+    label = '{} (#{})'.format(user_url(whom), whom.id)
 
     # Sorry if you speak these languages, but after getting several
     # thousand spam followers I needed a crude signal.
     forbidden_langs = {'ar', 'ja', 'tr', 'zh'}
     if lang_base(whom.lang) in forbidden_langs:
         log.info('%s has forbidden lang %s',
-                 user_url(whom), whom.lang)
+                 label, whom.lang)
         return FMK.BLOCK
 
     # Many spam users had user.lang == 'en' but tweet only in those languages.
@@ -100,22 +101,34 @@ def classify_user(api, whom, fetch_statuses=True):
         # "fully-hydrated" users have a status on them
         statuses = [whom.status]
     except AttributeError:
-        # but users in follow notifications do not
+        # (if they're not protected...)
+        if whom.protected:
+            log.info('%s is protected; assume they are okay', label)
+            return FMK.FOLLOW_BACK
+
+        if whom.statuses_count == 0 and whom.followers_count > 1000:
+            log.info('%s has never tweeted but has %d followers',
+                     label, whom.followers_count)
+            return FMK.BLOCK
+
+        # but users in follow notifications do not; and nor do users who
+        # haven't tweeted for a while (or ever)
         if fetch_statuses:
             # TODO: this fails for protected accounts who haven't accepted our request
             statuses = api.user_timeline(user_id=whom.id, count=20)
         else:
-            statuses = []
+            log.info('%s: not enough information', label)
+            return FMK.NEUTRAL
 
     langs = {lang_base(status.lang) for status in statuses}
     if langs & forbidden_langs:
         log.info('%s tweets in forbidden lang %s',
-                 user_url(whom), ', '.join(langs & forbidden_langs))
+                 label, ', '.join(langs & forbidden_langs))
         return FMK.BLOCK
 
     if 'en' not in langs:
-        log.info('%s does not tweet in English -- why are they following us?',
-                 user_url(whom))
+        log.info('%s tweets in %s, not en -- why are they following us?',
+                 label, ', '.join(langs))
         return FMK.NEUTRAL
 
     return FMK.FOLLOW_BACK
@@ -397,7 +410,7 @@ def block(api, args):
     '''Block (and report as spam) many user IDs.'''
     report = args.report
 
-    to_block_ids = set(map(int, args.block))
+    to_block_ids = set(map(int, args.block_file))
     log.info('would like to block %d ids', len(to_block_ids))
 
     existing_block_ids = set(tweepy.Cursor(api.blocks_ids).items())
