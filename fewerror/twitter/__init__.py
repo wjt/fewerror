@@ -76,9 +76,9 @@ def lang_base(lang):
 
 class FMK(enum.Enum):
     '''Classification for new followers.'''
-    FOLLOW_BACK = enum.auto()
-    NEUTRAL = enum.auto()
-    BLOCK = enum.auto()
+    FOLLOW_BACK = 1
+    NEUTRAL = 2
+    BLOCK = 3
 
 
 def classify_user(api, whom, fetch_statuses=True):
