@@ -206,7 +206,7 @@ def match(blob_tags, i):
     if w_pos not in QUANTITY_POS_TAGS and w not in mass_nouns:
         return
 
-    if not w.isalpha():
+    if not w.replace('/', '').isalpha():
         return
 
     for v, v_pos in blob_tags[i + 2:]:

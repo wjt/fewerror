@@ -141,6 +141,10 @@ true_positives = [
     ("""More or Less back on cracking form - do 65% of Irish exports go to UK as claimed by DUP?""",
      "More or Fewer back",
     ),
+
+    ("""Obviously less qualified/experienced, but someone with column and radio show is a journo, however much she lets the rest down I'm afraid! :)""",
+     "Obviously fewer qualified/experienced",
+    ),
 ]
 
 
