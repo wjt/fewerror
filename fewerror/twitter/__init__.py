@@ -53,6 +53,7 @@ def get_sanitized_text(status):
     return text.strip()
 
 
+lessish_rx = re.compile(r'\bLESS\b', re.IGNORECASE)
 manual_rt_rx = re.compile(r'''\b[RM]T\b''')
 quote_rx = re.compile(r'''^['"‘“]''')
 
@@ -206,7 +207,7 @@ class LessListener(StreamListener):
             return
 
         text = get_sanitized_text(status)
-        if 'less' not in text.lower():
+        if not lessish_rx.search(text):
             return
 
         log.info("%s %s", status_url(status), text)
