@@ -212,11 +212,11 @@ class LessListener(StreamListener):
 
         log.info("%s %s", status_url(status), text)
 
-        self.save_tweet(status)
-
         if looks_like_retweet(text):
             log.info('…looks like a manual RT, skipping')
             return
+
+        self.save_tweet(status)
 
         try:
             quantities = find_corrections(text)
