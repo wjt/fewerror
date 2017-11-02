@@ -1,6 +1,5 @@
 import datetime
 import dateutil.parser
-import errno
 import json
 import logging
 import os
@@ -50,11 +49,7 @@ class State(object):
         try:
             with open(filename, 'r') as f:
                 olde = json.load(f)
-
-        except IOError as e:
-            if e.errno != errno.ENOENT:
-                raise
-
+        except FileNotFoundError:
             olde = {}
 
         state = cls(filename, olde, **kwargs)
