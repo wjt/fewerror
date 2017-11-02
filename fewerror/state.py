@@ -13,7 +13,6 @@ class State(object):
                  filename,
                  olde=None,
                  now=datetime.datetime.utcnow,
-                 timeout_seconds=120,
                  per_word_timeout_seconds=60*60):
         self._state_filename = filename
         self._replied_to = {
@@ -24,12 +23,10 @@ class State(object):
             for k, v in olde.get('last_time_for_word', {}).items()
         }
 
-        self._timeout = datetime.timedelta(seconds=timeout_seconds)
         self._per_word_timeout = datetime.timedelta(
             seconds=per_word_timeout_seconds)
 
         self._now = now
-        self._last = now() - self._timeout
 
     def __str__(self):
         return '<State: {} replied_to, {} last_time_for_word>'.format(
@@ -87,16 +84,11 @@ class State(object):
                          last_for_this + self._per_word_timeout)
                 return False
 
-            if now - self._last < self._timeout:
-                log.info(u"rate-limiting until %s…", self._last + self._timeout)
-                return False
-
         return True
 
     def record_reply(self, status_id, quantities, r_id):
         now = self._now()
 
-        self._last = now
         self._replied_to[status_id] = r_id
         for quantity in quantities:
             self._last_time_for_word[quantity.lower()] = now

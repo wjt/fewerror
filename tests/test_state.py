@@ -16,14 +16,13 @@ class Now:
 
 
 @contextmanager
-def roundtripped_state(tmpdir, timeout_seconds=-1, per_word_timeout_seconds=-1):
+def roundtripped_state(tmpdir, per_word_timeout_seconds=-1):
     d = str(tmpdir)
     now = Now()
 
     def load():
         return State.load(
             "test", d,
-            timeout_seconds=timeout_seconds,
             per_word_timeout_seconds=per_word_timeout_seconds,
             now=now)
 
@@ -54,25 +53,8 @@ def test_reply_once(tmpdir):
         assert s.can_reply(456, ['annoying'])
 
 
-def test_rate_limit(tmpdir):
-    with roundtripped_state(tmpdir, timeout_seconds=30, per_word_timeout_seconds=-1) as (s, now):
-        assert s.can_reply(123, ['blood'])
-
-        s.record_reply(123, ['blood'], 124)
-        assert not s.can_reply(123, ['blood'])
-
-        # Reply to nothing else for 30 seconds
-        assert not s.can_reply(456, ['blood'])
-        assert not s.can_reply(456, ['annoying'])
-
-        now.advance(timedelta(seconds=31))
-
-        assert s.can_reply(456, ['blood'])
-        assert s.can_reply(456, ['annoying'])
-
-
 def test_word_rate_limit(tmpdir):
-    with roundtripped_state(tmpdir, timeout_seconds=-1, per_word_timeout_seconds=30) as (s, now):
+    with roundtripped_state(tmpdir, per_word_timeout_seconds=30) as (s, now):
         assert s.can_reply(123, ['blood'])
 
         s.record_reply(123, ['blood'], 124)
