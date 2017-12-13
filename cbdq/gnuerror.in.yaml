@@ -21,7 +21,9 @@
     "#spotify#",
     "#frustrating#",
     "#activate#",
-    "#wolves_are_numerous#"
+    "#wolves_are_numerous#",
+    "#teaching_ourselves#",
+    "#only_know_a_little#",
   ],
 
   "tinfoil": [
@@ -44,7 +46,8 @@
     "Assange",
     "parrots",
     "justice",
-    "the sharing economy"
+    "the sharing economy",
+    "web pages",
   ],
   "bad_TLA": [
     "CIA",
@@ -339,6 +342,25 @@
  "frustrating": "#thing_that_is_frustrating_to_use__is.capitalize# increasingly frustrating to use. Even in the bathroom.",
  "activate": "I find most #stuff_that_is_hard_to_activate# very difficult to activate.",
  "wolves_are_numerous": "#wolves_in_finland.capitalize# in #country# are so numerous that they endanger the #dogs_in_finland# that rural people use to #hunt_moose#.",
+
+  # https://mail.gnome.org/archives/foundation-list/2017-December/msg00007.html
+  "this_issue": [
+    "#animals_that_do_animal_things#",
+    "#enemies#",
+    "#bad_other_stuff#",
+    "#agents#",
+    "#bad_food#",
+  ],
+  "teaching_ourselves_target": [
+    "#entity#",
+    "#animal.s#",
+  ],
+  "teaching_ourselves": "Teaching ourselves to attend to #this_issue# when it arises will make us more effective defenders of #teaching_ourselves_target#.",
+  "only_know_a_little_about_object": [
+    "#entity.s#",
+    "#animal.s#",
+    ],
+  "only_know_a_little": "I know only a little about #only_know_a_little_about_object#.  I am sure there are nicer-looking ways that don't require #this_issue#, which a suitable expert could tell us about.",
 
  # https://github.com/dariusk/corpora/blob/master/data/geography/countries.json
  "country": [
