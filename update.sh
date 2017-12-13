@@ -23,5 +23,5 @@ else
     OLD_ENV_DIR="$(readlink -f "$ENV_LINK")"
     ln -s -T --force "$ENV_DIR" "$ENV_LINK"
     rm -rf "$OLD_ENV_DIR"
-    sudo systemctl restart fewerror-twitter
+    #sudo systemctl restart fewerror-twitter
 fi
