@@ -21,7 +21,7 @@ class FMK(enum.Enum):
 
 def classify_user(api, whom, fetch_statuses=True):
     '''Crude attempt to identify spammy followers. It appears that this bot
-    was used to boost follower counts since it always followed back.
+    is used to boost follower counts since it almost always follows back.
 
     Returns an entry from FMK.'''
     label = '{} (#{})'.format(user_url(whom), whom.id)
