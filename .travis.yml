@@ -4,11 +4,12 @@ python:
     #  - "pypy3"
 cache:
   directories:
-    - $HOME/.pip-cache/
+    - $HOME/.pip-cache
+    - $HOME/.cache
     - $HOME/nltk_data
 install:
-  - pip install --upgrade pip
-  - pip install -r dev-requirements.txt --cache-dir $HOME/.pip-cache
+  - pip install pipenv
+  - pipenv install --dev
   - python -m textblob.download_corpora
 script:
   - py.test --cov=fewerror
