@@ -46,11 +46,11 @@ def fetch_mutuals(api, args):
     for i, page in enumerate(g, 1):
         m = (mine & set(page))
         log.info('Page %d: %d mutuals', i, len(m))
+        print('\n'.join(mutuals), flush=True)
         mutuals |= m
         time.sleep(60)
 
-    for mutual in mutuals:
-        print(mutual)
+    log.info('Done; %d mutuals total', len(mutuals))
 
 
 def classify(api, args):
