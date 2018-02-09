@@ -2,6 +2,11 @@
 # vim: sts=4 sw=4 et
 set -e
 set -x
+
+if [ -d "$HOME/.local/bin" ]; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
 cd $(dirname "$0")
 PARENT="$(readlink -f ..)"
 
