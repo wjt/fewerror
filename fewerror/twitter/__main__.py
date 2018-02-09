@@ -7,7 +7,7 @@ import tweepy
 
 from . import auth_from_env, stream
 from .. import checkedshirt
-from .batch import block, classify, fetch_followers
+from .batch import block, classify, fetch_followers, fetch_mutuals
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +52,13 @@ def main():
     fetch_p.add_argument('directory', default=default_fetch_directory,
                          help='(default: {})'.format(default_fetch_directory))
 
+    # fetch-mutuals
+    fetch_m = subparsers.add_parser('fetch-mutuals', help='intersect some tweeps',
+                                    description=fetch_mutuals.__doc__)
+    fetch_m.set_defaults(func=fetch_mutuals)
+    fetch_m.add_argument('directory')
+    fetch_m.add_argument('id', type=int)
+
     # classify
     classify_p = subparsers.add_parser('classify', help='group some tweeps')
     classify_p.set_defaults(func=classify)
@@ -92,6 +99,6 @@ if __name__ == '__main__':
         exit(1)
     except SystemExit:
         raise
-    except:
+    except Exception:
         log.info('oh no', exc_info=True)
         raise

@@ -1,3 +1,4 @@
+import glob
 import json
 import logging
 import os
@@ -29,6 +30,27 @@ def fetch_followers(api, args):
     for i, follower in enumerate(g, 1):
         log.info('[%d/%d] %s', i, n, follower.screen_name)
         save_user(follower, args.directory)
+
+
+def fetch_mutuals(api, args):
+    '''Intersects a directory of user.*.json (as populated with fetch-followers) with users
+    following id.'''
+
+    mine = {
+        int(re.match(r'user.(\d+).json', os.path.basename(f)).group(1))
+        for f in glob.glob(os.path.join(args.directory, 'user.*.json'))
+    }
+    mutuals = set()
+
+    g = tweepy.Cursor(api.followers_ids, user_id=args.id, count=5000).pages()
+    for i, page in enumerate(g, 1):
+        m = (mine & set(page))
+        log.info('Page %d: %d mutuals', i, len(m))
+        mutuals |= m
+        time.sleep(60)
+
+    for mutual in mutuals:
+        print(mutual)
 
 
 def classify(api, args):
