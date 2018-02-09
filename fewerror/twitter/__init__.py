@@ -255,12 +255,12 @@ def auth_from_env():
 def stream(api, args):
     while True:
         try:
-            l = LessListener(api,
-                             post_replies=args.post_replies,
-                             gather=args.gather,
-                             state_dir=args.state)
+            listener = LessListener(api,
+                                    post_replies=args.post_replies,
+                                    gather=args.gather,
+                                    state_dir=args.state)
 
-            stream = tweepy.Stream(api.auth, l)
+            stream = tweepy.Stream(api.auth, listener)
             if args.use_public_stream:
                 stream.filter(track=['less'])
             else:
