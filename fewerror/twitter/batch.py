@@ -46,7 +46,7 @@ def fetch_mutuals(api, args):
     for i, page in enumerate(g, 1):
         m = (mine & set(page))
         log.info('Page %d: %d mutuals', i, len(m))
-        print('\n'.join(mutuals), flush=True)
+        print('\n'.join(map(str, m)), flush=True)
         mutuals |= m
         time.sleep(60)
 
