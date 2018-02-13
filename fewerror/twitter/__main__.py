@@ -12,6 +12,17 @@ from .batch import block, classify, fetch_followers, fetch_mutuals
 log = logging.getLogger(__name__)
 
 
+def ℕ(value):
+    '''Vim really deals badly with this function name.'''
+    try:
+        i = int(value)
+        if i < 0:
+            raise ValueError
+        return i
+    except ValueError:
+        raise argparse.ArgumentTypeError('{!r} ∉ ℕ'.format(value))
+
+
 def main():
     var = os.path.abspath('var')
 
@@ -76,6 +87,8 @@ def main():
                          help='file with one numeric user id per line')
     block_p.add_argument('--report', action='store_true',
                          help='with --block, also report for spam')
+    block_p.add_argument('--timeout', type=ℕ,
+                         help='delay in seconds between each API call')
 
     args = parser.parse_args()
     checkedshirt.init(args)

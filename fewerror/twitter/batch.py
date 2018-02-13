@@ -108,6 +108,7 @@ def report_spam(api, *args, **kwargs):
 def block(api, args):
     '''Unfollow, block, and optionally report as spam many user IDs.'''
     report = args.report
+    timeout = args.timeout or 120
 
     to_block_ids = set(map(int, args.block_file))
     log.info('would like to unfollow block %d ids', len(to_block_ids))
@@ -144,6 +145,4 @@ def block(api, args):
                 raise
 
         if i < n and to_block_id not in existing_block_ids:
-            # Experimentation suggests the limit is 50 spam reports per 30 minute window,
-            # or 1 spam report per 36 seconds. Round up...
-            time.sleep(45)
+            time.sleep(timeout)
