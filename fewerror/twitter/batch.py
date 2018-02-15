@@ -34,7 +34,7 @@ def fetch_followers(api, args):
 
 def fetch_mutuals(api, args):
     '''Intersects a directory of user.*.json (as populated with fetch-followers) with users
-    following id.'''
+    following USER_ID/SCREEN_NAME.'''
 
     mine = {
         int(re.match(r'user.(\d+).json', os.path.basename(f)).group(1))
@@ -42,7 +42,15 @@ def fetch_mutuals(api, args):
     }
     mutuals = set()
 
-    g = tweepy.Cursor(api.followers_ids, user_id=args.id, count=5000).pages()
+    kwargs = {'count': 5000}
+    if args.user_id is not None:
+        kwargs['user_id'] = args.user_id
+    elif args.screen_name is not None:
+        kwargs['screen_name'] = args.screen_name
+    else:
+        raise ValueError
+
+    g = tweepy.Cursor(api.followers_ids, **kwargs).pages()
     for i, page in enumerate(g, 1):
         m = (mine & set(page))
         log.info('Page %d: %d mutuals', i, len(m))

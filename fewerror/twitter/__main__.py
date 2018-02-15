@@ -68,7 +68,9 @@ def main():
                                     description=fetch_mutuals.__doc__)
     fetch_m.set_defaults(func=fetch_mutuals)
     fetch_m.add_argument('directory')
-    fetch_m.add_argument('id', type=int)
+    g = fetch_m.add_mutually_exclusive_group(required=True)
+    g.add_argument('--user-id', type=int)
+    g.add_argument('--screen-name', type=str)
 
     # classify
     classify_p = subparsers.add_parser('classify', help='group some tweeps')
