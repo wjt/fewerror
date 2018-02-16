@@ -13,6 +13,24 @@ from . import FMK, classify_user, user_url
 log = logging.getLogger(__name__)
 
 
+DEFAULT_BLOCK_TIMEOUT = 120
+
+
+def add_user_args(parser):
+    g = parser.add_mutually_exclusive_group(required=True)
+    g.add_argument('--user-id', type=int)
+    g.add_argument('--screen-name', type=str)
+
+
+def get_user_kwargs(args):
+    if args.user_id is not None:
+        return {'user_id': args.user_id}
+    elif args.screen_name is not None:
+        return {'screen_name': args.screen_name}
+    else:
+        raise ValueError(args)
+
+
 def save_user(user, directory):
     path = os.path.join(directory, 'user.{}.json'.format(user.id_str))
     with open(path, 'w') as f:
@@ -43,13 +61,8 @@ def fetch_mutuals(api, args):
     }
     mutuals = set()
 
-    kwargs = {'count': 5000}
-    if args.user_id is not None:
-        kwargs['user_id'] = args.user_id
-    elif args.screen_name is not None:
-        kwargs['screen_name'] = args.screen_name
-    else:
-        raise ValueError
+    kwargs = get_user_kwargs(args)
+    kwargs['count'] = 5000
 
     g = tweepy.Cursor(api.followers_ids, **kwargs).pages()
     for i, page in enumerate(g, 1):
@@ -114,24 +127,11 @@ def report_spam(api, *args, **kwargs):
                 raise
 
 
-def block(api, args):
-    '''Unfollow, block, and optionally report as spam many user IDs.'''
-    report = args.report
-    timeout = args.timeout or 120
-
-    to_block_ids = set(map(int, args.block_file))
-    log.info('would like to unfollow block %d ids', len(to_block_ids))
-
-    existing_block_ids = set(tweepy.Cursor(api.blocks_ids).items())
-    log.info('%d existing blocks', len(existing_block_ids))
-    # to_block_ids.difference_update(existing_block_ids)
-
+def _block_many(api, to_block_ids, timeout, report):
     n = len(to_block_ids)
     for i, to_block_id in enumerate(to_block_ids, 1):
         try:
-            if to_block_id in existing_block_ids:
-                log.info('[%d/%d] #%d already blocked', i, n, to_block_id)
-            elif report:
+            if report:
                 log.info('[%d/%d] reporting #%d', i, n, to_block_id)
                 u = report_spam(api, user_id=to_block_id, perform_block=True)
                 log.info('reported and blocked %s (#%d)', user_url(u), to_block_id)
@@ -153,8 +153,51 @@ def block(api, args):
             else:
                 raise
 
-        if i < n and to_block_id not in existing_block_ids:
+        if i < n:
             time.sleep(timeout)
+
+
+def block(api, args):
+    '''Unfollow, block, and optionally report as spam many user IDs.'''
+    to_block_ids = {int(line) for line in args.block_file if line.strip()}
+    log.info('would like to unfollow block %d ids', len(to_block_ids))
+
+    existing_block_ids = set(tweepy.Cursor(api.blocks_ids).items())
+    log.info('%d existing blocks', len(existing_block_ids))
+    to_block_ids.difference_update(existing_block_ids)
+
+    _block_many(api, to_block_ids, timeout=args.timeout, report=args.report)
+
+
+def block_one(api, args):
+    '''Block and unfollow a user, and (optionally) our friends who follow them.'''
+
+    kwargs = get_user_kwargs(args)
+
+    if args.mutuals:
+        log.info('Fetching our friends')
+        my_friends = set(tweepy.Cursor(api.friends_ids).items())
+        log.info('Fetched %d friends', len(my_friends))
+        time.sleep(args.TIMEOUT)
+
+        mutuals = set()
+        log.info('Intersecting friends with users following %s', kwargs)
+        g = tweepy.Cursor(api.followers_ids, **kwargs).pages()
+        for i, page in enumerate(g, 1):
+            m = my_friends & set(page)
+            log.info('Page %d: %d mutuals', i, len(m))
+            mutuals |= m
+            time.sleep(args.TIMEOUT)
+
+        _block_many(api, mutuals, timeout=args.timeout, report=False)
+
+    u = api.create_block(include_entities=False,
+                         skip_status=True,
+                         **kwargs)
+    log.info('Blocked %s', user_url(u))
+
+    api.destroy_friendship(**kwargs)
+    log.info('Unfollowed %s', user_url(u))
 
 
 def ℕ(value):
@@ -182,9 +225,7 @@ def add_subcommands(subparsers, var):
                                     description=fetch_mutuals.__doc__)
     fetch_m.set_defaults(func=fetch_mutuals)
     fetch_m.add_argument('directory')
-    g = fetch_m.add_mutually_exclusive_group(required=True)
-    g.add_argument('--user-id', type=int)
-    g.add_argument('--screen-name', type=str)
+    add_user_args(fetch_m)
 
     # classify
     classify_p = subparsers.add_parser('classify', help='group some tweeps')
@@ -195,6 +236,15 @@ def add_subcommands(subparsers, var):
                             help='file to store one numeric user id per line, '
                                  'as used by "block" command')
 
+    block_one_p = subparsers.add_parser('block-one', help='block one tweep',
+                                        description=block_one.__doc__)
+    block_one_p.set_defaults(func=block_one)
+    add_user_args(block_one_p)
+    block_one_p.add_argument('--mutuals', action='store_true',
+                             help='Also block friends who follow them')
+    block_one_p.add_argument('--timeout', type=ℕ, default=DEFAULT_BLOCK_TIMEOUT,
+                             help='delay in seconds between each API call')
+
     # block
     block_p = subparsers.add_parser('block', help='block some tweeps',
                                     description=block.__doc__)
@@ -203,7 +253,7 @@ def add_subcommands(subparsers, var):
                          help='file with one numeric user id per line')
     block_p.add_argument('--report', action='store_true',
                          help='with --block, also report for spam')
-    block_p.add_argument('--timeout', type=ℕ,
+    block_p.add_argument('--timeout', type=ℕ, default=DEFAULT_BLOCK_TIMEOUT,
                          help='delay in seconds between each API call')
 
 
