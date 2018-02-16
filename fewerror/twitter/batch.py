@@ -178,7 +178,7 @@ def block_one(api, args):
         log.info('Fetching our friends')
         my_friends = set(tweepy.Cursor(api.friends_ids).items())
         log.info('Fetched %d friends', len(my_friends))
-        time.sleep(args.TIMEOUT)
+        time.sleep(args.timeout)
 
         mutuals = set()
         log.info('Intersecting friends with users following %s', kwargs)
@@ -187,7 +187,7 @@ def block_one(api, args):
             m = my_friends & set(page)
             log.info('Page %d: %d mutuals', i, len(m))
             mutuals |= m
-            time.sleep(args.TIMEOUT)
+            time.sleep(args.timeout)
 
         _block_many(api, mutuals, timeout=args.timeout, report=False)
 
