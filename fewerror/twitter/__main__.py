@@ -5,22 +5,10 @@ import os
 
 import tweepy
 
-from . import auth_from_env, stream
+from . import auth_from_env, batch, stream
 from .. import checkedshirt
-from .batch import block, classify, fetch_followers, fetch_mutuals
 
 log = logging.getLogger(__name__)
-
-
-def ℕ(value):
-    '''Vim really deals badly with this function name.'''
-    try:
-        i = int(value)
-        if i < 0:
-            raise ValueError
-        return i
-    except ValueError:
-        raise argparse.ArgumentTypeError('{!r} ∉ ℕ'.format(value))
 
 
 def main():
@@ -55,42 +43,7 @@ def main():
     modes.add_argument('--use-public-stream', action='store_true',
                        help='search public tweets for "less", rather than your own stream')
 
-    # fetch-followers
-    fetch_p = subparsers.add_parser('fetch-followers', help='fetch some tweeps',
-                                    description=fetch_followers.__doc__)
-    fetch_p.set_defaults(func=fetch_followers)
-    default_fetch_directory = os.path.join(var, 'followers')
-    fetch_p.add_argument('directory', default=default_fetch_directory,
-                         help='(default: {})'.format(default_fetch_directory))
-
-    # fetch-mutuals
-    fetch_m = subparsers.add_parser('fetch-mutuals', help='intersect some tweeps',
-                                    description=fetch_mutuals.__doc__)
-    fetch_m.set_defaults(func=fetch_mutuals)
-    fetch_m.add_argument('directory')
-    g = fetch_m.add_mutually_exclusive_group(required=True)
-    g.add_argument('--user-id', type=int)
-    g.add_argument('--screen-name', type=str)
-
-    # classify
-    classify_p = subparsers.add_parser('classify', help='group some tweeps')
-    classify_p.set_defaults(func=classify)
-    classify_p.add_argument('directory', default=default_fetch_directory,
-                            help='(default: {})'.format(default_fetch_directory))
-    classify_p.add_argument('block_file', type=argparse.FileType('w'),
-                            help='file to store one numeric user id per line, '
-                                 'as used by "block" command')
-
-    # block
-    block_p = subparsers.add_parser('block', help='block some tweeps',
-                                    description=block.__doc__)
-    block_p.set_defaults(func=block)
-    block_p.add_argument('block_file', type=argparse.FileType('r'),
-                         help='file with one numeric user id per line')
-    block_p.add_argument('--report', action='store_true',
-                         help='with --block, also report for spam')
-    block_p.add_argument('--timeout', type=ℕ,
-                         help='delay in seconds between each API call')
+    batch.add_subcommands(subparsers, var)
 
     args = parser.parse_args()
     checkedshirt.init(args)

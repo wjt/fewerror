@@ -1,3 +1,4 @@
+import argparse
 import glob
 import json
 import logging
@@ -154,3 +155,56 @@ def block(api, args):
 
         if i < n and to_block_id not in existing_block_ids:
             time.sleep(timeout)
+
+
+def ℕ(value):
+    '''Vim really deals badly with this function name.'''
+    try:
+        i = int(value)
+        if i < 0:
+            raise ValueError
+        return i
+    except ValueError:
+        raise argparse.ArgumentTypeError('{!r} ∉ ℕ'.format(value))
+
+
+def add_subcommands(subparsers, var):
+    # fetch-followers
+    fetch_p = subparsers.add_parser('fetch-followers', help='fetch some tweeps',
+                                    description=fetch_followers.__doc__)
+    fetch_p.set_defaults(func=fetch_followers)
+    default_fetch_directory = os.path.join(var, 'followers')
+    fetch_p.add_argument('directory', default=default_fetch_directory,
+                         help='(default: {})'.format(default_fetch_directory))
+
+    # fetch-mutuals
+    fetch_m = subparsers.add_parser('fetch-mutuals', help='intersect some tweeps',
+                                    description=fetch_mutuals.__doc__)
+    fetch_m.set_defaults(func=fetch_mutuals)
+    fetch_m.add_argument('directory')
+    g = fetch_m.add_mutually_exclusive_group(required=True)
+    g.add_argument('--user-id', type=int)
+    g.add_argument('--screen-name', type=str)
+
+    # classify
+    classify_p = subparsers.add_parser('classify', help='group some tweeps')
+    classify_p.set_defaults(func=classify)
+    classify_p.add_argument('directory', default=default_fetch_directory,
+                            help='(default: {})'.format(default_fetch_directory))
+    classify_p.add_argument('block_file', type=argparse.FileType('w'),
+                            help='file to store one numeric user id per line, '
+                                 'as used by "block" command')
+
+    # block
+    block_p = subparsers.add_parser('block', help='block some tweeps',
+                                    description=block.__doc__)
+    block_p.set_defaults(func=block)
+    block_p.add_argument('block_file', type=argparse.FileType('r'),
+                         help='file with one numeric user id per line')
+    block_p.add_argument('--report', action='store_true',
+                         help='with --block, also report for spam')
+    block_p.add_argument('--timeout', type=ℕ,
+                         help='delay in seconds between each API call')
+
+
+__all__ = ['add_subcommands']
