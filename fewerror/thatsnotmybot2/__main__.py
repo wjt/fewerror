@@ -136,7 +136,7 @@ def replies_for_labels(labels):
     label_synsets = []
     for label in labels:
         word = getattr(label, 'description', label)
-        synsets = wn.synsets(word, pos=wn.NOUN)
+        synsets = wn.synsets(word.replace(' ', '_'), pos=wn.NOUN)
         if synsets and synsets[0] not in label_synsets:
             label_synsets.append(synsets[0])
 
