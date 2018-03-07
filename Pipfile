@@ -16,13 +16,17 @@ tweepy = {git = "git://github.com/wjt/tweepy", editable = true, ref = "8e0782633
 tracery = "*"
 raven = "*"
 python-dotenv = "*"
+google-cloud-vision = "*"
+google-cloud-language = "*"
+
 
 
 [dev-packages]
 
 coverage = "*"
 flake8 = "*"
+ipython = "*"
 py = "*"
-pytest-cov = "*"
 pytest = "*"
+pytest-cov = "*"
 python-coveralls = "*"
